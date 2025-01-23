@@ -11,4 +11,9 @@ class MovieCastMember extends Model
     {
         return $this->belongsTo(Movie::class);
     }
+
+    public function person(): BelongsTo
+    {
+        return $this->belongsTo(Person::class);
+    }
 }

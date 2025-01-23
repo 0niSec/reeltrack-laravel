@@ -23,6 +23,7 @@ Route::get('/register', function () {
 Route::get('/logout', function () {
     return [];
 })->name('logout');
+// END AUTH
 
 Route::get('/profile', function () {
     return [
@@ -37,7 +38,9 @@ Route::get('/search', function () {
     );
 })->name('search');
 
-Route::get('/movies', [MovieController::class, 'index']);
+Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 
 Route::get('/search/{id}', function ($id) {
     return array(

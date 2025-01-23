@@ -1,4 +1,4 @@
-<header class="border-b border-primary-600 shadow-md bg-neutral-900">
+<header class="border-b border-primary-600 shadow-md bg-neutral-950">
     <div class="container max-w-7xl">
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}

@@ -9,6 +9,26 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Movie extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'release_date' => 'date',
+            'runtime' => 'integer',
+        ];
+    }
+
+    protected $fillable = [
+        'title',
+        'release_date',
+        'runtime',
+        'description',
+        'poster_path',
+        'backdrop_path',
+        'trailer_path',
+        'imdb_id',
+        'tmdb_id',
+    ];
+
     public function castMembers(): HasManyThrough
     {
         return $this->hasManyThrough(Person::class, MovieCastMember::class);

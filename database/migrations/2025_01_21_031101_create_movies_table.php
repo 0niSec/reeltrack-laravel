@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->bigInteger('tmdb_id');
             $table->string('release_date');
             $table->bigInteger('ratings_count');
+            $table->json('genres');
             $table->decimal('rating_average');
             $table->bigInteger('total_reviews');
             $table->bigInteger('total_ratings');

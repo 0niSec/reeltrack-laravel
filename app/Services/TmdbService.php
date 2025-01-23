@@ -46,7 +46,7 @@ class TmdbService
         return $this->get("movie/{$id}/credits");
     }
 
-    public function backdropUrl(?string $path, string $size = 'w1280'): ?string
+    public function backdropUrl(?string $path, string $size = 'original'): ?string
     {
         if (!$path) {
             return null;
