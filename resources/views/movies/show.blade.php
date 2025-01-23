@@ -67,7 +67,7 @@
                 <div class="flex items-center gap-4 mt-4">
                     @php
                         // Parse release date info (placeholder usage)
-                        $parsedReleaseDate = Carbon::parse($movie['release_date']);
+                        $parsedReleaseDate = Carbon::parse($movie['release_date'])->format('F d, Y');
                     @endphp
                     <span>{{ $parsedReleaseDate }}</span>
                     <span>{{ $movie['runtime'] }} min</span>
