@@ -10,18 +10,18 @@ return new class extends Migration {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('backdrop_path');
-            $table->string('poster_path');
+            $table->string('backdrop_path')->nullable();
+            $table->string('poster_path')->nullable();
             $table->string('overview');
             $table->string('tagline');
             $table->integer('runtime');
-            $table->bigInteger('tmdb_id');
+            $table->unsignedBigInteger('tmdb_id');
             $table->string('release_date');
-            $table->bigInteger('ratings_count');
-            $table->decimal('rating_average');
-            $table->bigInteger('total_reviews');
-            $table->bigInteger('total_ratings');
-            $table->bigInteger('total_likes');
+            $table->unsignedBigInteger('ratings_count')->default(0);
+            $table->decimal('rating_average', 3)->default(0);
+            $table->unsignedBigInteger('total_reviews')->default(0);
+            $table->unsignedBigInteger('total_ratings')->default(0);
+            $table->unsignedBigInteger('total_likes')->default(0);
             $table->timestamps();
         });
     }

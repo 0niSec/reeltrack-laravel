@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->integer('episode_number');
             $table->string('name');
             $table->text('overview')->nullable();
-            $table->bigInteger('tmdb_id');
+            $table->unsignedBigInteger('tmdb_id');
             $table->integer('season_number');
             $table->string('still_path')->nullable();
             $table->integer('runtime');

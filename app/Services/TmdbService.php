@@ -46,6 +46,11 @@ class TmdbService
         return $this->get("movie/{$id}/credits");
     }
 
+    public function personDetails(int $id): array
+    {
+        return $this->get("person/{$id}");
+    }
+
     public function backdropUrl(?string $path, string $size = 'original'): ?string
     {
         if (!$path) {

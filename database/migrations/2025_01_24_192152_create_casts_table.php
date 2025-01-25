@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Movie;
 use App\Models\Person;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -9,21 +8,29 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('movie_cast_members', function (Blueprint $table) {
+        Schema::create('casts', function (Blueprint $table) {
             $table->id();
+            // Polymorphic columns
+            $table->unsignedBigInteger('castable_id');
+            $table->string('castable_type');
+
+            // Standard Cast Info
             $table->string('name');
             $table->string('character');
-            $table->integer('gender');
-            $table->string('profile_path')->nullable();
             $table->integer('order');
-            $table->foreignIdFor(Movie::class)->constrained('movies');
+
+            // Foreign Key constraints
             $table->foreignIdFor(Person::class)->constrained('people');
+
+            // Indexes for polymorphic lookup
+            $table->index(['castable_id', 'castable_type']);
+
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('movie_cast_members');
+        Schema::dropIfExists('casts');
     }
 };

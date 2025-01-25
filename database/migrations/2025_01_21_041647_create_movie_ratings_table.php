@@ -11,7 +11,7 @@ return new class extends Migration {
     {
         Schema::create('movie_ratings', function (Blueprint $table) {
             $table->id();
-            $table->decimal('rating', 3, 2);
+            $table->decimal('rating', 3);
             $table->foreignIdFor(Movie::class)->constrained('movies');
             $table->foreignIdFor(User::class)->constrained('users');
             $table->timestamps();

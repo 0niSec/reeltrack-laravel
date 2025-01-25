@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('movie_genres', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('tmdb_id');
+            $table->unsignedBigInteger('tmdb_id');
             $table->string('name');
             $table->timestamps();
         });

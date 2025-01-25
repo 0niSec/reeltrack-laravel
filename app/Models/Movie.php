@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Movie extends Model
 {
@@ -29,14 +29,14 @@ class Movie extends Model
         'tmdb_id',
     ];
 
-    public function castMembers(): HasManyThrough
+    public function cast(): MorphMany
     {
-        return $this->hasManyThrough(Person::class, MovieCastMember::class);
+        return $this->morphMany(Cast::class, 'castable');
     }
 
-    public function crewMembers(): HasManyThrough
+    public function crew(): MorphMany
     {
-        return $this->hasManyThrough(Person::class, MovieCrewMember::class);
+        return $this->morphMany(Crew::class, 'crewable');
     }
 
     public function reviews(): HasMany

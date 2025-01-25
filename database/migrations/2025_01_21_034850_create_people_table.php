@@ -10,12 +10,12 @@ return new class extends Migration {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->bigInteger('tmdb_id');
+            $table->unsignedBigInteger('tmdb_id');
             $table->text('biography')->nullable();
-            $table->string('profile_path');
-            $table->string('birthday');
+            $table->string('profile_path')->nullable();
+            $table->string('birthday')->nullable();
             $table->string('deathday')->nullable();
-            $table->string('place_of_birth');
+            $table->string('place_of_birth')->nullable();
             $table->integer('gender');
             $table->timestamps();
         });

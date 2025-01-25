@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->json('episode_run_time');
             $table->string('first_air_date')->nullable();
             $table->json('genres');
-            $table->bigInteger('tmdb_id');
+            $table->unsignedBigInteger('tmdb_id');
             $table->boolean('in_production')->default(false);
             $table->json('languages')->nullable();
             $table->string('last_air_date')->nullable();
