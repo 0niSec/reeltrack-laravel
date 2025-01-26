@@ -33,6 +33,13 @@ class MovieSeeder extends Seeder
                 'runtime' => $movieDetails['runtime'],
             ]);
 
+            foreach ($movieDetails['genres'] as $genre) {
+                $movie->genres()->create([
+                    'name' => $genre['name'],
+                    'tmdb_id' => $genre['id'],
+                ]);
+            }
+
             // Fetch credits.
             $credits = $tmdb->movieCredits($id);
             $castArray = $credits['cast'] ?? [];
@@ -55,7 +62,7 @@ class MovieSeeder extends Seeder
                     [
                         'name' => $personDetails['name'] ?? null,
                         'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $personDetails['profile_path'] ?? null,
+                        'profile_path' => $tmdb->backdropUrl($personDetails['profile_path'], "original" ?? null),
                         'birthday' => $personDetails['birthday'] ?? null,
                         'deathday' => $personDetails['deathday'] ?? null,
                         'place_of_birth' => $personDetails['place_of_birth'] ?? null,
@@ -89,7 +96,7 @@ class MovieSeeder extends Seeder
                     [
                         'name' => $personDetails['name'] ?? null,
                         'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $personDetails['profile_path'] ?? null,
+                        'profile_path' => $tmdb->backdropUrl($personDetails['profile_path'], "original" ?? null),
                         'birthday' => $personDetails['birthday'] ?? null,
                         'deathday' => $personDetails['deathday'] ?? null,
                         'place_of_birth' => $personDetails['place_of_birth'] ?? null,
@@ -102,7 +109,6 @@ class MovieSeeder extends Seeder
                     'person_id' => $person->id,
                     'department' => $member['department'] ?? null,
                     'job' => $member['job'] ?? null,
-                    'profile_path' => $member['profile_path'] ?? null,
                     'name' => $member['name'] ?? null,
                 ]);
             }

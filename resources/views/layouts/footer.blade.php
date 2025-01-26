@@ -1,4 +1,4 @@
-<footer class="mt-24 border-t border-primary-800">
+<footer class="mt-24 border-t border-primary-700">
     <div class="px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
             {{-- About Section --}}
@@ -8,6 +8,9 @@
                     Track your favorite movies and TV shows, create watchlists,
                     and discover new content.
                 </p>
+                <x-nav-link href="{{ route('about.faq') }}" class="block mt-4 text-primary-500 hover:text-primary-400">
+                    Read more...
+                </x-nav-link>
             </div>
 
             {{-- Quick Links --}}
@@ -15,25 +18,30 @@
                 <h3 class="text-lg font-bold mb-4">Quick Links</h3>
                 <ul class="space-y-2">
                     <li>
-                        <a href="{{ url('/') }}" class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="{{ url('/') }}">
                             Home
-                        </a>
+                        </x-nav-link>
                     </li>
                     <li>
-                        <a href="{{ url('/movies') }}"
-                           class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="{{ url('/about') }}">
+                            About
+                        </x-nav-link>
+                    </li>
+                    <li>
+                        <x-nav-link href="{{ route('movies.index') }}"
+                        >
                             Movies
-                        </a>
+                        </x-nav-link>
                     </li>
                     <li>
-                        <a href="#" class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="#">
                             TV Shows
-                        </a>
+                        </x-nav-link>
                     </li>
                     <li>
-                        <a href="#" class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="#">
                             Lists
-                        </a>
+                        </x-nav-link>
                     </li>
                 </ul>
             </div>
@@ -43,44 +51,47 @@
                 <h3 class="text-lg font-bold mb-4">Legal</h3>
                 <ul class="space-y-2">
                     <li>
-                        <a href="#" class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="#">
                             Privacy Policy
-                        </a>
+                        </x-nav-link>
                     </li>
                     <li>
-                        <a href="#" class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="#">
                             Terms of Service
-                        </a>
+                        </x-nav-link>
                     </li>
                     <li>
-                        <a href="#" class="text-neutral-400 hover:text-primary-500 transition-colors">
+                        <x-nav-link href="#">
                             Contact Us
-                        </a>
+                        </x-nav-link>
                     </li>
                 </ul>
             </div>
         </div>
 
         {{-- Copyright --}}
-        <div class="mt-8 pt-8 border-t border-primary-800 text-center text-neutral-400">
+        <div class="mt-8 pt-8 border-t border-primary-700 text-center text-neutral-400">
             <p>
                 &copy; {{ now()->year }} Reeltrack. All rights reserved.
             </p>
             <p>
                 Powered by
-                <a href="https://www.themoviedb.org" class="text-primary-500 hover:text-primary-600 transition-colors">
+                <x-nav-link href="https://www.themoviedb.org"
+                >
                     The Movie Database
-                </a>
+                </x-nav-link>
             </p>
             <p>
                 Built with ❤️
-                <a href="https://laravel.com" class="text-primary-500 hover:text-primary-600 transition-colors">
+                <x-nav-link href="https://laravel.com"
+                >
                     Laravel
-                </a>
+                </x-nav-link>
                 and
-                <a href="https://tailwindcss.com" class="text-primary-500 hover:text-primary-600 transition-colors">
+                <x-nav-link href="https://tailwindcss.com"
+                >
                     Tailwind CSS
-                </a>
+                </x-nav-link>
             </p>
         </div>
     </div>

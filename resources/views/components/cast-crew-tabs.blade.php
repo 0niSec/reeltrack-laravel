@@ -1,4 +1,4 @@
-@props(['credits'])
+@props(['cast', 'crew'])
 
 <div x-data="{ activeTab: 'cast' }">
     {{-- Tabs --}}
@@ -24,17 +24,19 @@
     {{-- Cast Tab --}}
     <div x-show="activeTab === 'cast'" class="mt-4">
         <div class="grid grid-cols-2 gap-4">
-            @foreach (collect($credits['cast'])->take(6) as $castMember)
+            @foreach (collect($cast) as $castMember)
                 <div class="flex items-center gap-3">
                     <img
-                        src="{{ $castMember['profile_path'] ?? '#' }}"
-                        alt="{{ $castMember['name'] ?? 'Unknown Actor' }}"
+                        src="{{ $castMember->person->profile_path
+            ??
+             'https://ui-avatars.com/api/?name=' . urlencode($castMember->person->name) . '&background=F6AF9D&rounded=true' }}"
+                        alt="{{ $castMember->name ?? 'Unknown Actor' }}"
                         class="w-12 h-12 rounded-full object-cover"
                     />
                     <div>
-                        <div class="font-medium">{{ $castMember['name'] }}</div>
+                        <div class="font-medium">{{ $castMember->name }}</div>
                         <div class="text-sm font-medium text-primary-400">
-                            {{ $castMember['character'] }}
+                            {{ $castMember->character }}
                         </div>
                     </div>
                 </div>
@@ -45,20 +47,23 @@
     {{-- Crew Tab --}}
     <div x-show="activeTab === 'crew'" class="mt-4">
         <div class="grid grid-cols-2 gap-4">
-            @foreach (collect($credits['crew'])->take(6) as $crewMember)
+            @foreach (collect($crew) as $crewMember)
                 <div class="flex items-center gap-3">
                     <img
-                        src="{{ $crewMember['profile_path'] ?? '#' }}"
-                        alt="{{ $crewMember['name'] ?? 'Unknown Crew Member' }}"
+                        src="{{ $crewMember->person->profile_path
+            ??
+             'https://ui-avatars.com/api/?name=' . urlencode($crewMember->person->name) . '&background=F6AF9D&rounded=true' }}"
+
+                        alt="{{ $crewMember->name ?? 'Unknown Crew Member' }}"
                         class="w-12 h-12 rounded-full object-cover"
                     />
                     <div>
-                        <div class="font-medium">{{ $crewMember['name'] }}</div>
+                        <div class="font-medium">{{ $crewMember->name }}</div>
                         <div class="text-sm font-medium text-primary-400">
-                            {{ $crewMember['department'] }}
+                            {{ $crewMember->department }}
                         </div>
                         <div class="text-xs text-primary-400">
-                            {{ $crewMember['job'] }}
+                            {{ $crewMember->job }}
                         </div>
 
                     </div>

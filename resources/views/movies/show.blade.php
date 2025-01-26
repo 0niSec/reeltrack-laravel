@@ -4,14 +4,14 @@
 
 <x-app>
     <x-slot:title>
-        {{ $movie['title'] }} - ReelTrack
+        {{ $movie->title }} - ReelTrack
     </x-slot:title>
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
         <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
         <img
-            src="{{ $movie['backdrop_path'] }}"
-            alt="{{ $movie['title'] }}"
+            src="{{ $movie->backdrop_path }}"
+            alt="{{ $movie->title }}"
             class="w-full h-full object-cover object-center"
         />
     </div>
@@ -22,8 +22,8 @@
             {{-- Left column: Poster and actions --}}
             <div class="w-[300px] flex-shrink-0">
                 <img
-                    src="{{ $movie['poster_path'] }}"
-                    alt="{{ $movie['title'] }}"
+                    src="{{ $movie->poster_path }}"
+                    alt="{{ $movie->poster_path }}"
                     class="w-full rounded-lg shadow-lg"
                 />
 
@@ -35,7 +35,7 @@
                 >
                     <button
                         type="button"
-                        class="w-full bg-primary-500 text-white py-2 rounded-md hover:bg-primary-600 transition-colors"
+                        class="w-full bg-primary-500 text-neutral-800 py-2 rounded-md hover:bg-primary-600 transition-colors"
                     >
                         Add to Watchlist
                     </button>
@@ -58,30 +58,26 @@
             {{-- Right column: Movie details --}}
             <div class="flex-grow text-primary-500">
                 {{-- Title and tagline --}}
-                <h1 class="text-4xl font-bold">{{ $movie['title'] }}</h1>
-                @if (!empty($movie['tagline']))
-                    <p class="text-xl italic mt-2 text-primary-400">{{ $movie['tagline'] }}</p>
+                <h1 class="text-4xl font-bold">{{ $movie->title }}</h1>
+                @if (!empty($movie->tagline))
+                    <p class="text-xl italic mt-2 text-primary-400">{{ $movie->tagline }}</p>
                 @endif
 
                 {{-- Meta information --}}
                 <div class="flex items-center gap-4 mt-4">
-                    @php
-                        // Parse release date info (placeholder usage)
-                        $parsedReleaseDate = Carbon::parse($movie['release_date'])->format('F d, Y');
-                    @endphp
-                    <span>{{ $parsedReleaseDate }}</span>
-                    <span>{{ $movie['runtime'] }} min</span>
+                    <span>{{ $movie->release_date->format('F d, Y') }}</span>
+                    <span>{{ $movie->runtime }} min</span>
                 </div>
 
                 {{-- Genres --}}
-                @if (!empty($movie['genres']))
+                @if (!empty($movie->genres))
                     <div class="flex gap-2 mt-4">
-                        @foreach ($movie['genres'] as $genre)
+                        @foreach ($movie->genres as $genre)
                             <a
-                                href="{{ route('movies.index', ['genre' => $genre['slug'] ?? 'genre-placeholder']) }}"
+                                href="{{ route('movies.index', ['genre' => $genre->name ?? 'genre-placeholder']) }}"
                                 class="px-3 py-1 rounded-full border border-primary-500 text-sm hover:bg-primary-500 hover:text-white transition-colors"
                             >
-                                {{ $genre['name'] }}
+                                {{ $genre->name }}
                             </a>
                         @endforeach
                     </div>
@@ -93,7 +89,7 @@
                 {{-- Overview --}}
                 <div class="mt-8">
                     <h2 class="text-xl font-semibold mb-2">Overview</h2>
-                    <p class="text-primary-400 leading-relaxed">{{ $movie['overview'] }}</p>
+                    <p class="text-primary-400 leading-relaxed">{{ $movie->overview }}</p>
                 </div>
 
                 {{-- User Actions Row --}}
@@ -124,12 +120,12 @@
                 </form>
 
                 {{-- Cast & Crew Tabs --}}
-                <x-cast-crew-tabs :credits="$credits"/>
+                <x-cast-crew-tabs :cast="$movie->cast" :crew="$movie->crew"/>
 
                 {{-- Reviews --}}
-                <div class="mt-8" id="movie_reviews">
-                    <x-movie-reviews :movie="$movie"/>
-                </div>
+                {{--                <div class="mt-8" id="movie_reviews">--}}
+                {{--                    <x-movie-reviews :movie="$movie"/>--}}
+                {{--                </div>--}}
             </div>
         </div>
     </div>

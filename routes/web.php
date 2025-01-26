@@ -3,9 +3,19 @@
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
+// Homepage
 Route::get('/', function () {
     return view('index');
 });
+
+// About
+Route::prefix('about')->group(function () {
+    Route::view('/faq', 'about.faq')->name('about.faq');
+    Route::view('/creating-data', 'about.creating-data')->name('about.creating-data');
+});
+
+// Redirect /about to faq
+Route::redirect('/about', '/about/faq');
 
 // AUTH
 Route::get('/login', function () {
@@ -38,9 +48,13 @@ Route::get('/search', function () {
     );
 })->name('search');
 
-Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
+Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
 
-Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
+Route::resource('movies', MovieController::class)->only([
+    'index', 'show', 'create', 'store', 'edit', 'update', 'destroy'
+]);
+
 
 Route::get('/search/{id}', function ($id) {
     return array(

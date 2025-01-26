@@ -17,7 +17,6 @@ return new class extends Migration {
             // Typical Crew info
             $table->string('department');
             $table->string('job');
-            $table->string('profile_path')->nullable();
             $table->string('name');
             $table->foreignIdFor(Person::class)->constrained('people');
 

@@ -1,5 +1,5 @@
 <header class="border-b border-primary-600 shadow-md bg-neutral-950">
-    <div class="container max-w-7xl">
+    <div class="container max-w-6xl">
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}
             <div class="flex-shrink-0">

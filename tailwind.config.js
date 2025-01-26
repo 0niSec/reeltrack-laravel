@@ -18,21 +18,21 @@ export default {
                 sans: ['Poppins', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                primary: {
-                    50: "#fdf3f3",
-                    100: "#fce4e4",
-                    200: "#facece",
-                    300: "#f6abab",
-                    400: "#ef7a7a",
-                    500: "#e35050",
-                    600: "#d03232",
-                    700: "#a22424",
-                    800: "#902424",
-                    900: "#782424",
-                    950: "#410e0e",
-                },
+                "primary": {
+                    50: '#FCE4BB',
+                    100: '#FBDCA8',
+                    200: '#FACD81',
+                    300: '#F8BD59',
+                    400: '#F7AE32',
+                    500: '#F59E0B',
+                    600: '#C07C08',
+                    700: '#8A5906',
+                    800: '#543603',
+                    900: '#1E1401',
+                    950: '#030200'
+                }
             },
         },
     },
-    plugins: [],
+    plugins: ['typography'],
 };
