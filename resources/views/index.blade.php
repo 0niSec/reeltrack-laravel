@@ -38,7 +38,7 @@
             </div>
 
             <!-- Feature Cards -->
-            <div class="container mx-auto mt-40">
+            <div class="container mt-40">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Track Card -->
                     <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur-sm border border-primary-700">

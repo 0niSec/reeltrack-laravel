@@ -6,7 +6,7 @@
         <button
             type="button"
             class="pb-2 font-bold"
-            :class="activeTab === 'cast' ? 'text-primary-500 font-bold border-b-2 border-primary-500' : 'text-primary-400 font-bold'"
+            :class="activeTab === 'cast' ? 'text-primary-500 font-bold border-b-2 border-primary-500 cursor-pointer' : 'text-primary-400 font-bold cursor-pointer'"
             @click="activeTab = 'cast'"
         >
             Cast
@@ -14,7 +14,7 @@
         <button
             type="button"
             class="pb-2 font-bold"
-            :class="activeTab === 'crew' ? 'text-primary-500 font-bold border-b-2 border-primary-500' : 'text-primary-400 font-bold'"
+            :class="activeTab === 'crew' ? 'text-primary-500 font-bold border-b-2 border-primary-500 cursor-pointer' : 'text-primary-400 font-bold cursor-pointer'"
             @click="activeTab = 'crew'"
         >
             Crew

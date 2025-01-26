@@ -3,11 +3,9 @@
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}
             <div class="shrink-0">
-                <h1 class="text-neutral-200 font-bold text-xl">
-                    <a href="{{ url('/') }}" class="hover:text-primary-500 transition-colors">
-                        Reeltrack
-                    </a>
-                </h1>
+                <a href="{{ url('/') }}" class="hover:text-primary-500 text-2xl font-bold transition-colors">
+                    Reeltrack
+                </a>
             </div>
 
             {{-- Search --}}
