@@ -21,7 +21,7 @@
             @include('movies.partials.movie_actions')
         </div>
     @else
-        <div class="aspect-[2/3] overflow-hidden rounded-lg">
+        <div class="aspect-2/3 overflow-hidden rounded-lg">
             <img
                 src="{{'https://placehold.co/800x1280?text=' . $formattedTitle . '&font=Poppins'}}"
                 alt="Movie Poster"

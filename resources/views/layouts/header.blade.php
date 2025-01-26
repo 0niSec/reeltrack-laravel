@@ -2,7 +2,7 @@
     <div class="container max-w-6xl">
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 <h1 class="text-neutral-200 font-bold text-xl">
                     <a href="{{ url('/') }}" class="hover:text-primary-500 transition-colors">
                         Reeltrack
@@ -18,7 +18,7 @@
                         name="q"
                         placeholder="Search"
                         class="border border-neutral-700 rounded-md px-2 py-1 text-neutral-200 bg-neutral-800
-                               focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                               focus:border-primary-500 focus:outline-hidden focus:ring-2 focus:ring-primary-500"
                     >
                     <button
                         type="submit"

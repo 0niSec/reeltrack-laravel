@@ -5,7 +5,7 @@
         data-action="dropdown#toggle"
         class="bg-transparent text-primary-500 text-sm p-1 pr-8
                border-primary-950 border rounded-md
-               focus:outline-none focus:ring-0
+               focus:outline-hidden focus:ring-0
                flex items-center"
     >
         <span>{{ $button_text }}</span>

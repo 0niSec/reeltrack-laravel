@@ -5,7 +5,7 @@
     <div class="relative">
         <!-- Background gradient -->
         <div class="absolute min-h-screen inset-x-0 -z-10">
-            <div class="min-h-screen bg-gradient-to-b from-primary-900/50 bg-no-repeat"></div>
+            <div class="min-h-screen bg-linear-to-b from-primary-900/50 bg-no-repeat"></div>
         </div>
 
         <!-- Anime.js animation container -->
@@ -41,7 +41,7 @@
             <div class="container mx-auto mt-40">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Track Card -->
-                    <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur border border-primary-700">
+                    <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur-sm border border-primary-700">
                         <div class="text-primary-400 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -56,7 +56,7 @@
                     </div>
 
                     <!-- Discover Card -->
-                    <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur border border-primary-700">
+                    <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur-sm border border-primary-700">
                         <div class="text-primary-400 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
@@ -70,7 +70,7 @@
                     </div>
 
                     <!-- Share Card -->
-                    <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur border border-primary-700">
+                    <div class="bg-primary-800/30 p-6 rounded-lg backdrop-blur-sm border border-primary-700">
                         <div class="text-primary-400 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">

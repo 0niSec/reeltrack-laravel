@@ -8,7 +8,7 @@
     </x-slot:title>
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-neutral-900 to-transparent"></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -20,7 +20,7 @@
     <div class="container max-w-6xl mx-auto -mt-64 relative z-10">
         <div class="flex gap-8">
             {{-- Left column: Poster and actions --}}
-            <div class="w-[300px] flex-shrink-0">
+            <div class="w-[300px] shrink-0">
                 <img
                     src="{{ $movie->poster_path }}"
                     alt="{{ $movie->poster_path }}"
@@ -56,7 +56,7 @@
             </div>
 
             {{-- Right column: Movie details --}}
-            <div class="flex-grow text-primary-500">
+            <div class="grow text-primary-500">
                 {{-- Title and tagline --}}
                 <h1 class="text-4xl font-bold">{{ $movie->title }}</h1>
                 @if (!empty($movie->tagline))

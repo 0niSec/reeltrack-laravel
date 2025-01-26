@@ -29,7 +29,7 @@
                     <img
                         src="{{ $castMember->person->profile_path
             ??
-             'https://ui-avatars.com/api/?name=' . urlencode($castMember->person->name) . '&background=F6AF9D&rounded=true' }}"
+             'https://ui-avatars.com/api/?name=' . urlencode($castMember->person->name) . '&background=F6AF9D&rounded-sm=true' }}"
                         alt="{{ $castMember->name ?? 'Unknown Actor' }}"
                         class="w-12 h-12 rounded-full object-cover"
                     />
@@ -52,7 +52,7 @@
                     <img
                         src="{{ $crewMember->person->profile_path
             ??
-             'https://ui-avatars.com/api/?name=' . urlencode($crewMember->person->name) . '&background=F6AF9D&rounded=true' }}"
+             'https://ui-avatars.com/api/?name=' . urlencode($crewMember->person->name) . '&background=F6AF9D&rounded-sm=true' }}"
 
                         alt="{{ $crewMember->name ?? 'Unknown Crew Member' }}"
                         class="w-12 h-12 rounded-full object-cover"
