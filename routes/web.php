@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\TvSeriesController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
 Route::get('/', function () {
     return view('index');
 });
+
+Route::view('/welcome', 'welcome')->name('welcome');
 
 // About
 Route::prefix('about')->group(function () {
@@ -33,7 +36,6 @@ Route::get('/register', function () {
 Route::get('/logout', function () {
     return [];
 })->name('logout');
-// END AUTH
 
 Route::get('/profile', function () {
     return [
@@ -52,6 +54,10 @@ Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies
 Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
 
 Route::resource('movies', MovieController::class)->only([
+    'index', 'show', 'create', 'store', 'edit', 'update', 'destroy'
+]);
+
+Route::resource('series', TvSeriesController::class)->only([
     'index', 'show', 'create', 'store', 'edit', 'update', 'destroy'
 ]);
 

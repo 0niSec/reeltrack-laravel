@@ -1,5 +1,5 @@
-<nav class="border-r col-span-1 w-fit pr-10 border-neutral-500" aria-label="Sidebar Navigation">
-    <ul class="space-y-2">
+<nav class="border-r col-span-1 w-fit h-fit pb-4 pr-10 border-neutral-500" aria-label="Sidebar Navigation">
+    <ul class="space-y-2 font-medium">
         <li>
             <x-nav-link href="{{  route('about.faq') }}">
                 FAQ

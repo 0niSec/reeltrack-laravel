@@ -1,4 +1,4 @@
-<header class="border-b border-primary-600 shadow-md bg-neutral-950">
+<header class="border-b border-primary-600 shadow-md shadow-zinc-800 bg-zinc-950">
     <div class="container max-w-6xl">
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}
@@ -15,7 +15,7 @@
                         type="text"
                         name="q"
                         placeholder="Search"
-                        class="border border-neutral-700 rounded-md px-2 py-1 text-neutral-200 bg-neutral-800
+                        class="border border-zinc-700 rounded-md px-2 py-1 text-zinc-200 bg-zinc-800
                                focus:border-primary-500 focus:outline-hidden focus:ring-2 focus:ring-primary-500"
                     >
                     <button
@@ -28,7 +28,7 @@
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="w-5 h-5 text-neutral-200"
+                            class="w-5 h-5 text-zinc-200"
                         >
                             <path
                                 stroke-linecap="round"
@@ -48,7 +48,7 @@
                     Movies
                 </a>
                 <a href="#" class="font-bold hover:text-primary-500 transition-colors">
-                    Shows
+                    TV
                 </a>
                 <a href="#" class="font-bold hover:text-primary-500 transition-colors">
                     Lists

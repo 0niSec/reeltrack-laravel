@@ -12,7 +12,7 @@ class MovieSeeder extends Seeder
     public function run(): void
     {
         $tmdb = new TmdbService();
-        $randomIds = collect(range(1, 3991))->random(25);
+        $randomIds = [120, 121, 122, 49051, 122917, 57158];
 
         foreach ($randomIds as $id) {
             // Fetch the main movie details.

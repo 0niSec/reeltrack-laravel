@@ -59,17 +59,33 @@
 }
 
 ::selection {
-    @apply bg-primary-500 text-neutral-800;
+    @apply bg-primary-500 text-zinc-800;
 }
 
-/*h1 {*/
-/*    @apply text-4xl font-bold;*/
-/*}*/
+article a {
+    @apply hover:underline underline-offset-4;
+}
 
-/*h2 {*/
-/*    @apply text-2xl font-bold;*/
-/*}*/
+article h1 {
+    @apply mb-6;
+    /* Larger margin for the main heading */
+}
 
-/*h3 {*/
-/*    @apply text-xl font-bold;*/
-/*}*/
+article h2 {
+    @apply mb-4 text-zinc-500;
+}
+
+article h3 {
+    @apply mb-3;
+}
+
+article p {
+    @apply mb-4;
+    /* Space at the bottom of each paragraph */
+}
+
+article h1:not(:first-child), article h2, article h3 {
+    @apply mt-8;
+    /* Adds top margin to create space before the heading */
+}
+

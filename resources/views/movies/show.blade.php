@@ -8,7 +8,7 @@
     </x-slot:title>
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-linear-to-t from-neutral-900 to-transparent"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-zinc-900 to-transparent"></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -35,7 +35,7 @@
                 >
                     <button
                         type="button"
-                        class="w-full bg-primary-500 text-neutral-800 py-2 rounded-md hover:bg-primary-600 transition-colors"
+                        class="w-full bg-primary-500 text-zinc-800 py-2 rounded-md hover:bg-primary-600 transition-colors"
                     >
                         Add to Watchlist
                     </button>
@@ -43,7 +43,7 @@
                     <button
                         type="button"
                         data-action="modal#open"
-                        class="w-full bg-neutral-800 text-primary-500 py-2 rounded-md hover:bg-neutral-700 transition-colors"
+                        class="w-full bg-zinc-800 text-primary-500 py-2 rounded-md hover:bg-zinc-700 transition-colors"
                     >
                         Review Movie
                     </button>
@@ -107,7 +107,7 @@
                                 type="date"
                                 name="watched_date"
                                 value="{{ now()->format('Y-m-d') }}"
-                                class="bg-neutral-800 text-primary-400 border border-neutral-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500"
+                                class="bg-zinc-800 text-primary-400 border border-zinc-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500"
                             />
                         </div>
 

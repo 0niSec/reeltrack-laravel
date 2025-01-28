@@ -70,7 +70,7 @@
         </div>
 
         {{-- Copyright --}}
-        <div class="mt-8 pt-8 border-t border-primary-700 text-center text-neutral-400">
+        <div class="mt-8 pt-8 border-t border-primary-700 text-center text-zinc-400">
             <p>
                 &copy; {{ now()->year }} Reeltrack. All rights reserved.
             </p>
