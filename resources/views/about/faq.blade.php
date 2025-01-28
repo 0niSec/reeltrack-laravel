@@ -9,7 +9,7 @@
     <div class="col-span-3">
         <article class="leading-relaxed">
             {{-- About --}}
-            <h1 class="border-b pb-2 border-b-primary-500">About</h1>
+            <h1 class="border-b border-b-primary-500">About</h1>
 
             <h2>What is Reeltrack?</h2>
             <p>Reeltrack is a personal project of mine that started as a way to learn
@@ -32,7 +32,7 @@
                 sign up for KoFi or Patreon to help me keep the lights on, but I will not place any ads on the site.</p>
 
             {{-- Membership --}}
-            <h1 class="border-b pb-2 border-b-primary-500">Membership</h1>
+            <h1 class="border-b border-b-primary-500">Membership</h1>
 
             <h2>Do I need an account?</h2>
             <p>No, you do not need an account to view any of the content on this site. All content provided is offered
@@ -68,7 +68,7 @@
                 costs, but that would be the only thing I am considering for the time being.</p>
 
             {{-- Features --}}
-            <h1 class="border-b pb-2 border-b-primary-500">General</h1>
+            <h1 class="border-b border-b-primary-500">General</h1>
 
             <h2>How do I use the site?</h2>
             <p>However you like! This is meant to be a place to keep track of things you've watched, things you want to
@@ -151,7 +151,7 @@
                 .
             </p>
 
-            <h1 class="border-b pb-2 border-b-primary-500">Technical</h1>
+            <h1 class="border-b border-b-primary-500">Technical</h1>
 
             <h2>Why Laravel and PHP?</h2>
             <p>Why not? I develop and program as a hobby, and after using <em>so</em> many Javascript frameworks (Nuxt,
@@ -171,7 +171,7 @@
                 haven't decided if I will make the repo public on Github because I've never developed in a team
                 before.</p>
 
-            <h1 class="border-b pb-2 border-b-primary-500">Legal</h1>
+            <h1 class="border-b border-b-primary-500">Legal</h1>
 
             <h2>Do you have legal documents I can read?</h2>
             <p>Yes.</p>

@@ -19,7 +19,7 @@
 {{-- Filters --}}
 <x-app>
     <x-slot:title>
-        Movies | Reeltrack
+        Movies
     </x-slot:title>
     <div class="container max-w-6xl my-10 flex flex-row items-center space-x-2">
         <span class="font-medium">Browse By</span>

@@ -50,15 +50,22 @@ Route::get('/search', function () {
     );
 })->name('search');
 
+Route::get('/tmdb/{id}', function ($id) {
+    return array(
+        'success' => true,
+        'data' => $id,
+    );
+});
+
 Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
 Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
 
 Route::resource('movies', MovieController::class)->only([
-    'index', 'show', 'create', 'store', 'edit', 'update', 'destroy'
+    'index', 'show', 'create', 'store', 'edit', 'update', 'destroy',
 ]);
 
 Route::resource('series', TvSeriesController::class)->only([
-    'index', 'show', 'create', 'store', 'edit', 'update', 'destroy'
+    'index', 'show', 'create', 'store', 'edit', 'update', 'destroy',
 ]);
 
 
