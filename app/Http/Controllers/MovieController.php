@@ -13,7 +13,7 @@ class MovieController extends Controller
     public function index(): View
     {
         // Get the newest movies from db
-        $movies = Movie::orderBy('created_at', 'desc')->take(5)->get();
+        $movies = Movie::latest()->take(5)->get();
 
         return view('movies.index', compact('movies'));
     }
@@ -24,7 +24,12 @@ class MovieController extends Controller
      */
     public function show(string $movie_id): View
     {
+        // TODO: Handle where the ID doesn't exist
         $movie = Movie::with('cast.person', 'crew.person', 'genres')->where('id', $movie_id)->first();
+
+        if (!$movie) {
+            abort(404);
+        }
 
         return view('movies.show', compact('movie'));
     }

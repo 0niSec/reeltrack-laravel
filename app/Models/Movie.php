@@ -9,24 +9,20 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Movie extends Model
 {
-    protected function casts(): array
-    {
-        return [
-            'release_date' => 'date',
-            'runtime' => 'integer',
-        ];
-    }
-
     protected $fillable = [
         'title',
-        'release_date',
-        'runtime',
-        'description',
-        'poster_path',
         'backdrop_path',
-        'trailer_path',
-        'imdb_id',
+        'poster_path',
+        'overview',
+        'tagline',
+        'runtime',
         'tmdb_id',
+        'release_date',
+        'ratings_count',
+        'rating_average',
+        'total_reviews',
+        'total_ratings',
+        'total_likes',
     ];
 
     public function cast(): MorphMany
@@ -57,5 +53,13 @@ class Movie extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'release_date' => 'date',
+            'runtime' => 'integer',
+        ];
     }
 }

@@ -4,14 +4,14 @@ namespace Database\Seeders;
 
 use App\Models\Movie;
 use App\Models\Person;
-use App\Services\TmdbService;
+use App\Services\TmdbApiService;
 use Illuminate\Database\Seeder;
 
 class MovieSeeder extends Seeder
 {
     public function run(): void
     {
-        $tmdb = new TmdbService();
+        $tmdb = new TmdbApiService();
         $randomIds = [120, 121, 122, 49051, 122917, 57158];
 
         foreach ($randomIds as $id) {
@@ -40,7 +40,7 @@ class MovieSeeder extends Seeder
                 ]);
             }
 
-            // Fetch credits.
+            // Fetch credits
             $credits = $tmdb->movieCredits($id);
             $castArray = $credits['cast'] ?? [];
             $crewArray = $credits['crew'] ?? [];

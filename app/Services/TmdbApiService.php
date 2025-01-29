@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class TmdbService
+class TmdbApiService
 {
     private const BASE_URL = 'https://api.themoviedb.org/3/'; // ensure “/3/” is included
     private const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
@@ -29,6 +29,28 @@ class TmdbService
     public function findMovie(int $tmdbId): array
     {
         return $this->get("movie/{$tmdbId}");
+    }
+
+    /**
+     * Internal helper to perform GET requests.
+     */
+    private function get(string $path): array
+    {
+        try {
+            $response = $this->client->get($path, [
+                'query' => [
+                    'language' => 'en-US',
+                ],
+            ]);
+
+            $parsed = json_decode($response->getBody()->getContents(), true);
+
+            return $parsed ?? [];
+        } catch (Throwable $e) {
+            Log::error('TMDB API Error: '.$e->getMessage());
+
+            return [];
+        }
     }
 
     public function popularMovies(): array
@@ -67,25 +89,5 @@ class TmdbService
         }
 
         return self::IMAGE_BASE_URL."/{$size}{$path}";
-    }
-
-    /**
-     * Internal helper to perform GET requests.
-     */
-    private function get(string $path): array
-    {
-        try {
-            $response = $this->client->get($path, [
-                'query' => [
-                    'language' => 'en-US',
-                ],
-            ]);
-
-            $parsed = json_decode($response->getBody()->getContents(), true);
-            return $parsed ?? [];
-        } catch (Throwable $e) {
-            Log::error('TMDB API Error: '.$e->getMessage());
-            return [];
-        }
     }
 }
