@@ -26,13 +26,20 @@
         <div class="grid grid-cols-2 gap-4">
             @foreach (collect($cast) as $castMember)
                 <div class="flex items-center gap-3">
-                    <img
-                        src="{{ $castMember->person->profile_path
-            ??
-             'https://ui-avatars.com/api/?name=' . urlencode($castMember->person->name) . '&background=F6AF9D&rounded-sm=true' }}"
-                        alt="{{ $castMember->name ?? 'Unknown Actor' }}"
-                        class="w-12 h-12 rounded-full object-cover"
-                    />
+                    @if($castMember->person->profile_path != null)
+                        <img
+                            src="{{ $castMember->person->profile_path }}"
+                            alt="{{ $castMember->name ?? 'Unknown Actor' }}"
+                            class="w-12 h-12 rounded-full object-cover"
+                        />
+                    @else
+                        <img
+                            src="'https://ui-avatars.com/api/?name='. {{  urlencode($castMember->person->name) }} .
+                            '&background=F6AF9D&rounded-sm=true'"
+                            alt="{{ $castMember->name ?? 'Unknown Actor' }}"
+                            class="w-12 h-12 rounded-full object-cover"/>
+                    @endif
+                    
                     <div>
                         <div class="font-medium">{{ $castMember->name }}</div>
                         <div class="text-sm font-medium text-primary-400">

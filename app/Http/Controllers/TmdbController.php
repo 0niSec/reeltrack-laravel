@@ -2,71 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
-use App\Services\CreditsService;
+use App\Jobs\ImportMovieJob;
 use App\Services\TmdbApiService;
+use Cache;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 
 class TmdbController extends Controller
 {
     /**
-     * Finds an existing movie or TV series and lets the user know it already exists
-     * or creates a new listing from the TMDb API
-     * @param  TmdbApiService  $tmdb
+     * Finds or creates a movie record from the TMDb API.
+     *
+     * This method queues an ImportMovieJob to fetch extended details and store them
+     * in the database in the background.
+     *
+     * The method will redirect the user to the `/movies` page.
+     *
      * @param  string  $type
      * @param  string  $id
      * @return RedirectResponse
+     * @uses ImportMovieJob
+     *
      */
-    public function findOrCreate(TmdbApiService $tmdb, CreditsService $creditsService, string $type, string $id):
+    public function findOrCreate(TmdbApiService $tmdb, string $type, string $id):
     RedirectResponse {
+        // Check if the type is 'movie'
         if ($type === 'movie') {
-            // TODO: What happens if $id is invalid?
+            // Validate that the given ID is actually valid
             $movieDetails = $tmdb->movieDetails($id);
-            $genres = $movieDetails['genres'];
-            $credits = $tmdb->movieCredits($id);
+            if (!$movieDetails) {
+                // If the ID is invalid, don't enqueue the job
+                return redirect()->route('movies.index')->with('error', 'Movie not found.');
+            }
 
-            // Create the movie record in the movies table
-            // Use a DB::transaction due to the complexity, and we want to have Eloquent automatically rollback
-            // if something goes wrong
-            DB::transaction(function () use ($tmdb, $creditsService, $movieDetails, $genres, $credits) {
-                $movie = Movie::firstOrCreate([
-                    'tmdb_id' => $movieDetails['id'],
-                ], [
-                    'title' => $movieDetails['title'],
-                    'overview' => $movieDetails['overview'],
-                    'poster_path' => $tmdb->posterUrl($movieDetails['poster_path']),
-                    'backdrop_path' => $tmdb->backdropUrl($movieDetails['backdrop_path']),
-                    'release_date' => $movieDetails['release_date'],
-                    'runtime' => $movieDetails['runtime'],
-                    'tagline' => $movieDetails['tagline'],
-                    'tmdb_id' => $movieDetails['id'],
-                ]);
+            $lock = Cache::lock('movie_import_lock'.$id, 10); // Lock for 10 seconds
 
-                // Loop over the genres array
-                // and add the records to the genres table
-                foreach ($genres as $genre) {
-                    $movie->genres()->updateOrCreate([
-                        'name' => $genre['name'],
-                        'tmdb_id' => $genre['id'],
-                    ]);
+            if ($lock->get()) {
+                // Check if the job requested is already in the jobs queue to be run
+                if (Cache::has('movie_import_'.$id)) {
+                    $lock->release();
+
+                    return redirect()->route('movies.index')->with('warning',
+                        'Movie import job already in progress with this job ID. Please wait for the import to complete.');
                 }
 
-                // Store the cast members and their related person data
-                $creditsService->storeCastMembers($credits['cast'], $movie);
+                Cache::put('movie_import_'.$id, true, 600); // Cache for 10 minutes
 
-                // Store the crew members and their related person data
-                $creditsService->storeCrewMembers($credits['crew'], $movie);
-            });
+                // Dispatch the job
+                ImportMovieJob::dispatch($type, $id);
 
-            return redirect()->route('movies.show',
-                Movie::with('cast.person', 'crew.person', 'genres')->where('tmdb_id', $movieDetails['id'])->first())
-                ->with
-                ('status',
-                    'Movie added successfully.');
+                // Release the lock
+                $lock->release();
+
+                // Return a quick response
+                return redirect()->route('movies.index')->with('status', 'Movie added to queue. Check back shortly!');
+            } else {
+                // If the lock cannot be acquired, return a warning
+                return redirect()->route('movies.index')->with('error',
+                    'Unable to process request. Please try again later.');
+            }
         }
-
-        return redirect()->route('movies.index')->with('status', 'Movie not found.');
     }
-
 }

@@ -52,7 +52,7 @@ Route::get('/search', function () {
 })->name('search');
 
 Route::get('/tmdb/{type}/{id}', [TmdbController::class, 'findOrCreate'])
-    ->whereIn('type', ['movie', 'tv'])
+    ->whereIn('type', ['movie', 'tv'])->whereNumber('id')
     ->name('findOrCreate');
 
 Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');

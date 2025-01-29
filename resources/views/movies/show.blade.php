@@ -16,6 +16,15 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="absolute bg-red-600 rounded-md p-4 top-50 bottom-0 left-0 right-0 z-10">
+            <div class="alert">
+                {{ session('error') }}
+            </div>
+
+        </div>
+    @endif
+
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
         <div class="absolute inset-0 bg-linear-to-t from-zinc-900 to-transparent"></div>
