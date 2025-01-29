@@ -86,6 +86,7 @@ class MovieSeeder extends Seeder
                 }
 
                 $personDetails = $tmdb->personDetails($member['id']);
+
                 if (!$personDetails || empty($personDetails['id'])) {
                     continue;
                 }

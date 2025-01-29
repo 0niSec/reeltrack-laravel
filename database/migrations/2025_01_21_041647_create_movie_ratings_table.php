@@ -12,8 +12,11 @@ return new class extends Migration {
         Schema::create('movie_ratings', function (Blueprint $table) {
             $table->id();
             $table->decimal('rating', 3);
-            $table->foreignIdFor(Movie::class)->constrained('movies');
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(Movie::class)->constrained('movies')->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+
+            $table->index('movie_id');
+
             $table->timestamps();
         });
     }

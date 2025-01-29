@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('tmdb_id');
+            $table->unsignedBigInteger('tmdb_id')->unique();
             $table->text('biography')->nullable();
             $table->string('profile_path')->nullable();
             $table->string('birthday')->nullable();

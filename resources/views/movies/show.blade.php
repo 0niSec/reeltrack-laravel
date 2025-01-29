@@ -6,6 +6,16 @@
     <x-slot:title>
         {{ $movie->title }} - ReelTrack
     </x-slot:title>
+
+    {{-- Flash Message Container --}}
+    @if(session('status'))
+        <div class="absolute bg-green-600 rounded-md p-4 top-10 bottom-10 left-10 right-10">
+            <div class="alert">
+                {{ session('status') }}
+            </div>
+        </div>
+    @endif
+
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
         <div class="absolute inset-0 bg-linear-to-t from-zinc-900 to-transparent"></div>

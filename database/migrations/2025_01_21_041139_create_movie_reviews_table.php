@@ -12,8 +12,11 @@ return new class extends Migration {
         Schema::create('movie_reviews', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->foreignIdFor(Movie::class)->constrained('movies');
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(Movie::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+
+            $table->index('movie_id');
+
             $table->timestamps();
         });
     }

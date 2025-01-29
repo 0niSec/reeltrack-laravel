@@ -19,18 +19,15 @@ class MovieController extends Controller
     }
 
     /**
-     * @param  string  $movie_id
+     * @param  Movie  $movie
      * @return View
      */
-    public function show(string $movie_id): View
+    public function show(Movie $movie): View
     {
-        // TODO: Handle where the ID doesn't exist
-        $movie = Movie::with('cast.person', 'crew.person', 'genres')->where('id', $movie_id)->first();
+        // Eager load the relationships to reduce number of queries
+        $movie->load('cast.person', 'crew.person', 'genres');
 
-        if (!$movie) {
-            abort(404);
-        }
-
+        // Return the view
         return view('movies.show', compact('movie'));
     }
 

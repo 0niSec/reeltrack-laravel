@@ -21,6 +21,17 @@
     <x-slot:title>
         Movies
     </x-slot:title>
+    
+    {{-- Flash Message Container --}}
+    @if(session('status'))
+        <div class="absolute top-10 bottom-10 left-10 right-10">
+            <div class="alert">
+                {{ session('status') }}
+            </div>
+        </div>
+    @endif
+
+
     <div class="container max-w-6xl my-10 flex flex-row items-center space-x-2">
         <span class="font-medium">Browse By</span>
 

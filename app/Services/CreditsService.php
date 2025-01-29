@@ -23,7 +23,9 @@ class CreditsService
      */
     public function storeCastMembers(array $castMembers, Movie $movie): void
     {
-        DB::transaction(function () use ($castMembers, $movie) {
+        $tmdb = new TmdbApiService();
+
+        DB::transaction(function () use ($tmdb, $castMembers, $movie) {
             foreach ($castMembers as $castMember) {
                 // Find or create the person
                 $person = $this->personService->updateOrCreatePerson($castMember);

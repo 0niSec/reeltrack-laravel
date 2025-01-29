@@ -12,8 +12,11 @@ return new class extends Migration {
         Schema::create('movie_likes', function (Blueprint $table) {
             $table->id();
             $table->boolean('liked')->default(false);
-            $table->foreignIdFor(Movie::class)->constrained('movies');
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(Movie::class)->constrained('movies')->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+
+            $table->index('movie_id');
+
             $table->timestamps();
         });
     }
