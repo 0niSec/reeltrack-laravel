@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
 use Illuminate\Support\Facades\Route;
@@ -8,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 // Homepage
 Route::get('/', function () {
     return view('index');
-});
+})->name('index');
 
 Route::view('/welcome', 'welcome')->name('welcome');
 
@@ -28,11 +29,7 @@ Route::get('/login', function () {
     ];
 })->name('login');
 
-Route::get('/register', function () {
-    return [
-        'success' => true,
-    ];
-})->name('register');
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 
 Route::get('/logout', function () {
     return [];
