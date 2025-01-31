@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\RegisteredUserController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
 use Illuminate\Support\Facades\Route;
@@ -23,21 +24,18 @@ Route::prefix('about')->group(function () {
 Route::redirect('/about', '/about/faq');
 
 // AUTH
-Route::get('/login', function () {
-    return [
-        'success' => true,
-    ];
-})->name('login');
+Route::get('/login', [SessionController::class, 'create'])->name('login');
+Route::post('/login', [SessionController::class, 'store']);
+Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
 
-Route::get('/logout', function () {
-    return [];
-})->name('logout');
 
-Route::get('/profile', function () {
+Route::get('/users/profile/{id}', function ($id) {
     return [
         'success' => true,
+        'id' => $id,
     ];
 })->name('profile');
 // END AUTH

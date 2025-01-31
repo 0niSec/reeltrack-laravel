@@ -1,5 +1,5 @@
-<div>
-    <label for="{{ $for }}" class="block mb-2 text-sm font-medium text-zinc-200">
+<div class="flex items-center">
+    <label {{ $attributes->merge(['class' => 'text-sm font-medium text-zinc-200']) }}>
         {{ $slot }}
     </label>
 </div>

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ImportMovieJob;
 use App\Services\TmdbApiService;
-use Cache;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 
 class TmdbController extends Controller
 {
@@ -17,11 +17,11 @@ class TmdbController extends Controller
      *
      * The method will redirect the user to the `/movies` page.
      *
+     * @param  TmdbApiService  $tmdb
      * @param  string  $type
      * @param  string  $id
      * @return RedirectResponse
      * @uses ImportMovieJob
-     *
      */
     public function findOrCreate(TmdbApiService $tmdb, string $type, string $id):
     RedirectResponse {
@@ -34,32 +34,22 @@ class TmdbController extends Controller
                 return redirect()->route('movies.index')->with('error', 'Movie not found.');
             }
 
-            $lock = Cache::lock('movie_import_lock'.$id, 10); // Lock for 10 seconds
+            $lock = Cache::has('movie_import_'.$movieDetails['id']);
+            logger()->debug('Lock: '.$lock); // DEBUG: HELP
 
-            if ($lock->get()) {
-                // Check if the job requested is already in the jobs queue to be run
-                if (Cache::has('movie_import_'.$id)) {
-                    $lock->release();
-
-                    return redirect()->route('movies.index')->with('warning',
-                        'Movie import job already in progress with this job ID. Please wait for the import to complete.');
-                }
-
-                Cache::put('movie_import_'.$id, true, 600); // Cache for 10 minutes
-
-                // Dispatch the job
-                ImportMovieJob::dispatch($type, $id);
-
-                // Release the lock
-                $lock->release();
-
-                // Return a quick response
-                return redirect()->route('movies.index')->with('status', 'Movie added to queue. Check back shortly!');
+            if ($lock) {
+                return redirect()->route('movies.index')->with('warning',
+                    'There is a job already queued for import for that ID. Please wait and it should be available shortly.');
             } else {
-                // If the lock cannot be acquired, return a warning
-                return redirect()->route('movies.index')->with('error',
-                    'Unable to process request. Please try again later.');
+                Cache::put('movie_import_'.$movieDetails['id'], true, 120);
+                // Dispatch the job
+                ImportMovieJob::dispatch($movieDetails);
+
+                // Redirect success
+                return redirect()->route('movies.index')->with('status', 'Movie added to queue.');
             }
+        } else {
+            return redirect()->route('movies.index')->with('error', 'Invalid type.');
         }
     }
 }

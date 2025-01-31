@@ -8,42 +8,52 @@
             <p class="text-sm text-center text-zinc-300 mb-10">We're looking forward to having you!</p>
 
             <!-- Form Components -->
-            <form action="#" method="POST" class="flex flex-col space-y-3"
+            <form action="/register" method="POST" class="flex flex-col space-y-4"
                   aria-labelledby="register-heading">
                 @csrf
 
                 <!-- Username -->
                 <div>
-                    <x-form-label for="username" value="Username" aria-for="username">Username</x-form-label>
-                    <x-form-input placeholder="Enter a username" id="username" name="username" required
+                    <x-form-label for="username" value="Username" aria-for="username"
+                                  class="mb-1">Username
+                    </x-form-label>
+                    <x-form-input placeholder="ILoveMovies99" id="username" name="username" required
                                   aria-required="true"/>
+                    <x-form-error name="username"/>
                 </div>
 
                 <!-- Email -->
                 <div>
                     <x-form-label for="email" value="Email">Email</x-form-label>
-                    <x-form-input placeholder="Enter an email" id="email" name="email" required aria-required="true"
+                    <x-form-input placeholder="your.email@example.com" id="email" name="email" required
+                                  aria-required="true" class="mb-1"
                                   type="email"/>
+                    <x-form-error name="email"/>
                 </div>
 
                 <!-- Password -->
                 <div>
-                    <x-form-label for="password" value="Password">Password</x-form-label>
-                    <x-form-input placeholder="Enter a password" id="password" name="password" type="password" required
+                    <x-form-label for="password" value="Password" class="mb-1">Password</x-form-label>
+                    <x-form-input placeholder="M0v13s4r3Aw3s0m3!" id="password" name="password" type="password" required
                                   aria-required="true"/>
+                    <x-form-error name="password"/>
                 </div>
 
                 <!-- Password Confirmation -->
                 <div>
-                    <x-form-label for="password_confirmation" value="Confirm Password">Confirm Password</x-form-label>
+                    <x-form-label for="password_confirmation" value="Confirm Password" class="mb-1">Confirm
+                        Password
+                    </x-form-label>
                     <x-form-input placeholder="Confirm your password" id="password_confirmation"
-                                  name="password_confirmation" type="password" required aria-required="true"/>
+                                  name="password_confirmation" type="password" required
+                                  aria-required="true"/>
+                    <x-form-error name="password_confirmation"/>
                 </div>
 
-                <x-form-submit-button>Submit</x-form-submit-button>
+                <x-form-submit-button>Register</x-form-submit-button>
             </form>
             <div class="flex flex-row mt-10 items-center justify-between">
-                <p class="text-sm">Already have an account?
+                <p class="text-sm">Need to make an account?
                     <x-inline-link href="{{route('login')}}">Login</x-inline-link>
                 </p>
 

@@ -20,27 +20,30 @@ class ImportMovieJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private string $type;
+    private array $movieDetails;
     private string $id;
 
     public function __construct(
         // These can be used in `handle` and are created with the Job
-        string $type,
-        string $id
+        array $movieDetails
     ) {
-        $this->type = $type;
-        $this->id = $id;
+        $this->movieDetails = $movieDetails;
+        $this->id = (string) $movieDetails['id'];
     }
 
-    /* @noinspection PhpUnused */
+    /**
+     * Get the unique ID for the job.
+     * @see https://laravel.com/docs/11.x/queues#unique-jobs
+     * @noinspection PhpUnused
+     */
     public function uniqueId(): string
     {
-        return $this->type.':'.$this->id;
+        return 'movie_import_'.$this->id;
     }
 
     public function uniqueFor(): int
     {
-        return 120; // Lock for 120 seconds
+        return 120; // Unique for 2 minutes while processing
     }
 
     /**
@@ -50,26 +53,24 @@ class ImportMovieJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle(TmdbApiService $tmdb, CreditsService $creditsService): void
     {
-        // TODO: What happens if $id is invalid?
-        $movieDetails = $tmdb->movieDetails($this->id);
         $credits = $tmdb->movieCredits($this->id);
-        $genres = $movieDetails['genres'];
+        $genres = $this->movieDetails['genres'];
 
         // Create the movie record in the movies table
         // Use a DB::transaction due to the complexity, and we want to have Eloquent automatically rollback
         // if something goes wrong
-        DB::transaction(function () use ($tmdb, $creditsService, $movieDetails, $credits, $genres) {
+        DB::transaction(function () use ($tmdb, $creditsService, $credits, $genres) {
             $movie = Movie::firstOrCreate([
-                'tmdb_id' => $movieDetails['id'],
+                'tmdb_id' => $this->id,
             ], [
-                'title' => $movieDetails['title'],
-                'overview' => $movieDetails['overview'],
-                'poster_path' => $tmdb->posterUrl($movieDetails['poster_path']),
-                'backdrop_path' => $tmdb->backdropUrl($movieDetails['backdrop_path']),
-                'release_date' => $movieDetails['release_date'],
-                'runtime' => $movieDetails['runtime'],
-                'tagline' => $movieDetails['tagline'],
-                'tmdb_id' => $movieDetails['id'],
+                'title' => $this->movieDetails['title'],
+                'overview' => $this->movieDetails['overview'],
+                'poster_path' => $tmdb->posterUrl($this->movieDetails['poster_path']),
+                'backdrop_path' => $tmdb->backdropUrl($this->movieDetails['backdrop_path']),
+                'release_date' => $this->movieDetails['release_date'],
+                'runtime' => $this->movieDetails['runtime'],
+                'tagline' => $this->movieDetails['tagline'],
+                'tmdb_id' => $this->id,
             ]);
 
             // Loop over the genres array
@@ -87,7 +88,6 @@ class ImportMovieJob implements ShouldQueue, ShouldBeUnique
             // Store the crew members and their related person data
             $creditsService->storeCrewMembers($credits['crew'], $movie);
         });
-
         Cache::forget('movie_import_'.$this->id);
     }
 }

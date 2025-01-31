@@ -62,13 +62,13 @@
                             type="submit"
                             class="font-bold hover:text-primary-500 transition-colors"
                         >
-                            Sign Out
+                            Logout
                         </button>
                     </form>
 
                     {{-- Profile with Avatar --}}
                     <a
-                        href="{{ route('profile', ['user_id' => Auth::user()->id]) }}"
+                        href="{{ route('profile', ['id' => Auth::user()->id]) }}"
                         class="flex items-center space-x-2 hover:text-primary-500 transition-colors"
                     >
                         <img
@@ -78,15 +78,15 @@
                         >
                         <span class="font-bold">
                             <!-- TODO: Add this later -->
-                            {{-- Auth::user()->username --}}
+                            {{ Auth::user()->username }}
                         </span>
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="font-bold hover:text-primary-500 transition-colors">
-                        Sign In
+                        Login
                     </a>
                     <a href="{{ route('register') }}" class="font-bold hover:text-primary-500 transition-colors">
-                        Create Account
+                        Register
                     </a>
                 @endauth
             </nav>
