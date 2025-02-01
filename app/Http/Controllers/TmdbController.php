@@ -35,7 +35,6 @@ class TmdbController extends Controller
             }
 
             $lock = Cache::has('movie_import_'.$movieDetails['id']);
-            logger()->debug('Lock: '.$lock); // DEBUG: HELP
 
             if ($lock) {
                 return redirect()->route('movies.index')->with('warning',

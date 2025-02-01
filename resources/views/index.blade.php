@@ -1,6 +1,6 @@
 <x-app>
     <x-slot:title>
-        Home | Reeltrack
+        Home
     </x-slot:title>
     <div class="relative">
         <!-- Background gradient -->

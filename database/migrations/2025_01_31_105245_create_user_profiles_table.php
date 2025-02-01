@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->json('rated_items')->nullable();
             $table->json('reviewed_items')->nullable();
             $table->json('liked_items')->nullable();
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
