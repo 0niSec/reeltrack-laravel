@@ -35,7 +35,8 @@ class SessionController extends Controller
         $request->session()->regenerate();
 
         // Redirect back
-        return redirect()->route('profile', ['id' => Auth::user()->id])->with('success', 'You have been logged in.');
+        return redirect()->route('profile', ['user' => Auth::user()->username])->with('success',
+            'You have been logged in.');
     }
 
     public function destroy(Request $request): RedirectResponse

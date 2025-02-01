@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -32,11 +33,8 @@ Route::get('/register', [RegisteredUserController::class, 'create'])->name('regi
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
 
-Route::get('/users/profile/{id}', function ($id) {
-    return [
-        'success' => true,
-        'id' => $id,
-    ];
+Route::get('/users/profile/{user:username}', function (User $user) {
+    return view('users.profile.show', ['user' => $user]);
 })->name('profile');
 // END AUTH
 
