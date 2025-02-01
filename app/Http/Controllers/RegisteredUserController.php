@@ -25,6 +25,8 @@ class RegisteredUserController extends Controller
         // Create the user
         $user = User::create($attrs);
 
+        $user->profile()->create();
+
         //Log the user in
         Auth::login($user);
 
