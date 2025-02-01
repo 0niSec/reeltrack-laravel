@@ -26,16 +26,19 @@ Route::redirect('/about', '/about/faq');
 
 // AUTH
 Route::get('/login', [SessionController::class, 'create'])->name('login');
-Route::post('/login', [SessionController::class, 'store']);
+Route::post('/login', [SessionController::class, 'store'])->middleware('throttle:login');
 Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
 
-Route::get('/users/{user:username}/profile', [UserProfileController::class, 'show'])->whereAlphaNumeric('user:username')
+Route::get('/users/{user:username}/profile', [UserProfileController::class, 'show'])
+    ->whereAlphaNumeric('user:username')
     ->name('profile');
-Route::get('/users/{user:username}/profile/settings', [UserProfileController::class, 'edit'])->name('profile.edit');
+Route::get('/users/{user:username}/profile/settings', [UserProfileController::class, 'edit'])
+    ->name('profile.edit')
+    ->middleware('auth');
 
 // END AUTH
 
@@ -46,8 +49,10 @@ Route::get('/search', function () {
 })->name('search');
 
 Route::get('/tmdb/{type}/{id}', [TmdbController::class, 'findOrCreate'])
-    ->whereIn('type', ['movie', 'tv'])->whereNumber('id')
-    ->name('findOrCreate');
+    ->whereIn('type', ['movie', 'tv'])
+    ->whereNumber('id')
+    ->name('findOrCreate')
+    ->middleware('auth');
 
 Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
 Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
