@@ -5,7 +5,7 @@
     <div class="relative">
         <!-- Background gradient -->
         <div class="absolute min-h-screen inset-x-0 -z-10">
-            <div class="min-h-screen bg-linear-to-b from-primary-600/30 bg-no-repeat"></div>
+            <div class="min-h-screen bg-linear-to-b from-primary-600/20 bg-no-repeat"></div>
         </div>
 
         <!-- Anime.js animation container -->
@@ -26,12 +26,12 @@
 
                 <div class="mt-12 text-center flex flex-row justify-center space-x-4">
                     <button class="inline-block px-8 py-4 bg-primary-600
-                hover:bg-primary-500 text-white font-bold rounded-lg transform transition hover:scale-105
+                hover:bg-primary-700 text-white font-bold rounded-lg transform transition hover:scale-105
                 hover:rotate-1">Browse Movies
                     </button>
 
                     <button class="inline-block px-8 py-4 bg-primary-600
-                hover:bg-primary-500 text-white font-bold rounded-lg transform transition hover:scale-105
+                hover:bg-primary-700 text-white font-bold rounded-lg transform transition hover:scale-105
                 hover:rotate-1">Browse Shows
                     </button>
                 </div>
