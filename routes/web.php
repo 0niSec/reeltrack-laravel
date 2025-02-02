@@ -36,9 +36,11 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::get('/users/{user:username}/profile', [UserProfileController::class, 'show'])
     ->whereAlphaNumeric('user:username')
     ->name('profile');
+
 Route::get('/users/{user:username}/profile/settings', [UserProfileController::class, 'edit'])
     ->name('profile.edit')
-    ->middleware('auth');
+    ->middleware('auth')
+    ->can('edit', 'user.profile');
 
 // END AUTH
 
