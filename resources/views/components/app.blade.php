@@ -11,6 +11,7 @@
     <link href="https://fonts.bunny.net/css?family=poppins:300,400,500,600,700,800,900" rel="stylesheet"/>
 
     <!-- Styles / Scripts -->
+    @livewireStyles
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
@@ -28,5 +29,5 @@
 
 <!-- Footer -->
 @include('layouts.footer')
-
+@livewireScripts
 </body>

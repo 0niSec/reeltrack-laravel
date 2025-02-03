@@ -60,8 +60,8 @@
         </div>
 
         <!-- Favorites Grid Container -->
-        <div class="grid grid-cols-12 grid-flow-col gap-4">
-            <div class="col-span-8 space-y-10">
+        <div class="grid grid-cols-14 grid-flow-row gap-4">
+            <div class="col-span-10 space-y-10">
 
                 <!-- Favorite Movies -->
                 <div class="flex flex-col">
@@ -72,8 +72,7 @@
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Favorite Shows'"/>
                 </div>
-
-
+                
                 <!-- Recent Likes -->
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Recent Likes'"/>

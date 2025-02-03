@@ -21,13 +21,12 @@
             <div class="alert">
                 {{ session('error') }}
             </div>
-
         </div>
     @endif
 
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-linear-to-t from-zinc-900 to-transparent"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-zinc-950 via-zinc-950 via-10% to-transparent"></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -61,11 +60,11 @@
 
                     <button
                         type="button"
-                        data-action="modal#open"
                         class="w-full bg-zinc-800 text-primary-500 py-2 rounded-md hover:bg-zinc-700 transition-colors"
                     >
                         Review Movie
                     </button>
+
 
                     {{-- Modal --}}
                     <div data-modal-target="container">
@@ -112,31 +111,39 @@
                 </div>
 
                 {{-- User Actions Row --}}
-                <form
-                    action="#"
-                    method="POST"
-                    class="mb-8"
-                >
-                    @csrf
-                    <div class="flex items-center gap-8 mt-6">
-                        {{-- Watched Date --}}
-                        <div>
-                            <label class="block text-sm text-primary-400 mb-1">Watched</label>
-                            <input
-                                type="date"
-                                name="watched_date"
-                                value="{{ now()->format('Y-m-d') }}"
-                                class="bg-zinc-800 text-primary-400 border border-zinc-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500"
-                            />
+                @if (Auth::check())
+                    <form
+                        method="POST"
+                        class="mb-8"
+                    >
+                        @csrf
+                        <div class="flex items-center gap-8 mt-6">
+                            {{-- Watched Date --}}
+                            <div>
+                                <label class="block text-sm text-primary-400 mb-1">Watched</label>
+                                <input
+                                    type="date"
+                                    name="watched_date"
+                                    value="{{ now()->format('Y-m-d') }}"
+                                    class="bg-zinc-800 text-primary-400 border border-zinc-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500"
+                                />
+                            </div>
+
+                            {{-- Rating Input Partial (placeholder usage) --}}
+                            <x-rating-input/>
+
+                            {{-- Like Input Partial (placeholder usage) --}}
+                            <livewire:like-input :movie="$movie"/>
+
                         </div>
+                    </form>
+                @else
+                    <div class="my-6"><a href="{{ route('login') }}"
+                                         class="p-2 rounded-md bg-primary-700 text-zinc-200 shadow-md
+                                         inset-shadow-sm hover:bg-primary-800 transition-all ">Login
+                            to rate or review</a></div>
+                @endauth
 
-                        {{-- Rating Input Partial (placeholder usage) --}}
-                        <x-rating-input/>
-
-                        {{-- Like Input Partial (placeholder usage) --}}
-                        <x-like-input/>
-                    </div>
-                </form>
 
                 {{-- Cast & Crew Tabs --}}
                 <x-cast-crew-tabs :cast="$movie->cast" :crew="$movie->crew"/>

@@ -14,6 +14,10 @@ return new class extends Migration {
             $table->foreignIdFor(User::class)->constrained('users');
             $table->unsignedBigInteger('reviewable_id'); // ID of the movie or TV show reviewed
             $table->string('reviewable_type'); // Movie or TV
+
+            $table->index(['reviewable_id', 'reviewable_type']);
+            $table->index(['reviewable_type', 'reviewable_id', 'user_id']);
+
             $table->timestamps();
         });
     }

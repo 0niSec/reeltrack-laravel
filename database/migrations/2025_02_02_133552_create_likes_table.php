@@ -11,9 +11,10 @@ return new class extends Migration {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
             $table->boolean('status');
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->unsignedBigInteger('likeable_id'); // ID of the movie or TV show reviewed
             $table->string('likeable_type'); // Movie or TV
+            $table->index(['likeable_id', 'likeable_type', 'user_id', 'status']);
             $table->timestamps();
         });
     }

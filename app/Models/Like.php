@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Like extends Model
 {
+    protected $fillable = [
+        'status',
+        'user_id',
+        'likeable_id',
+        'likeable_type',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

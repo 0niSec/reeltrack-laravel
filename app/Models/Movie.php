@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Movie extends Model
@@ -35,19 +34,19 @@ class Movie extends Model
         return $this->morphMany(Crew::class, 'crewable');
     }
 
-    public function reviews(): HasMany
+    public function rateable(): MorphMany
     {
-        return $this->hasMany(MovieReview::class);
+        return $this->morphMany(Rating::class, 'rateable');
     }
 
-    public function ratings(): HasMany
+    public function reviewable(): MorphMany
     {
-        return $this->hasMany(MovieRating::class);
+        return $this->morphMany(Review::class, 'reviewable');
     }
 
-    public function likes(): HasMany
+    public function likeable(): MorphMany
     {
-        return $this->hasMany(MovieLike::class);
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function genres(): BelongsToMany

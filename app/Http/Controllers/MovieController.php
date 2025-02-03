@@ -25,7 +25,7 @@ class MovieController extends Controller
     public function show(Movie $movie): View
     {
         // Eager load the relationships to reduce number of queries
-        $movie->load('cast.person', 'crew.person', 'genres');
+        $movie->load('cast.person', 'crew.person', 'genres', 'rateable', 'reviewable', 'likeable');
 
         // Return the view
         return view('movies.show', compact('movie'));

@@ -5,6 +5,6 @@
         <a href="{{ $href }}" class="text-primary-500 text-sm hover:text-primary-300 transition-colors cursor-pointer">
             {{ Str::upper($heading) }}
         </a>
-        <a href="{{ $href }}" class="text-primary-500 text-sm hover:text-primary-300 transition-colors cursor-pointer">More...</a>
+        <a href="{{ $href }}" class="text-primary-500 text-sm hover:text-primary-300 transition-colors cursor-pointer">More</a>
     </div>
 </div>
