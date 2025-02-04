@@ -29,6 +29,13 @@ class MovieController extends Controller
         ];
     }
 
+    public function castAndCrew(Movie $movie): View
+    {
+        $movie->load('cast.person', 'crew.person');
+
+        return view('movies.cast-and-crew', compact('movie'));
+    }
+
     /**
      * @param  Movie  $movie
      * @return View

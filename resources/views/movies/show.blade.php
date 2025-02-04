@@ -120,15 +120,7 @@
                         @csrf
                         <div class="flex items-center gap-8 mt-6">
                             {{-- Watched Date --}}
-                            <div>
-                                <label class="block text-sm text-primary-400 mb-1">Watched</label>
-                                <input
-                                    type="date"
-                                    name="watched_date"
-                                    value="{{ now()->format('Y-m-d') }}"
-                                    class="bg-zinc-800 text-primary-400 border border-zinc-700 rounded-md px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500"
-                                />
-                            </div>
+                            <livewire:watch-input :movie="$movie"/>
 
                             {{-- Rating Input Partial (placeholder usage) --}}
                             <x-rating-input/>
@@ -149,7 +141,10 @@
 
                 {{-- Cast & Crew Tabs --}}
                 <x-cast-crew-tabs :cast="$movie->cast" :crew="$movie->crew"/>
-                <a href="#" class="block mt-4 text-primary-500 font-medium hover:text-primary-600 hover:underline
+                <a href="{{ route('movies.cast-and-crew', $movie) }}" class="block mt-4
+                text-primary-500 font-medium
+                hover:text-primary-600
+                hover:underline
                 transition-all underline-offset-2">Full
                     Cast & Crew</a>
 

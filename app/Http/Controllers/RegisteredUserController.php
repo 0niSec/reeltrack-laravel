@@ -27,7 +27,7 @@ class RegisteredUserController extends Controller
 
         $user->profile()->create();
 
-        //Log the user in
+        //Reel the user in
         Auth::login($user);
 
         // Redirect

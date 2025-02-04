@@ -27,7 +27,13 @@ class Movie extends Model
 
     public function scopePopular(Builder $query): void
     {
-        $query->withCount('likes')->orderBy('likes_count', 'desc')->take(5);
+        $query->withCount([
+            'likes' => function ($query) {
+                $query->where('status', true);
+            },
+        ])
+            ->orderBy('likes_count', 'desc')
+            ->take(5);
     }
 
     public function scopeLatestReviews(Builder $query): void
@@ -71,10 +77,16 @@ class Movie extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
+    public function watches(): MorphMany
+    {
+        return $this->morphMany(Watch::class, 'watchable');
+    }
+
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);
     }
+
 
     protected function casts(): array
     {

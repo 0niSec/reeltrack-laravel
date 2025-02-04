@@ -60,11 +60,16 @@ class User extends Authenticatable
         return $this->hasMany(Rating::class, 'user_id');
     }
 
-    public function watchedDates(): HasMany
+    public function watches(): HasMany
     {
-        return $this->hasMany(WatchedDate::class, 'user_id');
+        return $this->hasMany(Watch::class, 'user_id');
     }
-    
+
+    public function reels(): HasMany
+    {
+        return $this->hasMany(Reel::class, 'user_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

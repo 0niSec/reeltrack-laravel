@@ -167,9 +167,12 @@
             @if (count($movies['newest']) > 0)
                 <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-4 gap-y-4">
                     @foreach ($movies['newest'] as $movie)
-                        <a href="{{ url('/movies/' . $movie->id) }}" class="hover:opacity-75 transition-opacity">
-                            <x-movie-card :movie="$movie"/>
-                        </a>
+                        <div class="flex flex-col"><a href="{{ url('/movies/' . $movie->id) }}"
+                                                      class="hover:opacity-75 transition-opacity">
+                                <x-movie-card :movie="$movie"/>
+                            </a>
+                            <x-mini-stats-row class="mt-1" :stats="$movie"/>
+                        </div>
                     @endforeach
                 </div>
             @else
@@ -188,10 +191,13 @@
             @if (count($movies['latestReviews']) > 0)
                 <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-x-4 gap-y-4">
                     @foreach ($movies['latestReviews'] as $movie)
-                        <a href="{{ url('/movies/' . $movie->id) }}" class="hover:opacity-75 transition-opacity">
-                            <x-movie-card :movie="$movie"/>
-                        </a>
-
+                        <div class="flex flex-col">
+                            <a href="{{ url('/movies/' . $movie->id) }}"
+                               class="hover:opacity-75 transition-opacity">
+                                <x-movie-card :movie="$movie"/>
+                            </a>
+                            <x-mini-stats-row class="mt-1" :stats="$movie"/>
+                        </div>
                     @endforeach
                 </div>
             @else

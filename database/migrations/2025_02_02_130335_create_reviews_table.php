@@ -11,9 +11,11 @@ return new class extends Migration {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('reel_id')->nullable(); // Optional Reel ID
             $table->unsignedBigInteger('reviewable_id'); // ID of the movie or TV show reviewed
             $table->string('reviewable_type'); // Movie or TV
+
 
             $table->index(['reviewable_id', 'reviewable_type']);
             $table->index(['reviewable_type', 'reviewable_id', 'user_id']);

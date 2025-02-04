@@ -11,13 +11,14 @@ return new class extends Migration {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
             $table->decimal('rating')->default(0.0);
-            $table->foreignIdFor(User::class)->constrained('users');
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('reel_id')->nullable();
             $table->unsignedBigInteger('rateable_id'); // ID of the movie or TV show reviewed
             $table->string('rateable_type'); // Movie or TV
 
             $table->index(['rateable_id', 'rateable_type']);
             $table->index(['rateable_type', 'rateable_id', 'rating', 'user_id']);
-            
+
             $table->timestamps();
         });
     }

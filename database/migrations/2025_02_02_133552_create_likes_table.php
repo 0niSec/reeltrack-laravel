@@ -12,9 +12,14 @@ return new class extends Migration {
             $table->id();
             $table->boolean('status');
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('reel_id')->nullable();
             $table->unsignedBigInteger('likeable_id'); // ID of the movie or TV show reviewed
             $table->string('likeable_type'); // Movie or TV
-            $table->index(['likeable_id', 'likeable_type', 'user_id', 'status']);
+
+            // Indexes
+            $table->index(['likeable_id', 'likeable_type']);
+            $table->index('status');
+
             $table->timestamps();
         });
     }

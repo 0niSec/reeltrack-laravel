@@ -8,8 +8,6 @@ use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-// FIXME: On fresh account - checking this doesn't update the Component, but adds it to the db still
-
 class LikeInput extends Component
 {
     #[Validate('required|boolean')]

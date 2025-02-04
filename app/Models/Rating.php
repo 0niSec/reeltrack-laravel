@@ -17,4 +17,9 @@ class Rating extends Model
     {
         return $this->morphTo();
     }
+
+    public function reel(): BelongsTo
+    {
+        return $this->belongsTo(Reel::class);
+    }
 }
