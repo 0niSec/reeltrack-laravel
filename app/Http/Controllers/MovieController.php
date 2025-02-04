@@ -13,9 +13,20 @@ class MovieController extends Controller
     public function index(): View
     {
         // Get the newest movies from db
-        $movies = Movie::latest()->take(5)->get();
+        $movies = [
+            'newest' => Movie::withStats()->latest()->take(5)->get(),
+            'popular' => Movie::withStats()->popular()->get(),
+            'latestReviews' => Movie::latestReviews()->get(),
+        ];
 
         return view('movies.index', compact('movies'));
+    }
+
+    public function popular()
+    {
+        return [
+            'success' => true,
+        ];
     }
 
     /**
@@ -24,17 +35,25 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): View
     {
-        // Eager load the relationships to reduce number of queries
-        $movie->load('cast.person', 'crew.person', 'genres', 'rateable', 'reviewable', 'likeable');
+        $movie->loadCount([
+            'ratings',
+            'likes' => fn($query) => $query->where('status', true),
+        ])->loadAvg('ratings', 'rating')
+            ->load([
+                'cast' => fn($query) => $query->with('person')
+                    ->orderBy('order', 'asc')
+                    ->take(10),
+                'crew' => fn($query) => $query->with('person')
+                    ->whereIn('department', [
+                        'Directing',
+                        'Writing',
+                        'Production',
+                    ]),
+                'genres',
+                'reviews',
+            ]);
 
         // Return the view
         return view('movies.show', compact('movie'));
-    }
-
-    public function popular()
-    {
-        return [
-            'success' => true,
-        ];
     }
 }

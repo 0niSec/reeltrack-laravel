@@ -74,17 +74,17 @@
             </div>
 
             {{-- Right column: Movie details --}}
-            <div class="grow text-primary-500">
+            <div class="grow ">
                 {{-- Title and tagline --}}
-                <h1 class="text-4xl font-bold">{{ $movie->title }}</h1>
+                <h1 class="text-4xl text-primary-500 font-bold">{{ $movie->title }}</h1>
                 @if (!empty($movie->tagline))
                     <p class="text-xl italic mt-2 text-primary-400">{{ $movie->tagline }}</p>
                 @endif
 
                 {{-- Meta information --}}
                 <div class="flex items-center gap-4 mt-4">
-                    <span>{{ $movie->release_date->format('F d, Y') }}</span>
-                    <span>{{ $movie->runtime }} min</span>
+                    <span class="text-zinc-400">{{ $movie->release_date->format('F d, Y') }}</span>
+                    <span class="text-zinc-400">{{ $movie->runtime }} min</span>
                 </div>
 
                 {{-- Genres --}}
@@ -93,7 +93,8 @@
                         @foreach ($movie->genres as $genre)
                             <a
                                 href="{{ route('movies.index', ['genre' => $genre->name ?? 'genre-placeholder']) }}"
-                                class="px-3 py-1 rounded-full border border-primary-500 text-sm hover:bg-primary-500 hover:text-white transition-colors"
+                                class="px-3 py-1 font-medium rounded-full border border-primary-500 text-sm
+                                hover:bg-primary-500 hover:text-white transition-colors"
                             >
                                 {{ $genre->name }}
                             </a>
@@ -106,8 +107,8 @@
 
                 {{-- Overview --}}
                 <div class="mt-8">
-                    <h2 class="text-xl font-semibold mb-2">Overview</h2>
-                    <p class="text-primary-400 leading-relaxed">{{ $movie->overview }}</p>
+                    <h2 class="text-primary-500 font-semibold mb-2">Overview</h2>
+                    <p class="leading-relaxed">{{ $movie->overview }}</p>
                 </div>
 
                 {{-- User Actions Row --}}
@@ -138,6 +139,7 @@
                         </div>
                     </form>
                 @else
+                    <!-- TODO: Find a way to redirect back here -->
                     <div class="my-6"><a href="{{ route('login') }}"
                                          class="p-2 rounded-md bg-primary-700 text-zinc-200 shadow-md
                                          inset-shadow-sm hover:bg-primary-800 transition-all ">Login
@@ -147,6 +149,9 @@
 
                 {{-- Cast & Crew Tabs --}}
                 <x-cast-crew-tabs :cast="$movie->cast" :crew="$movie->crew"/>
+                <a href="#" class="block mt-4 text-primary-500 font-medium hover:text-primary-600 hover:underline
+                transition-all underline-offset-2">Full
+                    Cast & Crew</a>
 
                 {{-- Reviews --}}
                 {{--                <div class="mt-8" id="movie_reviews">--}}

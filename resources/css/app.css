@@ -10,14 +10,16 @@
     --color-primary-50: #fef2f2;
     --color-primary-100: #fee3e2;
     --color-primary-200: #feccca;
-    --color-primary-300: #fca8a5;
-    --color-primary-400: #f87671;
+    --color-primary-300: #fda7a4;
+    --color-primary-400: #f97570;
     --color-primary-500: #f04943;
-    --color-primary-600: #dd2c25;
-    --color-primary-700: #bd221c;
-    --color-primary-800: #99201b;
-    --color-primary-900: #7f211d;
+    --color-primary-600: #dd2b25;
+    --color-primary-700: #ba211b;
+    --color-primary-800: #9a1e1a;
+    --color-primary-900: #801f1c;
     --color-primary-950: #450c0a;
+
+
 }
 
 @utility container {

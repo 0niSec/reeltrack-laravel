@@ -8,6 +8,8 @@ use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+// FIXME: On fresh account - checking this doesn't update the Component, but adds it to the db still
+
 class LikeInput extends Component
 {
     #[Validate('required|boolean')]
@@ -17,7 +19,9 @@ class LikeInput extends Component
 
     public function mount(Movie $movie)
     {
-        $this->liked = $movie->likeable()->where('user_id', auth()->user()->id)->first()->status;
+        $record = $movie->likes()->where('user_id', auth()->user()->id)->first();
+
+        $this->liked = $record ? $record->status : false;
     }
 
     public function toggleLike(): void
@@ -26,7 +30,7 @@ class LikeInput extends Component
 
         // Check if a record for the user exists
         $existingLike = $this->movie
-            ->likeable()
+            ->likes()
             ->where('user_id', auth()->user()->id)
             ->first();
 
@@ -45,10 +49,12 @@ class LikeInput extends Component
             $this->authorize('create', Like::class);
 
             // Create a new record
-            $this->movie->likeable()->create([
+            $this->movie->likes()->create([
                 'user_id' => auth()->user()->id,
                 'status' => true,
             ]);
+
+            $this->liked = true;
         }
     }
 

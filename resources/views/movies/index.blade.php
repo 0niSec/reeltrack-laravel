@@ -136,17 +136,20 @@
     </div>
 
     {{-- Popular --}}
-    <div class="flex flex-col space-y-24">
+    <div class="flex flex-col space-y-20">
         <div class="container max-w-6xl">
             <x-display-heading href="{{route('movies.popular')}}" :heading="'What\'s popular?'"/>
 
             {{-- Movies --}}
-            @if (count($movies) > 0)
+            @if (count($movies['popular']) > 0)
                 <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-4 gap-y-4">
-                    @foreach ($movies as $movie)
-                        <a href="{{ url('/movies/' . $movie->id) }}" class="hover:opacity-75 transition-opacity">
-                            <x-movie-card :movie="$movie"/>
-                        </a>
+                    @foreach ($movies['popular'] as $movie)
+                        <div class="flex flex-col">
+                            <a href="{{ url('/movies/' . $movie->id) }}" class="hover:opacity-75 transition-opacity">
+                                <x-movie-card :movie="$movie"/>
+                            </a>
+                            <x-mini-stats-row class="mt-1" :stats="$movie"/>
+                        </div>
                     @endforeach
                 </div>
             @else
@@ -161,12 +164,34 @@
             <x-display-heading href="{{route('movies.new')}}" :heading="'What\'s new this week?'"/>
 
 
-            @if (count($movies) > 0)
+            @if (count($movies['newest']) > 0)
                 <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-4 gap-y-4">
-                    @foreach ($movies as $movie)
+                    @foreach ($movies['newest'] as $movie)
                         <a href="{{ url('/movies/' . $movie->id) }}" class="hover:opacity-75 transition-opacity">
                             <x-movie-card :movie="$movie"/>
                         </a>
+                    @endforeach
+                </div>
+            @else
+                <div class="flex flex-col items-center justify-center py-8 text-center w-full">
+                    <p class="text-lg text-primary-400">No movies have been added yet!</p>
+                </div>
+            @endif
+        </div>
+
+        {{-- Latest Reviews --}}
+        {{-- TODO: This should actually link to the review of the movie that a user created --}}
+        <div class="container max-w-6xl">
+            <x-display-heading href="{{route('movies.new')}}" :heading="'Recent Reviews'"/>
+
+
+            @if (count($movies['latestReviews']) > 0)
+                <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-x-4 gap-y-4">
+                    @foreach ($movies['latestReviews'] as $movie)
+                        <a href="{{ url('/movies/' . $movie->id) }}" class="hover:opacity-75 transition-opacity">
+                            <x-movie-card :movie="$movie"/>
+                        </a>
+
                     @endforeach
                 </div>
             @else

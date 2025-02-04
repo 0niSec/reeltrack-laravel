@@ -22,6 +22,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('total_reviews')->default(0);
             $table->unsignedBigInteger('total_ratings')->default(0);
             $table->unsignedBigInteger('total_likes')->default(0);
+
+            // Indexes
+            $table->index('timestamps');
+            $table->index('release_date');
+            $table->index('title');
+
             $table->timestamps();
         });
     }

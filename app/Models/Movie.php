@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -24,6 +25,32 @@ class Movie extends Model
         'total_likes',
     ];
 
+    public function scopePopular(Builder $query): void
+    {
+        $query->withCount('likes')->orderBy('likes_count', 'desc')->take(5);
+    }
+
+    public function scopeLatestReviews(Builder $query): void
+    {
+        $query->withCount('reviews')->latest()->take(10);
+    }
+
+    public function scopeWithStats(Builder $query): void
+    {
+        $query->withCount([
+            'likes'
+            => fn($query) => $query
+                ->where('status', true),
+            'ratings',
+            'reviews',
+        ]);
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
     public function cast(): MorphMany
     {
         return $this->morphMany(Cast::class, 'castable');
@@ -34,19 +61,14 @@ class Movie extends Model
         return $this->morphMany(Crew::class, 'crewable');
     }
 
-    public function rateable(): MorphMany
+    public function ratings(): MorphMany
     {
         return $this->morphMany(Rating::class, 'rateable');
     }
 
-    public function reviewable(): MorphMany
+    public function reviews(): MorphMany
     {
         return $this->morphMany(Review::class, 'reviewable');
-    }
-
-    public function likeable(): MorphMany
-    {
-        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function genres(): BelongsToMany

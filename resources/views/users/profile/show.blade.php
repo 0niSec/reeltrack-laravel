@@ -72,10 +72,17 @@
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Favorite Shows'"/>
                 </div>
-                
+
                 <!-- Recent Likes -->
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Recent Likes'"/>
+                    <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
+                        @foreach($user->likes as $like)
+                            <a href="{{ route('movies.show', ['movie' => $like]) }}">
+                                <x-movie-card :movie="$like->likeable"/>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Recent Reviews -->

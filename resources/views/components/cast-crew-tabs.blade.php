@@ -39,10 +39,10 @@
                             alt="{{ $castMember->name ?? 'Unknown Actor' }}"
                             class="w-12 h-12 rounded-full object-cover"/>
                     @endif
-                    
+
                     <div>
-                        <div class="font-medium">{{ $castMember->name }}</div>
-                        <div class="text-sm font-medium text-primary-400">
+                        <div class="font-medium text-primary-500">{{ $castMember->name }}</div>
+                        <div class="text-sm font-medium text-zinc-200">
                             {{ $castMember->character }}
                         </div>
                     </div>
@@ -65,11 +65,11 @@
                         class="w-12 h-12 rounded-full object-cover"
                     />
                     <div>
-                        <div class="font-medium">{{ $crewMember->name }}</div>
-                        <div class="text-sm font-medium text-primary-400">
+                        <div class="text-primary-500 font-medium">{{ $crewMember->name }}</div>
+                        <div class="text-zinc-200 text-sm font-medium">
                             {{ $crewMember->department }}
                         </div>
-                        <div class="text-xs text-primary-400">
+                        <div class="text-xs text-zinc-400">
                             {{ $crewMember->job }}
                         </div>
 
