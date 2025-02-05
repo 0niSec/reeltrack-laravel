@@ -15,6 +15,11 @@ return new class extends Migration {
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->unsignedBigInteger('watchable_id');
             $table->string('watchable_type');
+            $table->unsignedBigInteger('reel_id')->nullable();
+
+            $table->index(['watchable_id', 'watchable_type']);
+            $table->index(['is_watched']);
+
             $table->timestamps();
         });
     }

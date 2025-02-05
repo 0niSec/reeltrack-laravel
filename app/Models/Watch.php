@@ -11,6 +11,7 @@ class Watch extends Model
     protected $fillable = [
         'watched_date',
         'is_watched',
+        'user_id',
         'watchable_id',
         'watchable_type',
     ];

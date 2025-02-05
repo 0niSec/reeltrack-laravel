@@ -11,11 +11,32 @@ class WatchInput extends Component
 {
 
     #[Validate('required|boolean')]
-    public bool $is_watched = false;
+    public bool $isWatched = false;
+
+    public Movie $movie;
 
     public function mount(Movie $movie): void
     {
-        $this->is_watched = $movie->watches()->where('user_id', auth()->id())->exists();
+        $this->isWatched = $movie->watches()
+            ->where('user_id', auth()->id())
+            ->first()
+            ?->is_watched ?? false;
+    }
+
+    public function toggleWatch(): void
+    {
+        $this->validate();
+
+        // Toggle the state
+        $this->isWatched = !$this->isWatched;
+
+        // Update or create the watch record for the authenticated user
+        $watch = $this->movie->watches()->updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['is_watched' => $this->isWatched]
+        );
+
+        $this->authorize('update', $watch);
     }
 
     public function render(): View

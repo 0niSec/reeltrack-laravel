@@ -114,7 +114,6 @@
                 {{-- User Actions Row --}}
                 @if (Auth::check())
                     <form
-                        method="POST"
                         class="mb-8"
                     >
                         @csrf

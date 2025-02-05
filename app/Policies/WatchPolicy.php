@@ -20,10 +20,12 @@ class WatchPolicy
 
     public function create(User $user): bool
     {
+        return $user->is(auth()->user());
     }
 
     public function update(User $user, Watch $watch): bool
     {
+        return $user->is($watch->user);
     }
 
     public function delete(User $user, Watch $watch): bool
