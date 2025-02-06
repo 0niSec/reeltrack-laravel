@@ -59,6 +59,19 @@
             </div>
         </div>
 
+        <!-- Profile Navigation -->
+        <div class="flex justify-center items-center space-x-4 p-2 border border-zinc-700">
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Profile</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Activity</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Movies</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">TV</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Reviews</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Reels</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Watchlist</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Lists</a>
+            <a href="{{ route('profile', $user) }}" class="text-zinc-200 hover:text-primary-400">Likes</a>
+        </div>
+
         <!-- Favorites Grid Container -->
         <div class="grid grid-cols-14 grid-flow-row gap-4">
             <div class="col-span-10 space-y-10">

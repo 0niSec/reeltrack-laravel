@@ -1,0 +1,24 @@
+<form class="relative" wire:submit.prevent="searchText">
+    <div>
+        <input
+            type="text"
+            placeholder="Search"
+            class="w-full text-sm border border-zinc-700 rounded-lg px-2 py-1 text-zinc-200 bg-zinc-900
+               focus:border-primary-500 focus:outline-none focus:ring-none focus:ring-primary-500"
+            wire:model.live.debounce.300ms="searchText"
+            wire:keydown.enter.prevent
+        >
+
+        @if(count($searchResults) > 0)
+            <div class="absolute left-0 right-0 mt-1 bg-zinc-900 border border-zinc-700 rounded-lg
+                        shadow-lg z-50 max-h-96 overflow-y-auto" id="search-results">
+                @foreach($searchResults as $searchResult)
+                    <a href="{{ route('movies.show', $searchResult) }}"
+                       class="block px-4 py-2 hover:bg-zinc-800 text-zinc-200 text-sm" wire:navigate.hover>
+                        {{ $searchResult->title }}
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</form>

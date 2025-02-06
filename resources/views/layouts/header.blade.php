@@ -8,39 +8,6 @@
                 </a>
             </div>
 
-            {{-- Search --}}
-            <form action="{{ route('search') }}" method="GET" class="flex items-center">
-                <div class="relative">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Search"
-                        class="border border-zinc-700 rounded-lg px-4 py-2 text-zinc-200 bg-zinc-800/50 backdrop-blur-sm
-               focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    >
-                    <button
-                        type="submit"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 bg-transparent border-none cursor-pointer"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-6 h-6 text-zinc-200 hover:text-primary-500 transition-colors"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="m21 21-5.197-5.197m0 0A7.5 7.5
-                   0 1 0 5.196 5.196a7.5 7.5
-                   0 0 0 10.607 10.607Z"
-                            />
-                        </svg>
-                    </button>
-                </div>
-            </form>
 
             {{-- Navigation --}}
             <nav class="flex items-center space-x-4">
@@ -96,6 +63,9 @@
                         Register
                     </a>
                 @endauth
+                
+                {{-- Search --}}
+                <livewire:search-input/>
             </nav>
         </div>
     </div>
