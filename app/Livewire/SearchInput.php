@@ -28,9 +28,6 @@ class SearchInput extends Component
 
             return Movie::where('title', 'LIKE', $query)->limit(15)->get();
         });
-
-        // TODO: Will need to update this to include the other types of media
-//        $this->searchResults = Movie::where('title', 'LIKE', $query)->limit(15)->get();
     }
 
     public function render()
