@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Rating extends Model
 {
+
+    protected $fillable = [
+        'rating',
+        'user_id',
+        'reel_id',
+        'rateable_id',
+        'rateable_type',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

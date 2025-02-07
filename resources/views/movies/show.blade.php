@@ -47,9 +47,7 @@
 
                 {{-- Action buttons --}}
                 <div
-                    class="mt-4 space-y-2"
-                    data-controller="modal"
-                    data-modal-debug-value="true"
+                    class="mt-4 space-y-2" x-data="{ isOpen: false }"
                 >
                     <button
                         type="button"
@@ -60,16 +58,14 @@
 
                     <button
                         type="button"
+                        @click="isOpen = true"
                         class="w-full bg-zinc-800 text-primary-500 py-2 rounded-md hover:bg-zinc-700 transition-colors"
                     >
-                        Review Movie
+                        Leave a Reel
                     </button>
 
-
                     {{-- Modal --}}
-                    <div data-modal-target="container">
-                        <!-- TODO: Implement review modal -->
-                    </div>
+                    <x-review-modal :movie="$movie"/>
                 </div>
             </div>
 
@@ -112,6 +108,7 @@
                 </div>
 
                 {{-- User Actions Row --}}
+                <!-- TODO: All of these components need to talk to each other in the modal -->
                 @if (Auth::check())
                     <form
                         class="mb-8"
@@ -121,12 +118,11 @@
                             {{-- Watched Date --}}
                             <livewire:watch-input :movie="$movie"/>
 
-                            {{-- Rating Input Partial (placeholder usage) --}}
-                            <x-rating-input/>
+                            {{-- Rating Input --}}
+                            <livewire:rating-input :movie="$movie"/>
 
-                            {{-- Like Input Partial (placeholder usage) --}}
+                            {{-- Like Input --}}
                             <livewire:like-input :movie="$movie"/>
-
                         </div>
                     </form>
                 @else

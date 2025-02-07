@@ -1,6 +1,6 @@
 <div class="mt-8 flex items-center gap-8" id="movie_stats">
     <div>
-        <div class="text-3xl font-bold">{{ $movie->rating_average ?? "0" }}</div>
+        <div class="text-3xl font-bold">{{ $movie->avg_rating ?? "0" }}</div>
         <div class="text-sm text-primary-400">Average rating</div>
     </div>
     <div>

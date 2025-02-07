@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\ReelController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
@@ -31,24 +32,24 @@ Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
+// END AUTH
 
+//**************************************//
+// User Profiles //
 
 Route::get('/users/{user:username}/profile', [UserProfileController::class, 'show'])
     ->whereAlphaNumeric('user:username')
     ->name('profile');
 
 Route::get('/users/{user:username}/profile/settings', [UserProfileController::class, 'edit'])
-    ->name('profile.edit')
+    ->name('profile.settings.edit')
     ->middleware('auth')
     ->can('edit', 'user.profile');
 
-// END AUTH
+Route::patch('/users/{user:username}/profile/settings', [UserProfileController::class, 'update']);
+Route::put('/users/{user:username}/profile/settings', [UserProfileController::class, 'update']);
 
-Route::get('/search', function () {
-    return array(
-        'success' => true,
-    );
-})->name('search');
+//*************************************//
 
 Route::get('/tmdb/{type}/{id}', [TmdbController::class, 'findOrCreate'])
     ->whereIn('type', ['movie', 'tv'])
@@ -62,14 +63,8 @@ Route::get('/movies/{movie}/cast-and-crew', [MovieController::class, 'castAndCre
 Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
 Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
 
+Route::post('/movies/{movie}/reel', [ReelController::class, 'store'])->name('movies.reel.store')->middleware('auth');
+
 Route::resource('series', TvSeriesController::class)->only([
     'index', 'show', 'create', 'store', 'edit', 'update', 'destroy',
 ]);
-
-
-Route::get('/search/{id}', function ($id) {
-    return array(
-        'success' => true,
-        'data' => $id,
-    );
-});

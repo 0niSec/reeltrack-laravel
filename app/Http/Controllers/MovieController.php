@@ -42,23 +42,42 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): View
     {
-        $movie->loadCount([
-            'ratings',
-            'likes' => fn($query) => $query->where('status', true),
-        ])->loadAvg('ratings', 'rating')
-            ->load([
-                'cast' => fn($query) => $query->with('person')
-                    ->orderBy('order', 'asc')
-                    ->take(10),
-                'crew' => fn($query) => $query->with('person')
-                    ->whereIn('department', [
-                        'Directing',
-                        'Writing',
-                        'Production',
-                    ]),
-                'genres',
-                'reviews',
-            ]);
+        $movie->load([
+            'cast' => fn($query) => $query
+                ->orderBy('order', 'asc')
+                ->take(10)
+                ->with('person'),
+            'crew' => fn($query) => $query
+                ->whereIn('department', ['Directing', 'Writing', 'Production'])
+                ->orderBy('order', 'asc')
+                ->take(10)
+                ->with('person'),
+            'genres',
+            'reviews',
+        ])
+            ->loadCount([
+                'ratings',
+                'likes' => fn($query) => $query->where('status', true),
+            ])
+            ->loadAvg('ratings as avg_rating', 'rating');
+
+//        $movie->loadCount([
+//            'ratings',
+//            'likes' => fn($query) => $query->where('status', true),
+//        ])->loadAvg('ratings as avg_rating', 'rating')
+//            ->load([
+//                'cast' => fn($query) => $query->with('person')
+//                    ->orderBy('order', 'asc')
+//                    ->take(10),
+//                'crew' => fn($query) => $query->with('person')
+//                    ->whereIn('department', [
+//                        'Directing',
+//                        'Writing',
+//                        'Production',
+//                    ]),
+//                'genres',
+//                'reviews',
+//            ]);
 
         // Return the view
         return view('movies.show', compact('movie'));
