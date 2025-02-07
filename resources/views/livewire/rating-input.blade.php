@@ -15,7 +15,7 @@
     }"
 >
     <label class="block text-sm text-primary-400 mb-1">
-        Rating
+        {{ $rating > 0 ? 'Rated' : 'Rating' }}
     </label>
 
     <!-- Hidden input allows the final rating to be sent on form submission -->
@@ -41,8 +41,8 @@
                         viewBox="0 0 24 24"
                         class="w-8 h-8 transition-colors"
                         :class="(currentValue() >= {{ $i + 0.5 }})
-                            ? 'text-primary-500'
-                            : 'text-neutral-600'"
+                            ? 'text-yellow-500'
+                            : 'text-zinc-600'"
                         style="clip-path: inset(0 50% 0 0);"
                     >
                         <path
@@ -64,8 +64,8 @@
                         viewBox="0 0 24 24"
                         class="w-8 h-8 transition-colors"
                         :class="(currentValue() >= {{ $i + 1.0 }})
-                            ? 'text-primary-500'
-                            : 'text-neutral-600'"
+                            ? 'text-yellow-500'
+                            : 'text-zinc-600'"
                         style="clip-path: inset(0 0 0 50%); margin-left: -16px;"
                     >
                         <path

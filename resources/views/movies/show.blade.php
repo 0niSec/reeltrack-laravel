@@ -74,7 +74,7 @@
                 {{-- Title and tagline --}}
                 <h1 class="text-4xl text-primary-500 font-bold">{{ $movie->title }}</h1>
                 @if (!empty($movie->tagline))
-                    <p class="text-xl italic mt-2 text-primary-400">{{ $movie->tagline }}</p>
+                    <p class="text-xl italic mt-2 text-primary-300">{{ $movie->tagline }}</p>
                 @endif
 
                 {{-- Meta information --}}
