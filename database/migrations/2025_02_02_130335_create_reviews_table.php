@@ -11,6 +11,7 @@ return new class extends Migration {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->text('content');
+            $table->boolean('contains_spoilers')->default(false);
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->unsignedBigInteger('reel_id')->nullable(); // Optional Reel ID
             $table->unsignedBigInteger('reviewable_id'); // ID of the movie or TV show reviewed

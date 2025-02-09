@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Movie;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -43,7 +44,7 @@ class RatingInput extends Component
     }
 
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.rating-input');
     }

@@ -26,7 +26,7 @@ class SearchInput extends Component
             Log::info("Cache miss for query: {$query}");
             Log::info("Searching for {$query}");
 
-            return Movie::where('title', 'LIKE', $query)->limit(15)->get();
+            return Movie::select('title')->where('title', 'LIKE', $query)->limit(15)->get();
         });
     }
 

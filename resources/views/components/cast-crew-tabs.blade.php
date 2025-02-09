@@ -1,5 +1,9 @@
 @props(['cast', 'crew'])
 
+{{--@php--}}
+{{--    dd($crew);--}}
+{{--@endphp--}}
+
 <div x-data="{ activeTab: 'cast' }">
     {{-- Tabs --}}
     <div class="flex gap-4 border-b border-neutral-700">
@@ -66,10 +70,8 @@
                     />
                     <div>
                         <div class="text-primary-500 font-medium">{{ $crewMember->name }}</div>
-                        <div class="text-zinc-300 text-sm font-medium">
-                            {{ $crewMember->department }}
-                        </div>
-                        <div class="text-xs text-zinc-400">
+
+                        <div class="text-sm text-zinc-400">
                             {{ $crewMember->job }}
                         </div>
 

@@ -65,6 +65,11 @@ class User extends Authenticatable
         return $this->hasMany(Watch::class, 'user_id');
     }
 
+    public function watchlists(): HasMany
+    {
+        return $this->hasMany(Watchlist::class, 'user_id');
+    }
+
     public function reels(): HasMany
     {
         return $this->hasMany(Reel::class, 'user_id');

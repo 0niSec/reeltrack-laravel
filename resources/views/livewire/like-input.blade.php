@@ -1,6 +1,5 @@
 <div>
     <label class="block text-sm text-primary-400 mb-1">{{ $liked ? 'Liked' : 'Like' }}</label>
-    <input type="hidden" name="like" wire:model.live="liked">
     <div class="relative flex items-center group">
         <div class="cursor-pointer" wire:click.prevent="toggleLike">
             <svg
@@ -9,7 +8,7 @@
                 fill="none"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-8 h-8 text-primary-600 hover:text-primary-400 hover:fill-primary-500 transition-colors {{
+                class="w-10 h-10 text-primary-600 hover:text-primary-400 hover:fill-primary-500 transition-colors {{
                 $liked ? 'fill-primary-500' : 'fill-none'
                  }}"
             >

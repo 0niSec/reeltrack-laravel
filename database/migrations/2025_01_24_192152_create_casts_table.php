@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('casts', function (Blueprint $table) {
             $table->id();
-            
+
             // Polymorphic columns
             $table->unsignedBigInteger('castable_id');
             $table->string('castable_type');

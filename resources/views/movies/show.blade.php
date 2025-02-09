@@ -46,27 +46,28 @@
                 />
 
                 {{-- Action buttons --}}
-                <div
-                    class="mt-4 space-y-2" x-data="{ isOpen: false }"
-                >
-                    <button
-                        type="button"
-                        class="w-full bg-primary-500 text-zinc-800 py-2 rounded-md hover:bg-primary-600 transition-colors"
+                @auth
+                    <div
+                        class="mt-4 space-y-2" x-data="{ isOpen: false }"
                     >
-                        Add to Watchlist
-                    </button>
+                        <button
+                            type="button"
+                            class="w-full bg-primary-500 text-zinc-800 py-2 rounded-md hover:bg-primary-600 transition-colors"
+                        >
+                            Add to Watchlist
+                        </button>
+                        <button
+                            type="button"
+                            @click="isOpen = true"
+                            class="w-full bg-zinc-800 text-primary-500 py-2 rounded-md hover:bg-zinc-700 transition-colors"
+                        >
+                            Leave a Reel or Review
+                        </button>
 
-                    <button
-                        type="button"
-                        @click="isOpen = true"
-                        class="w-full bg-zinc-800 text-primary-500 py-2 rounded-md hover:bg-zinc-700 transition-colors"
-                    >
-                        Leave a Reel
-                    </button>
-
-                    {{-- Modal --}}
-                    <x-review-modal :movie="$movie"/>
-                </div>
+                        {{-- Modal --}}
+                        <x-review-modal :movie="$movie"/>
+                    </div>
+                @endauth
             </div>
 
             {{-- Right column: Movie details --}}
@@ -110,11 +111,10 @@
                 {{-- User Actions Row --}}
                 <!-- TODO: All of these components need to talk to each other in the modal -->
                 @if (Auth::check())
-                    <form
-                        class="mb-8"
-                    >
+                    <form>
                         @csrf
-                        <div class="flex items-center gap-8 mt-6">
+                        <div class="flex items-center space-x-10 my-4">
+                            <!-- TODO: Make one parent component that holds all 3? -->
                             {{-- Watched Date --}}
                             <livewire:watch-input :movie="$movie"/>
 
@@ -123,6 +123,9 @@
 
                             {{-- Like Input --}}
                             <livewire:like-input :movie="$movie"/>
+
+                            {{-- Watchlist --}}
+                            <livewire:watchlist-input :movie="$movie"/>
                         </div>
                     </form>
                 @else
@@ -136,6 +139,7 @@
 
                 {{-- Cast & Crew Tabs --}}
                 <x-cast-crew-tabs :cast="$movie->cast" :crew="$movie->crew"/>
+
                 <a href="{{ route('movies.cast-and-crew', $movie) }}" class="block mt-4
                 text-primary-500 font-medium
                 hover:text-primary-600

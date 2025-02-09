@@ -20,6 +20,7 @@ class ReelPolicy
 
     public function create(User $user): bool
     {
+        return $user->is(auth()->user());
     }
 
     public function update(User $user, Reel $reel): bool

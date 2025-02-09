@@ -18,20 +18,14 @@
         {{ $rating > 0 ? 'Rated' : 'Rating' }}
     </label>
 
-    <!-- Hidden input allows the final rating to be sent on form submission -->
-    <input
-        type="hidden"
-        name="rating"
-        :value="livewireRating"
-    />
-
     <!-- 5 stars, each split into half increments -->
     <div class="flex" x-cloak>
         @for($i = 0; $i < 5; $i++)
-            <div class="relative w-8 h-8">
+            {{-- The width and height affects this component being in line with the rest --}}
+            <div class="relative w-8 h-10">
                 <!-- Left half-star -->
                 <div
-                    class="cursor-pointer absolute inset-0 w-4 h-8"
+                    class="cursor-pointer absolute inset-0 w-1 h-1"
                     @mouseover="setHover({{ $i + 0.5 }})"
                     @mouseleave="clearHover()"
                     @click="$wire.setRating({{ $i + 0.5 }}); livewireRating = {{ $i + 0.5 }}"
@@ -39,7 +33,7 @@
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
-                        class="w-8 h-8 transition-colors"
+                        class="w-10 h-10 transition-colors"
                         :class="(currentValue() >= {{ $i + 0.5 }})
                             ? 'text-yellow-500'
                             : 'text-zinc-600'"
@@ -54,7 +48,7 @@
 
                 <!-- Right half-star -->
                 <div
-                    class="cursor-pointer absolute inset-0 left-4 w-4 h-8"
+                    class="cursor-pointer absolute inset-0 left-4 w-1 h-1"
                     @mouseover="setHover({{ $i + 1.0 }})"
                     @mouseleave="clearHover()"
                     @click="$wire.setRating({{ $i + 1.0 }}); livewireRating = {{ $i + 1.0 }}"
@@ -62,7 +56,7 @@
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
-                        class="w-8 h-8 transition-colors"
+                        class="w-10 h-10 transition-colors"
                         :class="(currentValue() >= {{ $i + 1.0 }})
                             ? 'text-yellow-500'
                             : 'text-zinc-600'"

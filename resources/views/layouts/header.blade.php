@@ -12,7 +12,7 @@
             {{-- Navigation --}}
             <nav class="flex items-center space-x-4">
                 <a href="{{ route('movies.index') }}"
-                   class="font-bold hover:text-primary-500 transition-colors relative group">
+                   class="font-bold hover:text-primary-500 transition-colors relative group" wire:navigate.hover>
                     Movies
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full"></span>
@@ -63,7 +63,7 @@
                         Register
                     </a>
                 @endauth
-                
+
                 {{-- Search --}}
                 <livewire:search-input/>
             </nav>

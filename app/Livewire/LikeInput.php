@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Like;
 use App\Models\Movie;
 use Illuminate\View\View;
 use Livewire\Attributes\Validate;
@@ -15,45 +14,26 @@ class LikeInput extends Component
 
     public Movie $movie;
 
-    public function mount(Movie $movie)
+    public function mount(Movie $movie): void
     {
-        $record = $movie->likes()->where('user_id', auth()->user()->id)->first();
-
-        $this->liked = $record ? $record->status : false;
+        $this->movie = $movie;
+        $this->liked = $movie->likes()->where('user_id', auth()->id())->first()->status ?? false;
     }
 
     public function toggleLike(): void
     {
         $this->validate();
 
-        // Check if a record for the user exists
-        $existingLike = $this->movie
-            ->likes()
-            ->where('user_id', auth()->user()->id)
-            ->first();
+        $this->liked = !$this->liked;
 
+        $like = $this->movie->likes()->firstOrNew([
+            'user_id' => auth()->id(),
+        ]);
 
-        // If it exists, toggle the status
-        // Else, create it
-        if ($existingLike) {
-            // Authorize the action before continuing
-            $this->authorize('update', $existingLike);
+        $this->authorize($like->exists ? 'update' : 'create', $like);
 
-            $existingLike->update(['status' => !$existingLike->status]);
-
-            // Set the property so we can affect the DOM
-            $this->liked = !$this->liked;
-        } else {
-            $this->authorize('create', Like::class);
-
-            // Create a new record
-            $this->movie->likes()->create([
-                'user_id' => auth()->user()->id,
-                'status' => true,
-            ]);
-
-            $this->liked = true;
-        }
+        $like->status = $this->liked;
+        $like->save();
     }
 
     public function render(): View

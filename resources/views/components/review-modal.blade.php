@@ -19,28 +19,15 @@
                 {{-- Modal Header --}}
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold text-primary-500">
-                        Review {{ $movie['title'] }}
+                        Review {{ $movie->title }}
                     </h2>
                     <button
                         type="button"
-                        @click="isOpen = false"
+                        @click="isOpen = false;$wire:confirm('Are you sure you want to cancel?')"
                         class="text-zinc-400 hover:text-primary-500"
                     >
                         <!-- Close Icon -->
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
+                        <x-icon-close class="w-6 h-6"/>
                     </button>
                 </div>
 
@@ -56,17 +43,17 @@
                     <div class="flex items-center gap-8">
                         {{-- Rating --}}
                         <div class="flex-1">
-                            {{-- Rating Input Partial (placeholder usage) --}}
+                            {{-- Rating Input --}}
                             <livewire:rating-input :movie="$movie"/>
                         </div>
 
-                        {{-- Like (placeholder to implement) --}}
+                        {{-- Like --}}
                         <div class="flex-1">
                             <livewire:like-input :movie="$movie"/>
                         </div>
                     </div>
 
-                    {{-- Watch Date --}}
+                    {{-- Watch --}}
                     <livewire:watch-input :movie="$movie"/>
 
                     {{-- Review Text --}}

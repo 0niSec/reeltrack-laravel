@@ -82,6 +82,11 @@ class Movie extends Model
         return $this->morphMany(Watch::class, 'watchable');
     }
 
+    public function watchlists(): MorphMany
+    {
+        return $this->morphMany(Watchlist::class, 'watchlistable');
+    }
+
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);

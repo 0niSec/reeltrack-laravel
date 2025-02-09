@@ -62,7 +62,7 @@ class MovieSeeder extends Seeder
                     [
                         'name' => $personDetails['name'] ?? null,
                         'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $tmdb->backdropUrl($personDetails['profile_path'], "original" ?? null),
+                        'profile_path' => $tmdb->posterUrl($personDetails['profile_path']),
                         'birthday' => $personDetails['birthday'] ?? null,
                         'deathday' => $personDetails['deathday'] ?? null,
                         'place_of_birth' => $personDetails['place_of_birth'] ?? null,
@@ -97,7 +97,7 @@ class MovieSeeder extends Seeder
                     [
                         'name' => $personDetails['name'] ?? null,
                         'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $tmdb->backdropUrl($personDetails['profile_path'], "original" ?? null),
+                        'profile_path' => $tmdb->posterUrl($personDetails['profile_path']),
                         'birthday' => $personDetails['birthday'] ?? null,
                         'deathday' => $personDetails['deathday'] ?? null,
                         'place_of_birth' => $personDetails['place_of_birth'] ?? null,

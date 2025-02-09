@@ -14,9 +14,22 @@ class MovieController extends Controller
     {
         // Get the newest movies from db
         $movies = [
-            'newest' => Movie::withStats()->latest()->take(5)->get(),
-            'popular' => Movie::withStats()->popular()->get(),
-            'latestReviews' => Movie::latestReviews()->get(),
+            'newest' => Movie::select(['id', 'title', 'poster_path']) // Select only needed columns
+            ->withStats()
+                ->latest()
+                ->take(5)
+                ->get(),
+
+            'popular' => Movie::select(['id', 'title', 'poster_path']) // Select only needed columns
+            ->withStats()
+                ->popular()
+                ->get(),
+
+            'latestReviews' => Movie::select(['id', 'title', 'poster_path']) // Select only needed columns
+            ->withCount('reviews') // Keep withCount
+            ->latest()
+                ->take(10)
+                ->get(),
         ];
 
         return view('movies.index', compact('movies'));
@@ -42,42 +55,31 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): View
     {
-        $movie->load([
+        $userId = auth()->id();
+
+        $movie = Movie::with([
             'cast' => fn($query) => $query
                 ->orderBy('order', 'asc')
                 ->take(10)
-                ->with('person'),
+                ->with(['person:id,name,profile_path']),
             'crew' => fn($query) => $query
                 ->whereIn('department', ['Directing', 'Writing', 'Production'])
                 ->orderBy('order', 'asc')
                 ->take(10)
-                ->with('person'),
+                ->with(['person:id,name,profile_path']),
             'genres',
             'reviews',
+            'likes' => fn($query) => $query->where('user_id', $userId)->select('id'), // Only get the ID for efficiency
+            'ratings' => fn($query) => $query->where('user_id', $userId)->select('rateable_id', 'user_id', 'rating'),
+            // Only get necessary columns
+            'watchlists' => fn($query) => $query->where('user_id', $userId),
         ])
-            ->loadCount([
-                'ratings',
-                'likes' => fn($query) => $query->where('status', true),
+            ->withCount([
+                'likes' => fn($query) => $query->where('status', '=', true), // Total likes (no need for filtering here)
+                'ratings', // Total ratings (no need for filtering here)
             ])
-            ->loadAvg('ratings as avg_rating', 'rating');
-
-//        $movie->loadCount([
-//            'ratings',
-//            'likes' => fn($query) => $query->where('status', true),
-//        ])->loadAvg('ratings as avg_rating', 'rating')
-//            ->load([
-//                'cast' => fn($query) => $query->with('person')
-//                    ->orderBy('order', 'asc')
-//                    ->take(10),
-//                'crew' => fn($query) => $query->with('person')
-//                    ->whereIn('department', [
-//                        'Directing',
-//                        'Writing',
-//                        'Production',
-//                    ]),
-//                'genres',
-//                'reviews',
-//            ]);
+            ->withAvg('ratings as avg_rating', 'rating') // Average rating
+            ->findOrFail($movie->id);
 
         // Return the view
         return view('movies.show', compact('movie'));
