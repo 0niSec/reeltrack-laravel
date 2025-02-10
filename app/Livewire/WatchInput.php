@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Movie;
 use Illuminate\View\View;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -13,14 +14,18 @@ class WatchInput extends Component
     #[Validate('required|boolean')]
     public bool $isWatched = false;
 
-    public Movie $movie;
+    public int $movieId;
 
-    public function mount(Movie $movie): void
+    public function mount(int $movieId): void
     {
-        $this->isWatched = $movie->watches()
+        $this->movieId = $movieId;
+        $movie = Movie::findOrFail($movieId);
+
+        // If there's a watch record for this user, grab its "is_watched" value; otherwise default to false.
+        $this->isWatched = (bool) ($movie->watches()
             ->where('user_id', auth()->id())
-            ->first()
-            ?->is_watched ?? false;
+            ->value('is_watched') ?? false
+        );
     }
 
     public function toggleWatch(): void
@@ -30,14 +35,25 @@ class WatchInput extends Component
         // Toggle the state
         $this->isWatched = !$this->isWatched;
 
-        // Update or create the watch record for the authenticated user
-        $watch = $this->movie->watches()->updateOrCreate(
+        // Do a minimal update on the watchlist relationship
+        $movie = Movie::findOrFail($this->movieId);
+        $movie->watches()->updateOrCreate(
             ['user_id' => auth()->id()],
             ['is_watched' => $this->isWatched]
         );
 
-        $this->authorize('update', $watch);
+        $this->dispatch('watchToggled', $this->movieId, $this->isWatched)->self();
     }
+
+    // TODO: Fix this -- not working
+    #[On('watchToggled')]
+    public function handleWatchToggled($movieId, $isWatched): void
+    {
+        if ($this->movieId === $movieId) {
+            $this->isWatched = $isWatched;
+        }
+    }
+
 
     public function render(): View
     {

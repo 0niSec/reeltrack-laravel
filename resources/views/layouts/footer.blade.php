@@ -18,12 +18,12 @@
                 <h3 class="text-lg font-bold mb-4">Quick Links</h3>
                 <ul class="space-y-2">
                     <li>
-                        <x-nav-link href="{{ url('/') }}">
+                        <x-nav-link href="{{ route('index') }}">
                             Home
                         </x-nav-link>
                     </li>
                     <li>
-                        <x-nav-link href="{{ url('/about') }}">
+                        <x-nav-link href="{{ route('about.faq') }}">
                             About
                         </x-nav-link>
                     </li>

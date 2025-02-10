@@ -1,7 +1,7 @@
 <div>
     <label class="block text-sm text-primary-400 mb-1">{{ $liked ? 'Liked' : 'Like' }}</label>
     <div class="relative flex items-center group">
-        <div class="cursor-pointer" wire:click.prevent="toggleLike">
+        <div class="cursor-pointer" wire:click="toggleLike">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"

@@ -1,9 +1,5 @@
 @props(['cast', 'crew'])
 
-{{--@php--}}
-{{--    dd($crew);--}}
-{{--@endphp--}}
-
 <div x-data="{ activeTab: 'cast' }">
     {{-- Tabs --}}
     <div class="flex gap-4 border-b border-neutral-700">
@@ -28,7 +24,7 @@
     {{-- Cast Tab --}}
     <div x-show="activeTab === 'cast'" class="mt-4">
         <div class="grid grid-cols-2 gap-4">
-            @foreach (collect($cast) as $castMember)
+            @foreach ($cast as $castMember)
                 <div class="flex items-center gap-3">
                     @if($castMember->person->profile_path != null)
                         <img
@@ -58,7 +54,7 @@
     {{-- Crew Tab --}}
     <div x-show="activeTab === 'crew'" class="mt-4">
         <div class="grid grid-cols-2 gap-4">
-            @foreach (collect($crew) as $crewMember)
+            @foreach ($crew as $crewMember)
                 <div class="flex items-center gap-3">
                     <img
                         src="{{ $crewMember->person->profile_path

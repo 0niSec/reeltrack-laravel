@@ -6,6 +6,7 @@ use App\Models\Movie;
 use App\Models\Person;
 use App\Services\TmdbApiService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class MovieSeeder extends Seeder
 {
@@ -21,6 +22,20 @@ class MovieSeeder extends Seeder
                 continue;
             }
 
+            $slugTitle = preg_replace('/[^A-Za-z0-9\-]/', '-', $movieDetails['title']);
+
+            $movieBackdropUrl = $tmdb->backdropUrl($movieDetails['backdrop_path'] ?? null);
+            $backdropLocalPath = null;
+            if ($movieBackdropUrl) {
+                $imageContents = file_get_contents($movieBackdropUrl);
+
+                $filename = "backdrops/movie_{$id}_{$slugTitle}.jpg";
+
+                Storage::disk('public')->put($filename, $imageContents);
+
+                $backdropLocalPath = Storage::url($filename);
+            }
+
             // Create the Movie record.
             $movie = Movie::create([
                 'tmdb_id' => $movieDetails['id'],
@@ -28,7 +43,7 @@ class MovieSeeder extends Seeder
                 'overview' => $movieDetails['overview'],
                 'tagline' => $movieDetails['tagline'],
                 'poster_path' => $tmdb->posterUrl($movieDetails['poster_path'] ?? null),
-                'backdrop_path' => $tmdb->backdropUrl($movieDetails['backdrop_path'] ?? null),
+                'backdrop_path' => $backdropLocalPath,
                 'release_date' => $movieDetails['release_date'],
                 'runtime' => $movieDetails['runtime'],
             ]);
@@ -56,13 +71,25 @@ class MovieSeeder extends Seeder
                     continue;
                 }
 
+                $profilePath = null;
+                $profileUrl = $tmdb->posterUrl($personDetails['profile_path'] ?? null);
+
+                if ($profileUrl) {
+                    $personImageContents = file_get_contents($profileUrl);
+                    $profileImagePath = "people/person_{$personDetails['id']}_{$personDetails['name']}.jpg";
+                    Storage::disk('public')->put($profileImagePath, $personImageContents);
+
+
+                    $profilePath = Storage::url($profileImagePath);
+                }
+
                 // Create or update the Person record.
                 $person = Person::updateOrCreate(
                     ['tmdb_id' => $personDetails['id']],
                     [
                         'name' => $personDetails['name'] ?? null,
                         'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $tmdb->posterUrl($personDetails['profile_path']),
+                        'profile_path' => $profilePath,
                         'birthday' => $personDetails['birthday'] ?? null,
                         'deathday' => $personDetails['deathday'] ?? null,
                         'place_of_birth' => $personDetails['place_of_birth'] ?? null,

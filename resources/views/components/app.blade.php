@@ -16,6 +16,12 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('watchState', {});
+        });
+    </script>
+
 </head>
 
 <body class="font-sans antialiased flex flex-col min-h-screen">

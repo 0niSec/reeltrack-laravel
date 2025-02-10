@@ -30,10 +30,14 @@ class LikeInput extends Component
             'user_id' => auth()->id(),
         ]);
 
-        $this->authorize($like->exists ? 'update' : 'create', $like);
-
         $like->status = $this->liked;
         $like->save();
+    }
+
+    public function updatedLiked()
+    {
+        $this->liked = !$this->liked;
+        $this->dispatch('like-updated')->self();
     }
 
     public function render(): View

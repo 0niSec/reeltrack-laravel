@@ -116,7 +116,7 @@
                         <div class="flex items-center space-x-10 my-4">
                             <!-- TODO: Make one parent component that holds all 3? -->
                             {{-- Watched Date --}}
-                            <livewire:watch-input :movie="$movie"/>
+                            <livewire:watch-input :movie-id="$movie->id"/>
 
                             {{-- Rating Input --}}
                             <livewire:rating-input :movie="$movie"/>
@@ -125,7 +125,8 @@
                             <livewire:like-input :movie="$movie"/>
 
                             {{-- Watchlist --}}
-                            <livewire:watchlist-input :movie="$movie"/>
+                            {{-- Kebab case for the prop is okay --}}
+                            <livewire:watchlist-input :movie-id="$movie->id"/>
                         </div>
                     </form>
                 @else

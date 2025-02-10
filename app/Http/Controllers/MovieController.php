@@ -60,13 +60,11 @@ class MovieController extends Controller
         $movie = Movie::with([
             'cast' => fn($query) => $query
                 ->orderBy('order', 'asc')
-                ->take(10)
-                ->with(['person:id,name,profile_path']),
+                ->with(['person:id,name,profile_path'])->take(10),
             'crew' => fn($query) => $query
                 ->whereIn('department', ['Directing', 'Writing', 'Production'])
                 ->orderBy('order', 'asc')
-                ->take(10)
-                ->with(['person:id,name,profile_path']),
+                ->with(['person:id,name,profile_path'])->take(10),
             'genres',
             'reviews',
             'likes' => fn($query) => $query->where('user_id', $userId)->select('id'), // Only get the ID for efficiency

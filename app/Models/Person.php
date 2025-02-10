@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
@@ -16,5 +17,14 @@ class Person extends Model
         'place_of_birth',
         'gender',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'birthday' => 'date',
+            'deathday' => 'date',
+            'gender' => Gender::class,
+        ];
+    }
 
 }

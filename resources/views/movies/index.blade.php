@@ -60,7 +60,7 @@
                 class="font-bold px-2 hover:text-black"
                 @click="show = false"
             >
-                &times;
+                <x-icon-close class="w-4 h-4"/>
             </button>
         </div>
     @endif

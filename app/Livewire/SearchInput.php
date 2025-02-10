@@ -3,8 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Movie;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -22,12 +20,11 @@ class SearchInput extends Component
 
         $query = "%{$value}%";
 
-        $this->searchResults = Cache::remember("search-{$query}", now()->addHours(24), function () use ($query) {
-            Log::info("Cache miss for query: {$query}");
-            Log::info("Searching for {$query}");
-
-            return Movie::select('title')->where('title', 'LIKE', $query)->limit(15)->get();
-        });
+        $this->searchResults = Movie::select(['id', 'title', 'release_date'])
+            ->with('crew') // if you also want to access crew data
+            ->where('title', 'LIKE', $query)
+            ->limit(15)
+            ->get();
     }
 
     public function render()

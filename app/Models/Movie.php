@@ -49,6 +49,8 @@ class Movie extends Model
                 ->where('status', true),
             'ratings',
             'reviews',
+            'watches',
+            
         ]);
     }
 
