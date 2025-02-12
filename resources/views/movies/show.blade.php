@@ -26,7 +26,7 @@
 
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-linear-to-t from-zinc-950 via-zinc-950 via-10% to-transparent"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-zinc-900 "></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -116,7 +116,7 @@
                         <div class="flex items-center space-x-10 my-4">
                             <!-- TODO: Make one parent component that holds all 3? -->
                             {{-- Watched Date --}}
-                            <livewire:watch-input :movie-id="$movie->id"/>
+                            <livewire:watch-input :movie="$movie"/>
 
                             {{-- Rating Input --}}
                             <livewire:rating-input :movie="$movie"/>

@@ -24,5 +24,10 @@ class UserProfilePolicy
         return $userProfile->user->is($user);
     }
 
+    public function delete(User $user, UserProfile $userProfile): bool
+    {
+        return $userProfile->user->is($user);
+    }
+
 
 }

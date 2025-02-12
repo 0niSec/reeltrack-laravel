@@ -16,6 +16,7 @@ class UserProfileController extends Controller
             'likes.likeable',
             'reviews.reviewable',
             'watches.watchable',
+            'reviews.reviewable',
         ]);
 
         return view('users.profile.show', compact('user'));
@@ -30,6 +31,11 @@ class UserProfileController extends Controller
 
     public function update(Request $request, User $user)
     {
-        //
+        dd($request->all());
+    }
+
+    public function destroy(Request $request, User $user)
+    {
+        dd($request->all());
     }
 }

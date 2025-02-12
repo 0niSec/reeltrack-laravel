@@ -7,6 +7,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
 use App\Http\Controllers\UserProfileController;
+use App\Livewire\MovieShow;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -46,8 +47,19 @@ Route::get('/users/{user:username}/profile/settings', [UserProfileController::cl
     ->middleware('auth')
     ->can('edit', 'user.profile');
 
-Route::patch('/users/{user:username}/profile/settings', [UserProfileController::class, 'update']);
-Route::put('/users/{user:username}/profile/settings', [UserProfileController::class, 'update']);
+Route::post('/users/{user:username}/profile/delete',
+    [UserProfileController::class, 'destroy'])
+    ->name('profile.delete')
+    ->middleware('auth')
+    ->can('delete',
+        'user.profile');
+
+Route::patch('/users/{user:username}/profile/settings',
+    [UserProfileController::class, 'update'])
+    ->name('profile.settings.update')
+    ->middleware('auth')
+    ->can('edit',
+        'user.profile');
 
 //*************************************//
 

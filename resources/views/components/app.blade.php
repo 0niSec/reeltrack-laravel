@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-zinc-950 text-zinc-200">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-zinc-900 text-gray-200">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,13 +15,6 @@
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
-
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('watchState', {});
-        });
-    </script>
-
 </head>
 
 <body class="font-sans antialiased flex flex-col min-h-screen">
@@ -36,4 +29,11 @@
 <!-- Footer -->
 @include('layouts.footer')
 @livewireScripts
+
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.store('watchState', {});
+    });
+</script>
 </body>

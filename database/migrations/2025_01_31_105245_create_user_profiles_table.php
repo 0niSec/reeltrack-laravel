@@ -12,6 +12,19 @@ return new class extends Migration {
             $table->id();
             $table->uuid('avatar')->nullable();
             $table->text('about')->nullable();
+            $table->string('nickname')->nullable();
+            $table->string('website')->nullable();
+            $table->string('location')->nullable();
+            $table->enum('pronouns', ['He/him', 'He/their', 'She/her', 'She/their', 'They/their'])->nullable()
+                ->default
+                (null);
+            $table->string('twitter')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('tiktok')->nullable();
+            $table->string('bluesky')->nullable();
+            $table->text('bio')->nullable();
             $table->text('favorite_movies')->nullable();
             $table->text('favorite_shows')->nullable();
             $table->text('favorite_actors')->nullable();

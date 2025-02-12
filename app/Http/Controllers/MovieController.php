@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Cache;
 
 class MovieController extends Controller
 {
@@ -56,30 +57,56 @@ class MovieController extends Controller
     public function show(Movie $movie): View
     {
         $userId = auth()->id();
+        $cacheKey = 'movie_details_'.$movie->id;
 
-        $movie = Movie::with([
-            'cast' => fn($query) => $query
-                ->orderBy('order', 'asc')
-                ->with(['person:id,name,profile_path'])->take(10),
-            'crew' => fn($query) => $query
-                ->whereIn('department', ['Directing', 'Writing', 'Production'])
-                ->orderBy('order', 'asc')
-                ->with(['person:id,name,profile_path'])->take(10),
-            'genres',
-            'reviews',
-            'likes' => fn($query) => $query->where('user_id', $userId)->select('id'), // Only get the ID for efficiency
-            'ratings' => fn($query) => $query->where('user_id', $userId)->select('rateable_id', 'user_id', 'rating'),
-            // Only get necessary columns
-            'watchlists' => fn($query) => $query->where('user_id', $userId),
-        ])
-            ->withCount([
-                'likes' => fn($query) => $query->where('status', '=', true), // Total likes (no need for filtering here)
-                'ratings', // Total ratings (no need for filtering here)
+
+        $cachedMovie = Cache::remember($cacheKey, 3600, function () use ($movie) {
+            return Movie::with([
+                'cast' => function ($query) {
+                    $query->orderBy('order', 'asc')
+                        ->with(['person:id,name,profile_path'])
+                        ->take(10);
+                },
+                'crew' => function ($query) {
+                    $query->whereIn('department', ['Directing', 'Writing', 'Production'])
+                        ->orderBy('order', 'asc')
+                        ->with(['person:id,name,profile_path'])
+                        ->take(10);
+                },
+                'genres',
+
             ])
-            ->withAvg('ratings as avg_rating', 'rating') // Average rating
-            ->findOrFail($movie->id);
+                ->findOrFail($movie->id);
+        });
+
+        // Retrieve likes, ratings, and watchlists separately
+        $movieFresh = Movie::where('id', $movie->id)
+            ->with([
+                'likes' => fn($query) => $query
+                    ->where('user_id', $userId)
+                    ->select('id'),
+                'ratings' => fn($query) => $query
+                    ->where('user_id', $userId)
+                    ->select('rateable_id', 'user_id', 'rating'),
+                'watchlists' => fn($query) => $query->where('user_id', $userId),
+                'reviews',
+            ])
+            ->withCount([
+                'likes' => fn($query) => $query->where('status', true),
+                'ratings',
+            ])
+            ->withAvg('ratings as avg_rating', 'rating')
+            ->firstOrFail();
+
+        $cachedMovie->setRelation('likes', $movieFresh->likes);
+        $cachedMovie->setRelation('ratings', $movieFresh->ratings);
+        $cachedMovie->setRelation('watchlists', $movieFresh->watchlists);
+        $cachedMovie->likes_count = $movieFresh->likes_count;
+        $cachedMovie->ratings_count = $movieFresh->ratings_count;
+        $cachedMovie->avg_rating = $movieFresh->avg_rating;
+
 
         // Return the view
-        return view('movies.show', compact('movie'));
+        return view('movies.show', ['movie' => $cachedMovie]);
     }
 }
