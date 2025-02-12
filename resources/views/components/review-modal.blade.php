@@ -54,7 +54,7 @@
                     </div>
 
                     {{-- Watch --}}
-                    <livewire:watch-input :movie-id="$movie->id"/>
+                    <livewire:watch-input :movie="$movie"/>
 
                     {{-- Review Text --}}
                     <div>
