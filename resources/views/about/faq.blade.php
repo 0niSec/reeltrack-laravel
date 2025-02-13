@@ -42,6 +42,7 @@
             <ul class="list-disc list-inside mt-8 mb-8">
                 <li>Rating, reviewing and liking content</li>
                 <li>Creating lists</li>
+                <li>Creating "Reels"</li>
                 <li>Adding new content. For more information on this, see
                     <x-inline-link
                         href="{{ route('about.creating-data') }}">here

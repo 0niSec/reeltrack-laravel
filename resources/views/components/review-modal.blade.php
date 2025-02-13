@@ -23,7 +23,7 @@
                     </h2>
                     <button
                         type="button"
-                        @click="isOpen = false;$wire:confirm('Are you sure you want to cancel?')"
+                        @click="isOpen = false;confirm('Are you sure you want to cancel?')"
                         class="text-zinc-400 hover:text-primary-500"
                     >
                         <!-- Close Icon -->
@@ -54,7 +54,7 @@
                     </div>
 
                     {{-- Watch --}}
-                    <livewire:watch-input :movie="$movie"/>
+                    <livewire:watch-input :movie-id="$movie->id"/>
 
                     {{-- Review Text --}}
                     <div>

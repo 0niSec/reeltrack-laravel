@@ -38,7 +38,7 @@
     <div class="container max-w-6xl mx-auto -mt-64 relative z-10">
         <div class="flex gap-8">
             {{-- Left column: Poster and actions --}}
-            <div class="w-[300px] shrink-0">
+            <div class="w-[300px] shrink-0" x-data="{ isOpen: false }">
                 <img
                     src="{{ $movie->poster_path }}"
                     alt="{{ $movie->poster_path }}"
@@ -48,7 +48,7 @@
                 {{-- Action buttons --}}
                 @auth
                     <div
-                        class="mt-4 space-y-2" x-data="{ isOpen: false }"
+                        class="mt-4 space-y-2"
                     >
                         <button
                             type="button"
@@ -116,7 +116,7 @@
                         <div class="flex items-center space-x-10 my-4">
                             <!-- TODO: Make one parent component that holds all 3? -->
                             {{-- Watched Date --}}
-                            <livewire:watch-input :movie="$movie"/>
+                            <livewire:watch-input :movie-id="$movie->id"/>
 
                             {{-- Rating Input --}}
                             <livewire:rating-input :movie="$movie"/>

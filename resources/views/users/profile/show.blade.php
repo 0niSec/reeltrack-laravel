@@ -20,7 +20,7 @@
                     <p class="text-sm text-zinc-500">Member since {{ $user->created_at->year }}</p>
                 </div>
                 @can('edit', $user->profile)
-                    <a href="{{ route('profile.settings.edit', ['user' => Auth::user()->username]) }}" class="flex
+                    <a href="{{ route('settings.profile')}}" class="flex
                     items-center
             space-x-2 text-xs p-2 bg-zinc-700 rounded-lg shadow-xl inset-shadow-2xs font-bold hover:bg-zinc-600
             transition-all ease-in-out">Edit Profile</a>

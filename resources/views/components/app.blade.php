@@ -30,10 +30,4 @@
 @include('layouts.footer')
 @livewireScripts
 
-
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.store('watchState', {});
-    });
-</script>
 </body>

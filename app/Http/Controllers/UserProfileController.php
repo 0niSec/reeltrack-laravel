@@ -22,17 +22,6 @@ class UserProfileController extends Controller
         return view('users.profile.show', compact('user'));
     }
 
-    public function edit(User $user)
-    {
-        $user->load('profile');
-
-        return view('users.profile.settings.edit', compact('user'));
-    }
-
-    public function update(Request $request, User $user)
-    {
-        dd($request->all());
-    }
 
     public function destroy(Request $request, User $user)
     {

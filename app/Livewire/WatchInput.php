@@ -13,11 +13,12 @@ class WatchInput extends Component
     #[Validate('required|boolean')]
     public bool $isWatched = false;
 
-    public Movie $movie;
+    public int $movieId;
 
-    public function mount(Movie $movie): void
+    public function mount(int $movieId): void
     {
-        $this->movie = $movie;
+        $this->movieId = $movieId;
+        $movie = Movie::findOrFail($movieId);
 
         // If there's a watch record for this user, grab its "is_watched" value; otherwise default to false.
         $this->isWatched = (bool) ($movie->watches()
@@ -34,10 +35,13 @@ class WatchInput extends Component
         $this->isWatched = !$this->isWatched;
 
         // Do a minimal update on the watchlist relationship
-        $this->movie->watches()->updateOrCreate(
+        $movie = Movie::findOrFail($this->movieId);
+        $movie->watches()->updateOrCreate(
             ['user_id' => auth()->id()],
             ['is_watched' => $this->isWatched]
         );
+
+        $this->dispatch('watch-toggled', $this->movieId, $this->isWatched);
     }
 
 

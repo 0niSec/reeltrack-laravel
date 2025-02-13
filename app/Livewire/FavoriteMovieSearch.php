@@ -15,6 +15,8 @@ class FavoriteMovieSearch extends Component
     public function selectMovie(int $movieId): void
     {
         $this->dispatch('movie-selected', $movieId);
+        $this->reset('searchResults');
+//        $this->dispatch('close-modal');
     }
 
     public function updatedSearchText(string $value): void
@@ -23,13 +25,13 @@ class FavoriteMovieSearch extends Component
 
         $this->validate();
 
-        $query = "%{$value}%";
+        $wildcard = "%{$value}%";
 
-        $this->searchResults = Movie::select(['id', 'title', 'release_date'])
-            ->with('crew') // if you also want to access crew data
-            ->where('title', 'LIKE', $query)
-            ->limit(15)
-            ->get();
+        $this->searchResults = Movie::select(['id', 'title', 'release_date'])->with([
+            'crew' => function ($query) {
+                $query->where('job', 'Director');
+            },
+        ])->where('title', 'LIKE', $wildcard)->get();
     }
 
     public function render()

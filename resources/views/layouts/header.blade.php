@@ -42,19 +42,40 @@
                     </form>
 
                     {{-- Profile with Avatar --}}
-                    <a
-                        href="{{ route('profile', ['user' => Auth::user()->username]) }}"
-                        class="flex items-center space-x-2 hover:text-primary-500 transition-colors group"
-                    >
-                        <img
-                            src="https://ui-avatars.com/api/?rounded=true"
-                            alt="Avatar"
-                            class="w-8 h-8 rounded-full border-2 border-transparent group-hover:border-primary-500 transition-colors"
+                    <div class="flex items-center space-x-2 group cursor-pointer relative"
+                         x-data="{ showProfileDropdown: false }" @click.away="showProfileDropdown = false"
+                         @click="showProfileDropdown = !showProfileDropdown">
+                        <div
+                            class="flex items-center space-x-2 hover:text-primary-500 transition-colors group"
                         >
-                        <span class="font-bold">
-        {{ Auth::user()->username }}
-    </span>
-                    </a>
+                            <img
+                                src="https://ui-avatars.com/api/?rounded=true"
+                                alt="Avatar"
+                                class="w-8 h-8 rounded-full border-2 border-transparent
+                                group-hover:border-primary-500 transition-colors"
+                            >
+                        </div>
+                        <x-icon-caret-down
+                            class="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors"/>
+
+                        {{-- Profile Dropdown --}}
+                        <div
+                            x-show="showProfileDropdown"
+                            x-cloak
+                            class="absolute top-10 right-0 z-50 bg-zinc-800 shadow-xl rounded-lg py-2 w-48"
+                            @click.away="showProfileDropdown = false"
+                        >
+                            <a href="{{ route('profile', Auth::user()) }}"
+                               class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
+                                Profile
+                            </a>
+                            <a href="{{ route('settings.profile') }}"
+                               class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
+                                Settings
+                            </a>
+                        </div>
+
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="font-bold hover:text-primary-500 transition-colors">
                         Login

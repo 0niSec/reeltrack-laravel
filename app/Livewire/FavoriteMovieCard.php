@@ -8,21 +8,17 @@ use Livewire\Component;
 
 class FavoriteMovieCard extends Component
 {
-    public ?Movie $selectedMovie = null;
-    public $showModal = false;
+    public int $movieId;
+    public Movie $selectedMovie;
 
     #[On('movie-selected')]
-    public function setMovie($movie)
+    public function setMovie(int $movieId): void
     {
+        $this->movieId = $movieId;
+        $movie = Movie::findOrFail($movieId);
+
         $this->selectedMovie = $movie;
-        $this->showModal = false;
     }
-
-    public function dispatchShowModal(): void
-    {
-        $this->dispatch('open-movie-modal')->to(FavoriteMovieModal::class);
-    }
-
 
     public function render()
     {

@@ -20,7 +20,7 @@
                        text-sm cursor-pointer"
                             wire:click="selectMovie({{ $searchResult->id }})">
                             {{ $searchResult->title }} ({{ $searchResult->release_date->format('Y') }}) <span>{{
-                        $searchResult->crew->where('job', 'Director')->first()->name
+                        $searchResult->crew->first()->name ?? 'Unknown Director'
                         }}</span>
                         </li>
                     @endforeach
