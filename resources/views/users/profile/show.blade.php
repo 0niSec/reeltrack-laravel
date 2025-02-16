@@ -1,6 +1,17 @@
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
 
+    @if(session('success'))
+        <div
+            class="absolute bg-green-600 rounded-md p-4 w-auto max-w-md h-auto max-h-32 top-25 left-1/2
+            transform
+            -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
+            <div class="alert flex items-center">
+                <x-icon-check-circle class="w-8 h-8 mr-4"/> {{ session('success') }}
+            </div>
+        </div>
+    @endif
+
     <div class="container max-w-6xl mx-auto min-h-screen space-y-10">
 
         <!-- Top container/stats -->

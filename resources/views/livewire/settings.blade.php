@@ -1,5 +1,5 @@
-<x-slot:title>Settings</x-slot:title>
 <div class="container max-w-6xl mt-10">
+    <x-slot:heading>Profile Settings</x-slot:heading>
     <form wire:submit="save" enctype="multipart/form-data"
     >
         <div class="grid grid-cols-2 gap-x-20 mt-8">
@@ -95,7 +95,7 @@
                     @endfor
                 </div>
             </div>
-            <x-form-submit-button class="mt-10 w-1/2">Save</x-form-submit-button>
         </div>
+        <x-form-submit-button class="mt-8 w-auto">Save</x-form-submit-button>
     </form>
 </div>

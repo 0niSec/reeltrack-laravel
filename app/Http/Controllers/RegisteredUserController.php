@@ -18,7 +18,14 @@ class RegisteredUserController extends Controller
         $attrs = $request->validate([
             'username' => ['required', 'string', 'max:24', 'min:5', 'unique:users'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', Password::min(15), 'confirmed'], // Automatically looks for
+            'password' => [
+                'required', Password::min(10)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(3), 'confirmed',
+            ], // Automatically looks for
             // password_confirmation
         ]);
 
