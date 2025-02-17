@@ -3,6 +3,9 @@
 
     @if(session('success'))
         <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 5000)"
             class="absolute bg-green-600 rounded-md p-4 w-auto max-w-md h-auto max-h-32 top-25 left-1/2
             transform
             -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
@@ -19,9 +22,10 @@
             <!-- Username, avatar, edit profile button -->
             <div class="flex items-center space-x-4">
                 @if($user->profile->avatar)
-                    <img src="{{ $user->profile->id }}" alt="Profile Photo" class="rounded-full h-20 w-20 object-cover">
+                    <img src="{{ Storage::url($user->profile->avatar) }}" alt="Profile Photo"
+                         class="rounded-full h-20 w-20 object-cover">
                 @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->username) }}&size=128"
+                    <img src="https://ui-avatars.com/api/?name={{ $user->username }}&size=128"
                          alt="Default Avatar" class="rounded-full h-20 w-20 object-cover">
                 @endif
                 <div>

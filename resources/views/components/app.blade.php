@@ -19,7 +19,7 @@
 
 <body class="font-sans antialiased flex flex-col min-h-screen">
 <!-- Header -->
-@include('layouts.header')
+@include('layouts.header', ['user' => auth()->user()])
 
 <!-- Main Content -->
 <main class="grow">

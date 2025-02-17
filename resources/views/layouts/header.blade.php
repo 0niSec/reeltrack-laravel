@@ -48,12 +48,13 @@
                         <div
                             class="flex items-center space-x-2 hover:text-primary-500 transition-colors group"
                         >
-                            <img
-                                src="https://ui-avatars.com/api/?rounded=true"
-                                alt="Avatar"
-                                class="w-8 h-8 rounded-full border-2 border-transparent
-                                group-hover:border-primary-500 transition-colors"
-                            >
+                            @if($user->profile->avatar)
+                                <img src="{{ Storage::url($user->profile->avatar) }}" alt="Profile Photo"
+                                     class="rounded-full w-10 h-10 object-cover">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ $user->username }}&size=128"
+                                     alt="Default Avatar" class="rounded-full h-20 w-20 object-cover">
+                            @endif
                         </div>
                         <x-icon-caret-down
                             class="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors"/>
@@ -62,10 +63,10 @@
                         <div
                             x-show="showProfileDropdown"
                             x-cloak
-                            class="absolute top-10 right-0 z-50 bg-zinc-800 shadow-xl rounded-lg py-2 w-48"
+                            class="absolute top-12 right-0 z-50 bg-zinc-800 shadow-xl rounded-lg py-2 w-48"
                             @click.away="showProfileDropdown = false"
                         >
-                            <a href="{{ route('profile', Auth::user()) }}"
+                            <a href="{{ route('profile', Auth::user()->username) }}"
                                class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
                                 Profile
                             </a>

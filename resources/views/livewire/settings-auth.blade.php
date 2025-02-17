@@ -5,7 +5,9 @@
         <div
             class="absolute bg-green-800 rounded-md p-4 w-auto max-w-md h-auto max-h-32 top-25 left-1/2
             transform
-            -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
+            -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center" x-data="{ showSuccess: true }"
+            x-show="showSuccess"
+            x-init="setTimeout(() => showSuccess = false, 5000)">
             <div class="alert flex items-center">
                 <x-icon-check-circle class="w-8 h-8 mr-4"/> {{ session('success') }}
             </div>
@@ -16,7 +18,9 @@
         <div
             class="absolute bg-red-800 rounded-md p-4 w-auto max-w-md h-auto max-h-32 top-25 left-1/2
             transform
-            -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
+            -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center" x-data="{ showError: true }"
+            x-show="showError"
+            x-init="setTimeout(() => showError = false, 5000)">
             <div class="alert flex items-center">
                 <x-icon-error-circle class="w-8 h-8 mr-4"/> {{ session('error') }}
             </div>
@@ -31,9 +35,20 @@
                     are
                     okay) and
                     between 3 and 20 characters. You are allowed to update your username every thirty days, at most.</p>
-                <x-form-label for="username">Username</x-form-label>
-                <x-form-input-small type="text" wire:model.blur="username" name="username"
-                />
+                <div class="flex items-center justify-between space-x-2">
+                    <x-form-label for="username">Username</x-form-label>
+                    @if($username)
+                        <p class="{{ $isUsernameAvailable ? 'text-green-500' : 'text-red-500' }} text-sm flex items-center">
+                            @if($isUsernameAvailable)
+                                <x-icon-check-circle class="w-4 h-4 inline-block mr-1"/>
+                            @else
+                                <x-icon-x-mark class="w-4 h-4 inline-block mr-1"/>
+                            @endif
+                            {{ $usernameMessage }}
+                        </p>
+                    @endif
+                </div>
+                <x-form-input-small type="text" wire:model.live.debounce.300ms="username" name="username"/>
                 <x-form-error name="username"/>
             </div>
 
@@ -83,6 +98,7 @@
                     confirmation email to the new address. You <strong>must</strong> click this link to finalize the
                     change.
                 </p>
+                <!-- TODO: Email confirmation -->
                 <x-form-label for="email">Email</x-form-label>
                 <x-form-input-small type="text" wire:model="email" name="email"
                                     :value="old('email')"/>

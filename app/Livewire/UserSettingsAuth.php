@@ -18,12 +18,34 @@ class UserSettingsAuth extends Component
     public string $password;
     public string $email;
 
+    public bool $isUsernameAvailable = true;
+    public ?string $usernameMessage = null;
+    public ?string $usernameStatus = null;
+
+
     public ?Carbon $usernameLastChangedAt = null;
 
     public function mount()
     {
         $this->usernameLastChangedAt = auth()->user()->username_last_changed_at ? Carbon::parse(auth()->user()
             ->username_last_changed_at) : null;
+    }
+
+    public function updatedUsername(): void
+    {
+        if (empty($this->username)) {
+            $this->usernameMessage = null;
+            $this->usernameStatus = null;
+            $this->isUsernameAvailable = true;
+
+            return;
+        }
+
+        $normalizedInput = strtolower($this->username);
+        $exists = User::whereRaw('LOWER(username) = ?', [$normalizedInput])->exists();
+
+        $this->isUsernameAvailable = !User::whereRaw('LOWER(username) = ?', [$normalizedInput])->exists();
+        $this->usernameMessage = $this->isUsernameAvailable ? 'Available!' : 'Taken';
     }
 
     public function save()
@@ -104,9 +126,12 @@ class UserSettingsAuth extends Component
 
         // Reset password field after attempt
         $this->password = '';
-    }
 
-    // Add custom messages if needed
+        // In order for the user's new profile page to work correctly, we need to reload the page
+        // We could achieve the same thing by not using a Livewire component here, but for responsiveness and live
+        // updates, we need it
+        return redirect()->route('settings.auth');
+    }
 
     protected function rules(): array
     {

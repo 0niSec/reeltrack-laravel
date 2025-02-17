@@ -10,6 +10,29 @@ class UserProfile extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'avatar',
+        'about',
+        'nickname',
+        'website',
+        'location',
+        'pronouns',
+        'twitter',
+        'instagram',
+        'facebook',
+        'youtube',
+        'tiktok',
+        'bluesky',
+        'bio',
+        'favorite_movies',
+        'favorite_shows',
+        'favorite_actors',
+        'rated_items',
+        'reviewed_items',
+        'liked_items',
+        'user_id',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
