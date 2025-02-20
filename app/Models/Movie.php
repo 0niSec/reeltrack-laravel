@@ -25,6 +25,23 @@ class Movie extends Model
         'total_likes',
     ];
 
+    public function getRouteKey(): string
+    {
+        return $this->id.'-'.str($this->title)->slug();
+    }
+
+    /**
+     * @param $value
+     * @param $field
+     * @return Movie|Model|null
+     */
+    public function resolveRouteBinding($value, $field = null): Model|Movie|null
+    {
+        $id = explode('-', $value)[0];
+
+        return $this->where('id', $id)->firstOrFail();
+    }
+
     public function scopePopular(Builder $query): void
     {
         $query->withCount([
@@ -50,7 +67,7 @@ class Movie extends Model
             'ratings',
             'reviews',
             'watches',
-            
+
         ]);
     }
 

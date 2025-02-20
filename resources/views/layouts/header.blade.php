@@ -53,7 +53,7 @@
                                      class="rounded-full w-10 h-10 object-cover">
                             @else
                                 <img src="https://ui-avatars.com/api/?name={{ $user->username }}&size=128"
-                                     alt="Default Avatar" class="rounded-full h-20 w-20 object-cover">
+                                     alt="Default Avatar" class="rounded-full w-10 h-10 object-cover">
                             @endif
                         </div>
                         <x-icon-caret-down
@@ -64,18 +64,34 @@
                             x-show="showProfileDropdown"
                             x-cloak
                             class="absolute top-12 right-0 z-50 bg-zinc-800 shadow-xl rounded-lg py-2 w-48"
-                            @click.away="showProfileDropdown = false"
                         >
-                            <a href="{{ route('profile', Auth::user()->username) }}"
-                               class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
-                                Profile
-                            </a>
-                            <a href="{{ route('settings.profile') }}"
-                               class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
-                                Settings
-                            </a>
+                            <div class="px-4 py-2 border-b border-zinc-700 text-sm text-white">
+                                <span class="font-bold">{{ $user->username }}</span>
+                            </div>
+                            <div>
+                                <a
+                                    href="{{ route('profile', Auth::user()->username) }}"
+                                    class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
+                                    Profile
+                                </a>
+                                <a
+                                    href="{{ route('settings.profile') }}"
+                                    class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
+                                    Settings
+                                </a>
+                            </div>
+                            <div class="border-t border-zinc-700">
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors"
+                                    >
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-
                     </div>
                 @else
                     <a href="{{ route('login') }}" class="font-bold hover:text-primary-500 transition-colors">
