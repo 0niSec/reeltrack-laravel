@@ -29,12 +29,7 @@ class Movie extends Model
     {
         return $this->id.'-'.str($this->title)->slug();
     }
-
-    /**
-     * @param $value
-     * @param $field
-     * @return Movie|Model|null
-     */
+    
     public function resolveRouteBinding($value, $field = null): Model|Movie|null
     {
         $id = explode('-', $value)[0];

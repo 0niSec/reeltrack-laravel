@@ -40,8 +40,6 @@ class WatchInput extends Component
             ['user_id' => auth()->id()],
             ['is_watched' => $this->isWatched]
         );
-
-        $this->dispatch('watch-toggled', $this->movieId, $this->isWatched);
     }
 
 

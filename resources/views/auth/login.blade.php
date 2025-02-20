@@ -3,12 +3,18 @@
 
     <div class="flex items-center justify-center min-h-screen">
         <div
-            class="p-6 border-2 border-zinc-700 rounded-lg shadow-xl bg-zinc-800 max-w-md w-full
+            class="p-6 border-2 border-zinc-700 rounded-lg shadow-xl shadow-zinc-800/50 bg-zinc-800 max-w-md w-full
             mx-auto">
-            <h1 class="text-2xl text-primary-500 font-bold text-center" id="login-heading">Login</h1>
+            <div class="flex flex-col items-center justify-center mb-8 space-y-2">
+                <h1
+                    class="text-2xl text-zinc-200 font-bold text-center"
+                    id="login-heading">Log in to your
+                    account</h1>
+                <span class="block text-zinc-400 text-sm">Enter your username and password below to log in</span>
+            </div>
 
             <!-- Form Components -->
-            <form action="/login" method="POST" class="flex flex-col space-y-3"
+            <form action="/login" method="POST" class="flex flex-col space-y-6"
                   aria-labelledby="login-heading">
                 @csrf
 
@@ -24,7 +30,13 @@
 
                 <!-- Password -->
                 <div>
-                    <x-form-label for="password" value="Password" class="mb-1">Password</x-form-label>
+                    <div class="flex flex-row justify-between">
+                        <x-form-label for="password" value="Password" class="mb-1">Password</x-form-label>
+                        <a href="#" class="text-sm text-primary-500 hover:text-primary-400 underline underline-offset-2
+                        transition-colors">Forgot
+                            your
+                            password?</a>
+                    </div>
                     <x-form-input placeholder="Password" id="password" name="password" :value="old('password')"
                                   type="password" required
                                   aria-required="true"/>
@@ -32,7 +44,7 @@
                 </div>
 
 
-                <x-form-submit-button>Login</x-form-submit-button>
+                <x-form-submit-button>Log in</x-form-submit-button>
 
                 <!-- Remember Me -->
                 <div class="flex flex-row space-x-2 items-center">
@@ -46,10 +58,11 @@
             <div class="flex flex-row mt-10 items-center justify-between">
                 <div class="flex flex-col space-y-1">
                     <p class="text-sm">Need an account?
-                        <x-inline-link href="{{route('register')}}">Register</x-inline-link>
+                        <x-inline-link href="{{route('register')}}" class="underline
+                        underline-offset-2">Register
+                        </x-inline-link>
                     </p>
-                    <a href="#" class="text-sm text-primary-500 hover:text-primary-400 transition-colors">Forgot your
-                        password?</a>
+
                 </div>
 
                 <a class="text-sm rounded-md bg-zinc-600 hover:bg-zinc-500 transition-colors text-zinc-100 px-4 py-2"

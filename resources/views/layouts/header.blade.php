@@ -73,11 +73,11 @@
                                     href="{{ route('profile', Auth::user()->username) }}"
                                     class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
                                     Profile
-                                </a>
-                                <a
+                                </a> <a
                                     href="{{ route('settings.profile') }}"
-                                    class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
-                                    Settings
+                                    class="flex items-center space-x-2 px-4 py-2 text-sm text-white hover:text-primary-500 hover:bg-zinc-700 transition-colors">
+                                    <x-icon-settings class="w-5 h-5"/>
+                                    <span>Settings</span>
                                 </a>
                             </div>
                             <div class="border-t border-zinc-700">
@@ -85,9 +85,10 @@
                                     @csrf
                                     <button
                                         type="submit"
-                                        class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors"
+                                        class="flex items-center space-x-2 px-4 py-2 text-sm text-white hover:text-primary-500 hover:bg-zinc-700 transition-colors w-full text-left"
                                     >
-                                        Logout
+                                        <x-icon-logout class="w-5 h-5"/>
+                                        <span>Logout</span>
                                     </button>
                                 </form>
                             </div>
