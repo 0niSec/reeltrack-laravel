@@ -15,8 +15,13 @@ return new class extends Migration {
             $table->string('overview');
             $table->string('tagline');
             $table->integer('runtime');
+            $table->integer('budget');
+            $table->string('original_language');
+            $table->string('original_title');
+            $table->integer('revenue');
             $table->unsignedBigInteger('tmdb_id')->unique();
             $table->string('release_date');
+            $table->string('status');
             $table->unsignedBigInteger('ratings_count')->default(0);
             $table->decimal('rating_average', 3)->default(0);
             $table->unsignedBigInteger('total_reviews')->default(0);

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Contracts\Watchable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Movie extends Model
+class Movie extends Model implements Watchable
 {
     protected $fillable = [
         'title',
@@ -29,7 +30,7 @@ class Movie extends Model
     {
         return $this->id.'-'.str($this->title)->slug();
     }
-    
+
     public function resolveRouteBinding($value, $field = null): Model|Movie|null
     {
         $id = explode('-', $value)[0];
@@ -46,6 +47,16 @@ class Movie extends Model
         ])
             ->orderBy('likes_count', 'desc')
             ->take(5);
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getId(): int|string
+    {
+        return $this->id;
     }
 
     public function scopeLatestReviews(Builder $query): void
@@ -104,6 +115,11 @@ class Movie extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);
+    }
+
+    public function activities(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'subject');
     }
 
 

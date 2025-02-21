@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\WatchlistEvent;
 use App\Models\Movie;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
@@ -41,6 +42,8 @@ class WatchlistInput extends Component
             ['user_id' => auth()->id()],
             ['is_watchlisted' => $this->isWatchlisted]
         );
+
+        WatchlistEvent::dispatch(auth()->user(), $this->movie(), $this->isWatchlisted);
     }
 
     public function render()

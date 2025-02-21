@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Contracts\Watchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class TvSeries extends Model
+class TvSeries extends Model implements Watchable
 {
     protected $fillable = [
         'backdrop_path',
@@ -30,19 +31,6 @@ class TvSeries extends Model
         'tagline',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'created_by' => 'array',
-            'episode_run_time' => 'array',
-            'genres' => 'array',
-            'in_production' => 'boolean',
-            'languages' => 'array',
-            'origin_country' => 'array',
-            'seasons' => 'array',
-        ];
-    }
-
     public function cast(): MorphMany
     {
         $this->morphMany(Cast::class, 'castable');
@@ -57,4 +45,33 @@ class TvSeries extends Model
     {
         return $this->hasManyThrough(TvSeriesEpisode::class, TvSeriesSeason::class, 'tv_series_id', 'season_id');
     }
+
+    public function getTitle(): string
+    {
+        return $this->name;
+    }
+
+    public function getId(): int|string
+    {
+        return $this->id;
+    }
+
+    public function activities(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'subject');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_by' => 'array',
+            'episode_run_time' => 'array',
+            'genres' => 'array',
+            'in_production' => 'boolean',
+            'languages' => 'array',
+            'origin_country' => 'array',
+            'seasons' => 'array',
+        ];
+    }
+
 }

@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Contracts\Watchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class TvSeriesEpisode extends Model
+class TvSeriesEpisode extends Model implements Watchable
 {
 
     protected $fillable = [
@@ -34,5 +35,20 @@ class TvSeriesEpisode extends Model
     public function tvSeriesSeason(): BelongsTo
     {
         return $this->belongsTo(TvSeriesSeason::class);
+    }
+
+    public function activities(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'subject');
+    }
+
+    public function getTitle(): string
+    {
+        return $this->name;
+    }
+
+    public function getId(): int|string
+    {
+        return $this->id;
     }
 }

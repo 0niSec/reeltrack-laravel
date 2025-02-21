@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Contracts\Watchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class TvSeriesSeason extends Model
+class TvSeriesSeason extends Model implements Watchable
 {
     protected $fillable = [
         'tv_series_id',
@@ -18,13 +19,6 @@ class TvSeriesSeason extends Model
         'poster_path',
         'season_number',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'air_date' => 'date',
-        ];
-    }
 
     public function cast(): MorphMany
     {
@@ -44,5 +38,27 @@ class TvSeriesSeason extends Model
     public function tvSeriesEpisodes(): HasMany
     {
         return $this->hasMany(TvSeriesEpisode::class, 'tv_series_season_id');
+    }
+
+    public function getTitle(): string
+    {
+        return $this->name;
+    }
+
+    public function getId(): int|string
+    {
+        return $this->id;
+    }
+
+    public function activities(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'subject');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'air_date' => 'date',
+        ];
     }
 }
