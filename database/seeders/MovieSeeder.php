@@ -3,143 +3,206 @@
 namespace Database\Seeders;
 
 use App\Models\Movie;
-use App\Models\Person;
+use App\Services\CreditsService;
 use App\Services\TmdbApiService;
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class MovieSeeder extends Seeder
 {
+    private TmdbApiService $tmdb;
+    private Client $client;
+    private CreditsService $creditsService;
+
+
+    public function __construct()
+    {
+        $this->tmdb = new TmdbApiService();
+        $this->client = new Client(['timeout' => 60]);
+        $this->creditsService = new CreditsService();
+    }
+
     public function run(): void
     {
-        $tmdb = new TmdbApiService();
         $randomIds = [120, 121, 122, 49051, 122917, 57158, 245891, 603692, 324552, 458156];
 
-        foreach ($randomIds as $id) {
-            // Fetch the main movie details.
-            $movieDetails = $tmdb->movieDetails($id);
-            if (!$movieDetails || empty($movieDetails['id'])) {
+        // Fetch all movie details and credits concurrently
+        $moviePromises = array_map(fn($id) => $this->fetchMovieDetailsAsync($id), $randomIds);
+        $movieResults = Utils::settle($moviePromises)->wait();
+
+        $creditPromises = [];
+        foreach ($movieResults as $id => $result) {
+            if ($result['state'] === 'fulfilled' && !empty($result['value'])) {
+                $movieDetails = $result['value'];
+                $tmdbId = $movieDetails['id']; // Get the actual TMDB ID from the movie details
+                $creditPromises[$id] = $this->fetchCreditsAsync($tmdbId); // Pass the TMDB ID instead of the array index
+            }
+        }
+
+        $creditResults = Utils::settle($creditPromises)->wait();
+
+        // Download all images first
+        $imagePromises = [];
+        $storagePaths = [];
+
+        foreach ($movieResults as $id => $result) {
+            if ($result['state'] !== 'fulfilled' || empty($result['value'])) {
                 continue;
             }
 
-            $slugTitle = preg_replace('/[^A-Za-z0-9\-]/', '-', $movieDetails['title']);
+            $movieDetails = $result['value'];
 
-            $movieBackdropUrl = $tmdb->backdropUrl($movieDetails['backdrop_path'] ?? null);
-            $backdropLocalPath = null;
-            if ($movieBackdropUrl) {
-                $imageContents = file_get_contents($movieBackdropUrl);
-
-                $filename = "backdrops/movie_{$id}_{$slugTitle}.jpg";
-
-                Storage::disk('public')->put($filename, $imageContents);
-
-                $backdropLocalPath = Storage::url($filename);
-            }
-
-            // Create the Movie record.
-            $movie = Movie::create([
-                'tmdb_id' => $movieDetails['id'],
-                'title' => $movieDetails['title'],
-                'overview' => $movieDetails['overview'],
-                'tagline' => $movieDetails['tagline'],
-                'poster_path' => $tmdb->posterUrl($movieDetails['poster_path'] ?? null),
-                'backdrop_path' => $backdropLocalPath,
-                'release_date' => $movieDetails['release_date'],
-                'runtime' => $movieDetails['runtime'],
-            ]);
-
-            foreach ($movieDetails['genres'] as $genre) {
-                $movie->genres()->create([
-                    'name' => $genre['name'],
-                    'tmdb_id' => $genre['id'],
-                ]);
-            }
-
-            // Fetch credits
-            $credits = $tmdb->movieCredits($id);
-            $castArray = $credits['cast'] ?? [];
-            $crewArray = $credits['crew'] ?? [];
-
-            // Handle cast members.
-            foreach ($castArray as $member) {
-                if (empty($member['id'])) {
-                    continue;
-                }
-
-                $personDetails = $tmdb->personDetails($member['id']);
-                if (!$personDetails || empty($personDetails['id'])) {
-                    continue;
-                }
-
-                $profilePath = null;
-                $profileUrl = $tmdb->posterUrl($personDetails['profile_path'] ?? null);
-
-                if ($profileUrl) {
-                    $personImageContents = file_get_contents($profileUrl);
-                    $profileImagePath = "people/person_{$personDetails['id']}_{$personDetails['name']}.jpg";
-                    Storage::disk('public')->put($profileImagePath, $personImageContents);
-
-
-                    $profilePath = Storage::url($profileImagePath);
-                }
-
-                // Create or update the Person record.
-                $person = Person::updateOrCreate(
-                    ['tmdb_id' => $personDetails['id']],
-                    [
-                        'name' => $personDetails['name'] ?? null,
-                        'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $profilePath,
-                        'birthday' => $personDetails['birthday'] ?? null,
-                        'deathday' => $personDetails['deathday'] ?? null,
-                        'place_of_birth' => $personDetails['place_of_birth'] ?? null,
-                        'gender' => $personDetails['gender'] ?? 0,
-                    ]
+            if (!empty($movieDetails['backdrop_path'])) {
+                $backdropPath = "backdrops/movie_{$id}.jpg";
+                $imagePromises["backdrop_{$id}"] = $this->downloadImageAsync(
+                    $this->tmdb->backdropUrl($movieDetails['backdrop_path']),
+                    $backdropPath
                 );
-
-                // Create the cast record, linking via morph relation.
-                $movie->cast()->create([
-                    'person_id' => $person->id,
-                    'name' => $member['name'] ?? null,
-                    'character' => $member['character'] ?? null,
-                    'order' => $member['order'] ?? 0,
-                ]);
+                $storagePaths[$id]['backdrop_path'] = Storage::url($backdropPath);
             }
 
-            // Handle crew members.
-            foreach ($crewArray as $member) {
-                if (empty($member['id'])) {
-                    continue;
-                }
-
-                $personDetails = $tmdb->personDetails($member['id']);
-
-                if (!$personDetails || empty($personDetails['id'])) {
-                    continue;
-                }
-
-                // Create or update the Person record.
-                $person = Person::updateOrCreate(
-                    ['tmdb_id' => $personDetails['id']],
-                    [
-                        'name' => $personDetails['name'] ?? null,
-                        'biography' => $personDetails['biography'] ?? null,
-                        'profile_path' => $tmdb->posterUrl($personDetails['profile_path']),
-                        'birthday' => $personDetails['birthday'] ?? null,
-                        'deathday' => $personDetails['deathday'] ?? null,
-                        'place_of_birth' => $personDetails['place_of_birth'] ?? null,
-                        'gender' => $personDetails['gender'] ?? 0,
-                    ]
+            if (!empty($movieDetails['poster_path'])) {
+                $posterPath = "posters/movie_{$id}.jpg";
+                $imagePromises["poster_{$id}"] = $this->downloadImageAsync(
+                    $this->tmdb->posterUrl($movieDetails['poster_path']),
+                    $posterPath
                 );
-
-                // Create the crew record, linking via morph relation.
-                $movie->crew()->create([
-                    'person_id' => $person->id,
-                    'department' => $member['department'] ?? null,
-                    'job' => $member['job'] ?? null,
-                    'name' => $member['name'] ?? null,
-                ]);
+                $storagePaths[$id]['poster_path'] = Storage::url($posterPath);
             }
+        }
+
+        // Wait for all images to download
+        if (!empty($imagePromises)) {
+            Utils::settle($imagePromises)->wait();
+        }
+
+        // Now process all data with correct storage URLs
+        DB::transaction(function () use ($movieResults, $creditResults, $storagePaths) {
+            foreach ($movieResults as $id => $result) {
+                if ($result['state'] !== 'fulfilled' || empty($result['value'])) {
+                    continue;
+                }
+
+                $movieDetails = $result['value'];
+                $credits = $creditResults[$id]['state'] === 'fulfilled' ? $creditResults[$id]['value'] : null;
+
+
+                // Create movie with pre-calculated storage URLs
+                $movie = Movie::create([
+                    'tmdb_id' => $movieDetails['id'],
+                    'title' => $movieDetails['title'],
+                    'overview' => $movieDetails['overview'],
+                    'tagline' => $movieDetails['tagline'],
+                    'budget' => $movieDetails['budget'],
+                    'status' => $movieDetails['status'],
+                    'original_title' => $movieDetails['original_title'],
+                    'revenue' => $movieDetails['revenue'],
+                    'original_language' => $movieDetails['original_language'],
+                    'poster_path' => $storagePaths[$id]['poster_path'] ?? null,
+                    'backdrop_path' => $storagePaths[$id]['backdrop_path'] ?? null,
+                    'release_date' => $movieDetails['release_date'],
+                    'runtime' => $movieDetails['runtime'],
+                ]);
+
+                // Store genres
+                if (!empty($movieDetails['genres'])) {
+                    $genresData = array_map(function ($genre) {
+                        return [
+                            'tmdb_id' => $genre['id'],
+                            'name' => $genre['name'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }, $movieDetails['genres']);
+
+                    $movie->genres()->createMany($genresData);
+                }
+
+                // Wait for all image downloads to complete
+                if (!empty($imagePromises)) {
+                    Utils::settle($imagePromises)->wait();
+                }
+
+                // Store cast members using CreditsService
+                if ($credits && !empty($credits['cast'])) {
+                    // Map the TMDB ID to each cast member
+                    $castMembers = array_map(function ($castMember) {
+                        return array_merge($castMember, ['id' => $castMember['id']]); // Ensure TMDB ID is included
+                    }, $credits['cast']);
+
+                    $this->creditsService->storeCastMembers($castMembers, $movie);
+                }
+
+
+                // Store crew members if credits were fetched successfully
+                if ($credits && !empty($credits['crew'])) {
+                    // Map the TMDB ID to each crew member
+                    $crewMembers = array_map(function ($crewMember) {
+                        return array_merge($crewMember, ['id' => $crewMember['id']]); // Ensure TMDB ID is included
+                    }, $credits['crew']);
+
+                    $this->creditsService->storeCrewMembers($crewMembers, $movie);
+                }
+            }
+        });
+    }
+
+    private function fetchMovieDetailsAsync(int $id): PromiseInterface
+    {
+        return Http::async()
+            ->withToken(config('services.tmdb.api_key'))
+            ->get("https://api.themoviedb.org/3/movie/{$id}")
+            ->then(fn($response) => $response->json());
+    }
+
+    private function fetchCreditsAsync(int $id): PromiseInterface
+    {
+        return Http::async()
+            ->withToken(config('services.tmdb.api_key'))
+            ->get("https://api.themoviedb.org/3/movie/{$id}/credits")
+            ->then(fn($response) => $response->json());
+    }
+
+    private function downloadImageAsync(string $url, string $path): PromiseInterface
+    {
+        return $this->client->getAsync($url)->then(
+            function ($response) use ($path) {
+                Storage::disk('public')->put($path, $response->getBody());
+
+                return $path;
+            }
+        );
+    }
+
+    private function processCredits(Movie $movie, array $credits): void
+    {
+        if (!empty($credits['cast'])) {
+            $castData = array_map(fn($member) => [
+                'name' => $member['name'],
+                'character' => $member['character'] ?? null,
+                'order' => $member['order'] ?? null,
+                'castable_type' => Movie::class,
+                'castable_id' => $movie->id,
+            ], $credits['cast']);
+
+            $movie->cast()->createMany($castData);
+        }
+
+        if (!empty($credits['crew'])) {
+            $crewData = array_map(fn($member) => [
+                'name' => $member['name'],
+                'job' => $member['job'],
+                'department' => $member['department'],
+                'crewable_type' => Movie::class,
+                'crewable_id' => $movie->id,
+            ], $credits['crew']);
+
+            $movie->crew()->createMany($crewData);
         }
     }
 }

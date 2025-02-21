@@ -23,12 +23,13 @@ class PersonService
 
     protected function mapCastDataToAttributes(array $castData): array
     {
-        // This will be the TMDB id that's getting passed into the API
         $personDetails = $this->tmdb->personDetails($castData['id']);
 
         return [
             'name' => $personDetails['name'],
-            'profile_path' => ('https://image.tmdb.org/t/p/original'.$personDetails['profile_path']) ?? null,
+            'profile_path' => $personDetails['profile_path']
+                ? 'https://image.tmdb.org/t/p/original'.$personDetails['profile_path']
+                : null,
             'gender' => $personDetails['gender'] ?? 0,
             'birthday' => $personDetails['birthday'] ?? null,
             'deathday' => $personDetails['deathday'] ?? null,
@@ -36,4 +37,5 @@ class PersonService
             'biography' => $personDetails['biography'] ?? null,
         ];
     }
+
 }
