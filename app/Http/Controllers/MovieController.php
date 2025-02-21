@@ -68,11 +68,17 @@ class MovieController extends Controller
                         ->take(10);
                 },
                 'crew' => function ($query) {
-                    $query->whereIn('department', ['Directing', 'Writing', 'Production'])
-                        ->orderBy('order', 'asc')
-                        ->with(['person:id,name,profile_path'])
-                        ->take(10);
+                    $query->whereIn('job', [
+                        'Director',
+                        'Writer',
+                        'Producer',
+                        'Executive Producer',
+                    ])
+                        ->orderBy('job')
+                        ->with(['person:id,name,profile_path']);
                 },
+
+
                 'genres',
 
             ])
