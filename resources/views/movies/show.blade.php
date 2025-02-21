@@ -122,7 +122,7 @@
                             <livewire:rating-input :movie="$movie"/>
 
                             {{-- Like Input --}}
-                            <livewire:like-input :movie="$movie"/>
+                            <livewire:like-input :movie-id="$movie->id"/>
 
                             {{-- Watchlist --}}
                             {{-- Kebab case for the prop is okay --}}

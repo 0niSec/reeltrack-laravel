@@ -49,7 +49,7 @@
 
                         {{-- Like --}}
                         <div class="flex-1">
-                            <livewire:like-input :movie="$movie"/>
+                            <livewire:like-input :movie-id="$movie->id"/>
                         </div>
                     </div>
 

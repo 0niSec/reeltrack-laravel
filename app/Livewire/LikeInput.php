@@ -4,41 +4,48 @@ namespace App\Livewire;
 
 use App\Models\Movie;
 use Illuminate\View\View;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class LikeInput extends Component
 {
+
     #[Validate('required|boolean')]
-    public bool $liked = false;
+    public bool $isLiked = false;
 
-    public Movie $movie;
+    #[Validate('required|integer|min:1')]
+    public int $movieId;
 
-    public function mount(Movie $movie): void
+    public function mount(): void
     {
-        $this->movie = $movie;
-        $this->liked = $movie->likes()->where('user_id', auth()->id())->first()->status ?? false;
+        // If there's a like record for this user, grab its "status" value; otherwise default to false.
+        $like = $this->movie()->likes()
+            ->where('user_id', auth()->id())
+            ->first();
+
+        $this->isLiked = $like ? $like->status : false;
+    }
+
+    #[Computed]
+    public function movie(): Movie
+    {
+        return Movie::findOrFail($this->movieId);
     }
 
     public function toggleLike(): void
     {
         $this->validate();
 
-        $this->liked = !$this->liked;
+        // Toggle the state
+        $this->isLiked = !$this->isLiked;
 
-        $like = $this->movie->likes()->firstOrNew([
-            'user_id' => auth()->id(),
-        ]);
-
-        $like->status = $this->liked;
-        $like->save();
+        $this->movie()->likes()->updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['status' => $this->isLiked]
+        );
     }
 
-    public function updatedLiked()
-    {
-        $this->liked = !$this->liked;
-        $this->dispatch('like-updated')->self();
-    }
 
     public function render(): View
     {
