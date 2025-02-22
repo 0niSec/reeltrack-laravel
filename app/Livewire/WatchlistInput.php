@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Events\WatchlistEvent;
+use App\Models\Activity;
 use App\Models\Movie;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
@@ -18,11 +18,10 @@ class WatchlistInput extends Component
 
     public function mount(): void
     {
-        // If there's a watchlist record for this user, grab its "is_watchlisted" value; otherwise default to false.
-        $this->isWatchlisted = (bool) ($this->movie()->watchlists()
+        $this->isWatchlisted = $this->movie()
+            ->watchlists()
             ->where('user_id', auth()->id())
-            ->value('is_watchlisted') ?? false
-        );
+            ->exists();
     }
 
     #[Computed]
@@ -38,12 +37,19 @@ class WatchlistInput extends Component
         // Toggle the state
         $this->isWatchlisted = !$this->isWatchlisted;
 
-        $this->movie()->watchlists()->updateOrCreate(
-            ['user_id' => auth()->id()],
-            ['is_watchlisted' => $this->isWatchlisted]
-        );
+        if ($this->isWatchlisted) {
+            $this->movie()->watchlists()->create(['user_id' => auth()->id(), 'is_watchlisted' => true]);
+        } else {
+            $this->movie()->watchlists()->where('user_id', auth()->id())->delete();
 
-        WatchlistEvent::dispatch(auth()->user(), $this->movie(), $this->isWatchlisted);
+            // Delete the activity log
+            Activity::query()
+                ->where('user_id', auth()->id())
+                ->where('subject_type', Movie::class)
+                ->where('subject_id', $this->movieId)
+                ->where('event_type', 'watchlist')
+                ->delete();
+        }
     }
 
     public function render()

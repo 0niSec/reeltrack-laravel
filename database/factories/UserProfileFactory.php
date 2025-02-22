@@ -13,7 +13,7 @@ class UserProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'avatar' => $this->faker->imageUrl(),
+            'avatar' => null,
             'about' => $this->faker->word(),
             'favorite_movies' => null,
             'favorite_shows' => null,

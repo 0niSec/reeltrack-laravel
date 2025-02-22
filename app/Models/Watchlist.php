@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Observers\WatchlistObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+#[ObservedBy([WatchlistObserver::class])]
 class Watchlist extends Model
 {
+    public mixed $movie;
     protected $fillable = [
         'watchlistable_id',
-        'watchlistable_typr',
+        'watchlistable_type',
         'is_watchlisted',
         'user_id',
     ];

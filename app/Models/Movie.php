@@ -77,6 +77,11 @@ class Movie extends Model implements Watchable
         ]);
     }
 
+    public function url(): string
+    {
+        return route('movies.show', $this);
+    }
+
     public function likes(): MorphMany
     {
         return $this->morphMany(Like::class, 'likeable');

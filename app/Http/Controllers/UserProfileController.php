@@ -17,6 +17,7 @@ class UserProfileController extends Controller
             'reviews.reviewable',
             'watches.watchable',
             'reviews.reviewable',
+            'activities.subject',
         ]);
 
         return view('users.profile.show', compact('user'));

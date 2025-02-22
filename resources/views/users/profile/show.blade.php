@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
 
@@ -122,6 +123,56 @@
 
             <div class="col-span-4">
                 <x-display-heading href="#" :heading="'Activity'"/>
+
+                <div class="space-y-4">
+                    @forelse($user->activities as $activity)
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <p class="text-xs text-zinc-200">
+                                    You
+                                    @if($activity->event_type === 'watchlist')
+                                        @if($activity->action === 'added')
+                                            added
+                                        @else
+                                            removed
+                                        @endif
+                                        <a href="{{ $activity->subject->url() }}"
+                                           class="font-medium hover:text-primary-400
+                                           transition-colors"
+                                           wire:navigate>
+                                            {{ $activity->subject->title }}
+                                        </a>
+
+
+                                        {{ $activity->action === 'added' ? 'to' : 'from' }} your watchlist
+                                    @elseif($activity->event_type === 'review')
+                                        @if($activity->action === 'created')
+                                            reviewed
+                                        @elseif($activity->action === 'updated')
+                                            updated your review of
+                                        @else
+                                            removed your review from
+                                        @endif
+                                        <a href="{{ $activity->subject->url() }}"
+                                           class="font-medium hover:text-primary-400 transition-colors" wire:navigate>
+                                            {{ $activity->subject->title }}
+                                        </a>
+                                    @endif
+                                </p>
+                                <p class="text-xs text-zinc-500">
+                                    {{ Carbon::parse($activity->created_at)->diffInMinutes() < 5 ? 'Just now' :
+                                        (Carbon::parse($activity->created_at)->diffInDays() > 7 ?
+                                            Carbon::parse($activity->created_at)->format('M d, Y') :
+                                            Carbon::parse($activity->created_at)->diffForHumans()) }}
+                                </p>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-sm text-zinc-500">
+                            No recent activities to display.
+                        </p>
+                    @endforelse
+                </div>
             </div>
 
         </div>

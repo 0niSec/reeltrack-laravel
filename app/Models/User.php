@@ -77,6 +77,11 @@ class User extends Authenticatable
         return $this->hasMany(Reel::class, 'user_id');
     }
 
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class, 'user_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
