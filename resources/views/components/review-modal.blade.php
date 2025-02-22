@@ -44,17 +44,17 @@
                         {{-- Rating --}}
                         <div class="flex-1">
                             {{-- Rating Input --}}
-                            <livewire:rating-input :movie="$movie"/>
+                            {{-- TODO: Add --}}
                         </div>
 
                         {{-- Like --}}
                         <div class="flex-1">
-                            <livewire:like-input :movie-id="$movie->id"/>
+                            {{-- TODO: Add --}}
                         </div>
                     </div>
 
                     {{-- Watch --}}
-                    <livewire:watch-input :movie-id="$movie->id"/>
+                    {{-- TODO: Add --}}
 
                     {{-- Review Text --}}
                     <div>

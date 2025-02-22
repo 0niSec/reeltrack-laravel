@@ -11,7 +11,15 @@
         currentValue(halfStar) {
             // If hoverRating is non-zero, use it to show highlight preview
             return this.hoverRating > 0 ? this.hoverRating : this.livewireRating;
-        }
+        },
+        clearRating() {
+            this.livewireRating = 0;
+            $wire.clearRating();
+        },
+        showCloseIcon() {
+            return this.livewireRating > 0 && (this.hoverRating > 0 || this.hoveringCloseIcon);
+        },
+        hoveringCloseIcon: false
     }"
 >
     <label class="block text-sm text-primary-400 mb-1">
@@ -19,7 +27,27 @@
     </label>
 
     <!-- 5 stars, each split into half increments -->
-    <div class="flex" x-cloak>
+    <div class="flex relative items-center" x-cloak>
+        <!-- Clear icon -->
+        <div
+            class="absolute -left-8 flex items-center justify-center w-8 h-8 rounded-full cursor-pointer transition-opacity"
+            x-show="showCloseIcon()"
+            @click="clearRating"
+            x-data="{ visible: false }"
+            @mouseover="hoveringCloseIcon = true"
+            @mouseleave="hoveringCloseIcon = false; visible = false"
+            x-transition
+            :class="{ 'opacity-100': hoverRating > 0 || hoveringCloseIcon, 'opacity-50': !(hoverRating > 0 || hoveringCloseIcon) }"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-zinc-500" viewBox="0 0 24 24"
+                 fill="currentColor">
+                <path
+                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                />
+            </svg>
+        </div>
+
+
         @for($i = 0; $i < 5; $i++)
             {{-- The width and height affects this component being in line with the rest --}}
             <div class="relative w-8 h-10">

@@ -119,7 +119,7 @@
                             <livewire:watch-input :movie-id="$movie->id"/>
 
                             {{-- Rating Input --}}
-                            <livewire:rating-input :movie="$movie"/>
+                            <livewire:rating-input :movie-id="$movie->id"/>
 
                             {{-- Like Input --}}
                             <livewire:like-input :movie-id="$movie->id"/>

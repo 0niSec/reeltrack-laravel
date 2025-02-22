@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\RatingEvent;
 use App\Events\WatchlistEvent;
 use App\Listeners\LogUserActivityListener;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -37,7 +38,12 @@ class AppServiceProvider extends ServiceProvider
         // Event Registration
         Event::listen(
             WatchlistEvent::class,
-            LogUserActivityListener::class
+            LogUserActivityListener::class,
+        );
+
+        Event::listen(
+            RatingEvent::class,
+            LogUserActivityListener::class,
         );
     }
 }
