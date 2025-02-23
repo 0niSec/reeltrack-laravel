@@ -4,7 +4,7 @@
 
 <x-app>
     <x-slot:title>
-        {{ $movie->title }} - ReelTrack
+        {{ $movie->title }}
     </x-slot:title>
 
     {{-- Flash Message Container --}}
@@ -26,7 +26,7 @@
 
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-linear-to-t from-zinc-900 "></div>
+        <div class="absolute inset-0 bg-linear-to-t from-slate-950 "></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -50,12 +50,7 @@
                     <div
                         class="mt-4 space-y-2"
                     >
-                        <button
-                            type="button"
-                            class="w-full bg-primary-500 text-zinc-800 py-2 rounded-md hover:bg-primary-600 transition-colors"
-                        >
-                            Add to Watchlist
-                        </button>
+                        
                         <button
                             type="button"
                             @click="isOpen = true"

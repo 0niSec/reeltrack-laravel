@@ -42,7 +42,7 @@
 
                     <div>
                         <div class="font-medium text-primary-500">{{ $castMember->name }}</div>
-                        <div class="text-sm font-medium text-zinc-400">
+                        <div class="text-sm font-medium text-gray-400">
                             {{ $castMember->character }}
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                     <div>
                         <div class="text-primary-500 font-medium">{{ $crewMember->name }}</div>
 
-                        <div class="text-sm text-zinc-400">
+                        <div class="text-sm text-gray-400">
                             {{ $crewMember->job }}
                         </div>
 

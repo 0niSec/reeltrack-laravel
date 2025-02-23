@@ -10,7 +10,6 @@ class UserProfilePolicy
 {
     use HandlesAuthorization;
 
-
     /**
      * Determine if the given user profile can be edited by the user.
      *

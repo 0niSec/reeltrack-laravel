@@ -85,8 +85,7 @@ Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.sh
 Route::get('/movies/{movie}/cast-and-crew', [MovieController::class, 'castAndCrew'])->name('movies.cast-and-crew');
 Route::post('/movies/{movie}/reel', [ReelController::class, 'store'])
     ->name('movies.reel.store')
-    ->middleware('auth')
-    ->can('create', 'reel');
+    ->middleware('auth');
 Route::patch('/movies/{movie}/reel/{reel}/edit', [ReelController::class, 'update'])
     ->name('movies.reel.edit')
     ->middleware('auth')
