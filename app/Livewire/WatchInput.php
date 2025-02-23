@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Movie;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -43,6 +44,19 @@ class WatchInput extends Component
             ['user_id' => auth()->id()],
             ['is_watched' => $this->isWatched]
         );
+    }
+
+    #[On('movie-rated')]
+    public function setWatched()
+    {
+        if (!$this->isWatched) {
+            $this->isWatched = true;
+            
+            $this->movie()->watches()->createOrFirst(
+                ['user_id' => auth()->id()],
+                ['is_watched' => $this->isWatched]
+            );
+        }
     }
 
 

@@ -1,7 +1,7 @@
 <div>
     <!-- Modal backdrop -->
     <div
-        class="fixed inset-0 bg-zinc-800/50 backdrop-blur-lg  z-50"
+        class="fixed inset-0 bg-gray-800/30 backdrop-blur-lg  z-50"
         x-show="isOpen"
         x-cloak
         x-transition
@@ -11,71 +11,53 @@
     >
         <!-- Modal inner container -->
         <div
-            class="fixed inset-0 flex items-center justify-center p-4"
+            class="fixed inset-0 flex items-center justify-center p-6"
             @click.stop {{-- Prevent clicks inside from closing the modal --}}
         >
             {{-- Modal content --}}
-            <div class="bg-zinc-900 rounded-lg shadow-xl max-w-2xl w-full p-6">
+            <div class="bg-gray-900 rounded-lg shadow-xl max-w-3xl w-full relative">
                 {{-- Modal Header --}}
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-semibold text-primary-500">
-                        Review {{ $movie->title }}
-                    </h2>
-                    <button
-                        type="button"
-                        @click="isOpen = false;confirm('Are you sure you want to cancel?')"
-                        class="text-zinc-400 hover:text-primary-500"
-                    >
-                        <!-- Close Icon -->
-                        <x-icon-close class="w-6 h-6"/>
-                    </button>
+                <div class="px-10 pt-10">
+                    <div class="flex justify-between items-center border-b pb-4 mb-4 border-gray-500">
+                        <h2 class="text-xl font-semibold text-primary-500">
+                            Review {{ $movie->title }}
+                        </h2>
+                        <button
+                            type="button"
+                            @click="isOpen = false;confirm('Are you sure you want to cancel?')"
+                            class="text-gray-400 hover:text-primary-500 absolute top-8 right-8"
+                        >
+                            <x-icon-close class="w-6 h-6"/>
+                        </button>
+                    </div>
                 </div>
 
                 {{-- Begin form --}}
                 <form
-                    action="{{ route('movies.reel.store', ['movie' => $movie->id]) }}"
+                    action="{{ route('movies.reel.store', $movie) }}"
                     method="POST"
-                    class="space-y-6"
+                    class="px-10 space-y-6"
                 >
                     @csrf
 
-                    {{-- Rating and Like Row --}}
-                    <div class="flex items-center gap-8">
-                        {{-- Rating --}}
-                        <div class="flex-1">
-                            {{-- Rating Input --}}
-                            {{-- TODO: Add --}}
-                        </div>
-
-                        {{-- Like --}}
-                        <div class="flex-1">
-                            {{-- TODO: Add --}}
-                        </div>
-                    </div>
-
                     {{-- Watch --}}
-                    {{-- TODO: Add --}}
+                    <livewire:watched-date/>
 
                     {{-- Review Text --}}
                     <div>
-                        <label class="block text-sm text-primary-400 mb-1">Your Review</label>
-                        <textarea
-                            name="content"
-                            rows="4"
-                            placeholder="Share your thoughts about the movie..."
-                            class="w-full bg-zinc-800 text-primary-400 border border-zinc-700 rounded-md px-3 py-2
-                            placeholder:text-zinc-500 focus:ring-primary-500 focus:border-primary-500"
-                        >{{ old('content') }}</textarea>
+                        <x-form-label for="review" value="Review">Review</x-form-label>
+                        <x-form-textarea name="review" rows="5" class="w-full"/>
+                    </div>
+
+                    {{-- Rating and Like Row --}}
+                    <div class="flex items-center w-full justify-end space-x-10">
+                        <livewire:rating-input-modal :movie-id="$movie->id"/>
+                        <livewire:like-input-modal :movie-id="$movie->id"/>
                     </div>
 
                     {{-- Submit Button --}}
-                    <div class="flex justify-end">
-                        <button
-                            type="submit"
-                            class="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
-                        >
-                            Submit
-                        </button>
+                    <div class="flex justify-end p-4 mt-6 border-t border-gray-500">
+                        <x-form-submit-button>Save</x-form-submit-button>
                     </div>
                 </form>
             </div>

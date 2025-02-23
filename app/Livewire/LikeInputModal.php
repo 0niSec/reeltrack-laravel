@@ -3,12 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\Movie;
-use Illuminate\View\View;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-class LikeInput extends Component
+class LikeInputModal extends Component
 {
 
     #[Validate('required|boolean')]
@@ -39,18 +39,16 @@ class LikeInput extends Component
 
         // Toggle the state
         $this->isLiked = !$this->isLiked;
-
-        $this->movie()->likes()->updateOrCreate(
-            ['user_id' => auth()->id()],
-            ['status' => $this->isLiked]
-        );
-
-        $this->dispatch('movie-liked', $this->isLiked);
     }
 
-
-    public function render(): View
+    #[On('movie-liked')]
+    public function setLikeStatus(bool $isLiked): void
     {
-        return view('livewire.like-input');
+        $this->isLiked = $isLiked;
+    }
+
+    public function render()
+    {
+        return view('livewire.like-input-modal');
     }
 }

@@ -45,6 +45,7 @@ class RatingInput extends Component
         );
 
         $this->rating = $value;
+        $this->dispatch('movie-rated', $value);
     }
 
     /**

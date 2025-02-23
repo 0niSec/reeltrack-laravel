@@ -1,16 +1,15 @@
 <div>
-    <label class="block text-sm text-primary-400 mb-1">{{ $isWatched ? 'Watched' : 'Watch' }}</label>
-    <input type="hidden" name="isWatched" wire:model="isWatched"/>
+    <label class="block text-sm text-primary-400 mb-1">{{ $isLiked ? 'Liked' : 'Like' }}</label>
+
     <div class="relative flex items-center group">
+        <input type="hidden" name="isLiked" x-ref="isLiked" wire:model="isLiked" :value="$wire.isLiked"/>
         <div
             class="cursor-pointer relative"
-            wire:click="toggleWatch"
+            wire:click="toggleLike"
             wire:loading.class="opacity-50"
         >
-            <x-icon-eye-outline
-                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isWatched ? 'fill-primary-500
-                text-zinc-900'
-                : 'fill-none text-primary-500' }}"
+            <x-icon-heart-outline
+                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isLiked ? 'fill-primary-500 text-primary-500' : 'fill-none text-primary-500' }}"
             />
 
             <div wire:loading class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
