@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -13,6 +14,12 @@ class Reel extends Model
         'user_id',
         'reelable_id',
         'reelable_type',
+        'watch_date',
+        'specific_year',
+        'before_year',
+        'is_rewatch',
+        'rating',
+        'is_liked',
     ];
 
     public function user(): BelongsTo
@@ -25,23 +32,81 @@ class Reel extends Model
         return $this->morphTo();
     }
 
-    public function rating(): HasOne
+    public function reviews(): HasOne
     {
-        return $this->hasOne(Rating::class, 'reel_id');
+        return $this->hasOne(Review::class);
     }
 
-    public function review(): HasOne
+
+    // Query Scopes
+
+    public function scopeForUser(Builder $query, $userId): Builder
     {
-        return $this->hasOne(Review::class, 'reel_id');
+        return $query->where('user_id', $userId);
     }
 
-    public function like(): HasOne
+    public function scopeLiked(Builder $query): Builder
     {
-        return $this->hasOne(Like::class, 'reel_id');
+        return $query->where('is_liked', true);
     }
 
-    public function watch(): HasOne
+    public function scopeRated(Builder $query): Builder
     {
-        return $this->hasOne(Watch::class, 'reel_id');
+        return $query->whereNotNull('rating');
     }
+
+    public function scopeWatched(Builder $query): Builder
+    {
+        return $query->whereNotNull('watch_date');
+    }
+
+    public function scopeReviewed(Builder $query): Builder
+    {
+        return $query->whereNotNull('review_id');
+    }
+
+    public function toggleLike(): void
+    {
+        $this->is_liked = !$this->is_liked;
+        $this->save();
+    }
+
+    // Helper Methods
+
+    public function markAsWatched(?string $date = null): void
+    {
+        $this->watch_date = $date ?? now();
+        $this->save();
+    }
+
+    public function setRating(float $rating): void
+    {
+        $this->rating = $rating;
+        $this->save();
+    }
+
+    public function createReview(array $attributes): Review
+    {
+        $review = new Review($attributes);
+        $review->save();
+
+        $this->review_id = $review->id;
+        $this->save();
+
+        return $review;
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'watch_date' => 'date',
+            'specific_year' => 'integer',
+            'before_year' => 'integer',
+            'rating' => 'decimal:1',
+            'is_liked' => 'boolean',
+            'is_rewatch' => 'boolean',
+        ];
+    }
+
+
 }

@@ -19,12 +19,7 @@ class LikeInputModal extends Component
 
     public function mount(): void
     {
-        // If there's a like record for this user, grab its "status" value; otherwise default to false.
-        $like = $this->movie()->likes()
-            ->where('user_id', auth()->id())
-            ->where('status', true);
-
-        $this->isLiked = $like->exists();
+        $this->isLiked = $this->movie()->isLiked();
     }
 
     #[Computed]

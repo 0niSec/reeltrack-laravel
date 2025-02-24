@@ -38,17 +38,6 @@ class Movie extends Model implements Watchable
         return $this->where('id', $id)->firstOrFail();
     }
 
-    public function scopePopular(Builder $query): void
-    {
-        $query->withCount([
-            'likes' => function ($query) {
-                $query->where('status', true);
-            },
-        ])
-            ->orderBy('likes_count', 'desc')
-            ->take(5);
-    }
-
     public function getTitle(): string
     {
         return $this->title;
@@ -64,27 +53,62 @@ class Movie extends Model implements Watchable
         $query->withCount('reviews')->latest()->take(10);
     }
 
-    public function scopeWithStats(Builder $query): void
+    public function scopeWithReelStats($query)
     {
-        $query->withCount([
-            'likes'
-            => fn($query) => $query
-                ->where('status', true),
-            'ratings',
-            'reviews',
-            'watches',
+        return $query->withCount([
+            'reels as likes_count' => function ($query) {
+                $query->where('is_liked', true);
+            },
+            'reels as ratings_count' => function ($query) {
+                $query->whereNotNull('rating');
+            },
+            'reels as watch_count' => function ($query) {
+                $query->whereNotNull('watch_date');
+            },
+        ])->withAvg('reels as avg_rating', 'rating');
+    }
 
+    public function scopeWithReelReviewsCount($query)
+    {
+        return $query->withCount([
+            'reels as reviews_count' => function ($query) {
+                $query->whereHas('reviews');
+            },
         ]);
     }
+
+    public function scopeWithFullDetails($query)
+    {
+        return $query->with([
+            'cast' => function ($query) {
+                $query->orderBy('order', 'asc')
+                    ->with(['person:id,name,profile_path'])
+                    ->take(10);
+            },
+            'crew' => function ($query) {
+                $query->whereIn('job', [
+                    'Director',
+                    'Writer',
+                    'Producer',
+                    'Executive Producer',
+                ])
+                    ->orderBy('job')
+                    ->with(['person:id,name,profile_path']);
+            },
+            'genres',
+            'reels' => function ($query) {
+                $query->with('reviews')
+                    ->withCount('reviews');
+            },
+            'reels.user:id,username', // Add if needed for displaying review authors
+        ])->withReelStats()
+            ->withReelReviewsCount();
+    }
+
 
     public function url(): string
     {
         return route('movies.show', $this);
-    }
-
-    public function likes(): MorphMany
-    {
-        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function cast(): MorphMany
@@ -97,19 +121,9 @@ class Movie extends Model implements Watchable
         return $this->morphMany(Crew::class, 'crewable');
     }
 
-    public function ratings(): MorphMany
-    {
-        return $this->morphMany(Rating::class, 'rateable');
-    }
-
     public function reviews(): MorphMany
     {
         return $this->morphMany(Review::class, 'reviewable');
-    }
-
-    public function watches(): MorphMany
-    {
-        return $this->morphMany(Watch::class, 'watchable');
     }
 
     public function watchlists(): MorphMany
@@ -125,6 +139,33 @@ class Movie extends Model implements Watchable
     public function activities(): MorphMany
     {
         return $this->morphMany(Activity::class, 'subject');
+    }
+
+    public function getRating(?User $user = null): ?float
+    {
+        return $this->getReel($user)?->rating;
+    }
+
+    public function getReel(?User $user = null): ?Reel
+    {
+        $user ??= auth()->user();
+
+        return $this->reels()->where('user_id', $user->id)->first();
+    }
+
+    public function reels(): MorphMany
+    {
+        return $this->morphMany(Reel::class, 'reelable');
+    }
+
+    public function isLiked(?User $user = null): bool
+    {
+        return (bool) $this->getReel($user)?->is_liked;
+    }
+
+    public function isWatched(?User $user = null): bool
+    {
+        return $this->getReel($user)?->watch_date !== null;
     }
 
 

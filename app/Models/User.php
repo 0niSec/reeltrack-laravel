@@ -47,24 +47,9 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
-    public function likes(): HasMany
-    {
-        return $this->hasMany(Like::class, 'user_id');
-    }
-
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'user_id');
-    }
-
-    public function ratings(): HasMany
-    {
-        return $this->hasMany(Rating::class, 'user_id');
-    }
-
-    public function watches(): HasMany
-    {
-        return $this->hasMany(Watch::class, 'user_id');
     }
 
     public function watchlists(): HasMany

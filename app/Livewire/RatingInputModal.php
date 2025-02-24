@@ -19,11 +19,9 @@ class RatingInputModal extends Component
 
     public function mount(): void
     {
-        $this->rating = $this->movie()
-            ->ratings()
-            ->where('user_id', auth()->id())
-            ->value('rating') ?? 0.0;
+        $this->rating = $this->movie->getReel()?->rating ?? 0.0;
     }
+
 
     #[Computed]
     public function movie(): Movie

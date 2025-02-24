@@ -20,12 +20,9 @@ class WatchInput extends Component
 
     public function mount(): void
     {
-        // If there's a watch record for this user, grab its "is_watched" value; otherwise default to false.
-        $this->isWatched = (bool) ($this->movie()->watches()
-            ->where('user_id', auth()->id())
-            ->value('is_watched') ?? false
-        );
+        $this->isWatched = $this->movie()->isWatched();
     }
+
 
     #[Computed]
     public function movie(): Movie
@@ -36,25 +33,24 @@ class WatchInput extends Component
     public function toggleWatch(): void
     {
         $this->validate();
-
-        // Toggle the state
         $this->isWatched = !$this->isWatched;
 
-        $this->movie()->watches()->updateOrCreate(
+        $this->movie()->reels()->updateOrCreate(
             ['user_id' => auth()->id()],
-            ['is_watched' => $this->isWatched]
+            ['watch_date' => $this->isWatched ? now() : null]
         );
     }
 
+
     #[On('movie-rated')]
-    public function setWatched()
+    public function setWatched(): void
     {
         if (!$this->isWatched) {
             $this->isWatched = true;
-            
-            $this->movie()->watches()->createOrFirst(
+
+            $this->movie()->reels()->updateOrCreate(
                 ['user_id' => auth()->id()],
-                ['is_watched' => $this->isWatched]
+                ['watch_date' => now()]
             );
         }
     }

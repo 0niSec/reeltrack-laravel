@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\Reel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,16 +10,15 @@ return new class extends Migration {
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->boolean('contains_spoilers')->default(false);
-            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
-            $table->unsignedBigInteger('reel_id')->nullable(); // Optional Reel ID
-            $table->unsignedBigInteger('reviewable_id'); // ID of the movie or TV show reviewed
-            $table->string('reviewable_type'); // Movie or TV
+            $table->foreignIdFor(Reel::class)->constrained('reels')->cascadeOnDelete();
 
+            $table->morphs('reviewable');
+
+            $table->text('content');
+
+            $table->boolean('contains_spoilers')->default(false);
 
             $table->index(['reviewable_id', 'reviewable_type']);
-            $table->index(['reviewable_type', 'reviewable_id', 'user_id']);
 
             $table->timestamps();
         });

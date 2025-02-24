@@ -15,23 +15,31 @@ class MovieController extends Controller
     {
         // Get the newest movies from db
         $movies = [
-            'newest' => Movie::select(['id', 'title', 'poster_path']) // Select only needed columns
-            ->withStats()
+            'newest' => Movie::select(['id', 'title', 'poster_path'])
+                ->withReelStats()
                 ->latest()
                 ->take(5)
                 ->get(),
 
-            'popular' => Movie::select(['id', 'title', 'poster_path']) // Select only needed columns
-            ->withStats()
-                ->popular()
+            'popular' => Movie::select(['id', 'title', 'poster_path'])
+                ->withReelStats()
+                ->orderByDesc('likes_count')
+                ->orderByDesc('avg_rating')
+                ->take(5)
                 ->get(),
 
-            'latestReviews' => Movie::select(['id', 'title', 'poster_path']) // Select only needed columns
-            ->withCount('reviews') // Keep withCount
-            ->latest()
+            'latestReviews' => Movie::select(['id', 'title', 'poster_path'])
+                ->whereHas('reels.reviews')
+                ->withCount([
+                    'reels' => function ($query) {
+                        $query->whereHas('reviews');
+                    },
+                ])
+                ->latest()
                 ->take(10)
                 ->get(),
         ];
+
 
         return view('movies.index', compact('movies'));
     }
@@ -60,56 +68,18 @@ class MovieController extends Controller
         $cacheKey = 'movie_details_'.$movie->id;
 
 
-        $cachedMovie = Cache::remember($cacheKey, 3600, function () use ($movie) {
-            return Movie::with([
-                'cast' => function ($query) {
-                    $query->orderBy('order', 'asc')
-                        ->with(['person:id,name,profile_path'])
-                        ->take(10);
-                },
-                'crew' => function ($query) {
-                    $query->whereIn('job', [
-                        'Director',
-                        'Writer',
-                        'Producer',
-                        'Executive Producer',
-                    ])
-                        ->orderBy('job')
-                        ->with(['person:id,name,profile_path']);
-                },
+        $cachedMovie = Cache::remember($cacheKey, 3600, function () use ($movie, $userId) {
+            $movie = Movie::withFullDetails()->findOrFail($movie->id);
 
+            // Add computed properties to the model instance
+            $movie->likes_count = $movie->reels->where('is_liked', true)->count();
+            $movie->ratings_count = $movie->reels->whereNotNull('rating')->count();
+            $movie->avg_rating = $movie->reels->avg('rating');
+            $movie->user_reel = $userId ? $movie->reels->firstWhere('user_id', $userId) : null;
+            $movie->reviews = $movie->reels->pluck('reviews')->filter();
 
-                'genres',
-
-            ])
-                ->findOrFail($movie->id);
+            return $movie;
         });
-
-        // Retrieve likes, ratings, and watchlists separately
-        $movieFresh = Movie::where('id', $movie->id)
-            ->with([
-                'likes' => fn($query) => $query
-                    ->where('user_id', $userId)
-                    ->select('id'),
-                'ratings' => fn($query) => $query
-                    ->where('user_id', $userId)
-                    ->select('rateable_id', 'user_id', 'rating'),
-                'watchlists' => fn($query) => $query->where('user_id', $userId),
-                'reviews',
-            ])
-            ->withCount([
-                'likes' => fn($query) => $query->where('status', true),
-                'ratings',
-            ])
-            ->withAvg('ratings as avg_rating', 'rating')
-            ->firstOrFail();
-
-        $cachedMovie->setRelation('likes', $movieFresh->likes);
-        $cachedMovie->setRelation('ratings', $movieFresh->ratings);
-        $cachedMovie->setRelation('watchlists', $movieFresh->watchlists);
-        $cachedMovie->likes_count = $movieFresh->likes_count;
-        $cachedMovie->ratings_count = $movieFresh->ratings_count;
-        $cachedMovie->avg_rating = $movieFresh->avg_rating;
 
 
         // Return the view

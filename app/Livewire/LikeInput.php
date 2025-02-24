@@ -19,12 +19,7 @@ class LikeInput extends Component
 
     public function mount(): void
     {
-        // If there's a like record for this user, grab its "status" value; otherwise default to false.
-        $like = $this->movie()->likes()
-            ->where('user_id', auth()->id())
-            ->where('status', true);
-
-        $this->isLiked = $like->exists();
+        $this->isLiked = $this->movie()->isLiked();
     }
 
     #[Computed]
@@ -36,13 +31,11 @@ class LikeInput extends Component
     public function toggleLike(): void
     {
         $this->validate();
-
-        // Toggle the state
         $this->isLiked = !$this->isLiked;
 
-        $this->movie()->likes()->updateOrCreate(
+        $this->movie()->reels()->updateOrCreate(
             ['user_id' => auth()->id()],
-            ['status' => $this->isLiked]
+            ['is_liked' => $this->isLiked]
         );
 
         $this->dispatch('movie-liked', $this->isLiked);

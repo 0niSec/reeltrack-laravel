@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use App\Models\Movie;use App\Models\TvShow;use Carbon\Carbon; @endphp
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
 
@@ -46,30 +46,39 @@
             <!-- User Stats -->
             <div id="user-stats" class="flex items-center space-x-4">
                 <div class="flex items-center space-x-8">
-                    <!-- TODO: Add data from db -->
                     <!-- Films -->
                     <div class="text-center">
-                        <span class="block text-2xl font-medium text-gray-300">0</span>
+            <span class="block text-2xl font-medium text-gray-300">
+                {{ $stats['films_count'] }}
+            </span>
                         <span class="block text-sm font-thin text-gray-500">Films</span>
                     </div>
                     <!-- TV -->
                     <div class="text-center">
-                        <span class="block text-2xl font-medium text-gray-300">0</span>
+            <span class="block text-2xl font-medium text-gray-300">
+                {{ $stats['tv_count'] }}
+            </span>
                         <span class="block text-sm font-thin text-gray-500">TV</span>
                     </div>
-                    <!-- This Week -->
+                    <!-- This Year -->
                     <div class="text-center">
-                        <span class="block text-2xl font-medium text-gray-300">0</span>
+            <span class="block text-2xl font-medium text-gray-300">
+                {{ $stats['this_year_count'] }}
+            </span>
                         <span class="block text-sm font-thin text-gray-500">This Year</span>
                     </div>
                     <!-- Following -->
                     <div class="text-center">
-                        <span class="block text-2xl font-medium text-gray-300">0</span>
+            <span class="block text-2xl font-medium text-gray-300">
+                0
+            </span>
                         <span class="block text-sm font-thin text-gray-500">Following</span>
                     </div>
                     <!-- Followers -->
                     <div class="text-center">
-                        <span class="block text-2xl font-medium text-gray-300">0</span>
+            <span class="block text-2xl font-medium text-gray-300">
+                0
+            </span>
                         <span class="block text-sm font-thin text-gray-500">Followers</span>
                     </div>
                 </div>
@@ -96,6 +105,13 @@
                 <!-- Favorite Movies -->
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Favorite Movies'"/>
+                    <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
+                        @foreach($highlyRated as $movie)
+                            <a href="{{ route('movies.show', $movie) }}" wire:navigate>
+                                <x-movie-card :movie="$movie"/>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Favorite Shows -->
@@ -107,9 +123,9 @@
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Recent Likes'"/>
                     <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
-                        @foreach($user->likes->where('status', true) as $like)
-                            <a href="{{ route('movies.show', ['movie' => $like->likeable]) }}" wire:navigate>
-                                <x-movie-card :movie="$like->likeable"/>
+                        @foreach($likedMovies as $movie)
+                            <a href="{{ route('movies.show', $movie) }}" wire:navigate>
+                                <x-movie-card :movie="$movie"/>
                             </a>
                         @endforeach
                     </div>

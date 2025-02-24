@@ -2,30 +2,74 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movie;
+use App\Models\TvSeries;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class UserProfileController extends Controller
 {
     public function show(User $user)
     {
-        // Eager load relationships on User
-        // Get all the content they've liked, reviewed and watched
+        // Eager load relationships
         $user->load([
             'profile',
-            'likes.likeable',
-            'reviews.reviewable',
-            'watches.watchable',
-            'reviews.reviewable',
             'activities.subject',
         ]);
 
-        return view('users.profile.show', compact('user'));
-    }
+        // Get liked movies with eager loading
+        $likedMovies = $user->reels()
+            ->where('reelable_type', Movie::class)
+            ->where('is_liked', true)
+            ->with('reelable')
+            ->get()
+            ->pluck('reelable');
 
+        // Get recently watched content
+        $recentlyWatched = $user->reels()
+            ->whereNotNull('watch_date')
+            ->orderBy('watch_date', 'desc')
+            ->with('reelable')
+            ->take(5)
+            ->get()
+            ->pluck('reelable');
 
-    public function destroy(Request $request, User $user)
-    {
-        dd($request->all());
+        // Get highly rated content
+        $highlyRated = $user->reels()
+            ->whereNotNull('rating')
+            ->where('rating', '>=', 4)
+            ->with('reelable')
+            ->orderBy('rating', 'desc')
+            ->take(5)
+            ->get()
+            ->pluck('reelable');
+
+        $stats = [
+            'films_count' => $user->reels()
+                ->where('reelable_type', Movie::class)
+                ->whereNotNull('watch_date')
+                ->count(),
+            'tv_count' => $user->reels()
+                ->where('reelable_type', TvSeries::class)
+                ->whereNotNull('watch_date')
+                ->count(),
+            'this_year_count' => $user->reels()
+                ->whereYear('watch_date', Carbon::now()->year)
+                ->count(),
+            'rated_count' => $user->reels()
+                ->whereNotNull('rating')
+                ->count(),
+            'liked_count' => $user->reels()
+                ->where('is_liked', true)
+                ->count(),
+        ];
+
+        return view('users.profile.show', compact(
+            'user',
+            'stats',
+            'likedMovies',
+            'recentlyWatched',
+            'highlyRated',
+        ));
     }
 }

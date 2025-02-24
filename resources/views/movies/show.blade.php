@@ -50,14 +50,16 @@
                     <div
                         class="mt-4 space-y-2"
                     >
-                        
+
                         <button
                             type="button"
                             @click="isOpen = true"
-                            class="w-full bg-zinc-800 text-primary-500 py-2 rounded-md hover:bg-zinc-700 transition-colors"
+                            class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
+                            transition-colors"
                         >
                             Leave a Reel or Review
                         </button>
+                        <x-share-button/>
 
                         {{-- Modal --}}
                         <x-review-modal :movie="$movie"/>
@@ -75,8 +77,8 @@
 
                 {{-- Meta information --}}
                 <div class="flex items-center gap-4 mt-4">
-                    <span class="text-zinc-400">{{ $movie->release_date->format('F d, Y') }}</span>
-                    <span class="text-zinc-400">{{ $movie->runtime }} min</span>
+                    <span class="text-gray-400">{{ $movie->release_date->format('F d, Y') }}</span>
+                    <span class="text-gray-400">{{ $movie->runtime }} min</span>
                 </div>
 
                 {{-- Genres --}}
@@ -127,7 +129,7 @@
                 @else
                     <!-- TODO: Find a way to redirect back here -->
                     <div class="my-6"><a href="{{ route('login') }}"
-                                         class="p-2 rounded-md bg-primary-700 text-zinc-200 shadow-md
+                                         class="p-2 rounded-md bg-primary-700 text-gray-200 shadow-md
                                          inset-shadow-sm hover:bg-primary-800 transition-all ">Login
                             to rate or review</a></div>
                 @endauth
@@ -139,13 +141,14 @@
                 <a href="{{ route('movies.cast-and-crew', $movie) }}" class="block mt-4
                 text-primary-500 font-medium
                 hover:text-primary-600
-                hover:underline
+                underline
                 transition-all underline-offset-2">Full
                     Cast & Crew</a>
 
                 {{-- Reviews --}}
+                <h2 class="mt-10">Reviews</h2>
                 {{--                <div class="mt-8" id="movie_reviews">--}}
-                {{--                    <x-movie-reviews :movie="$movie"/>--}}
+                {{--                    <x-reviews/>--}}
                 {{--                </div>--}}
             </div>
         </div>
