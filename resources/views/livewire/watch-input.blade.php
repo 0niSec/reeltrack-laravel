@@ -1,5 +1,14 @@
 <div>
-    <label class="block text-sm text-primary-400 mb-1">{{ $isWatched ? 'Watched' : 'Watch' }}</label>
+    <label class="block text-sm text-primary-400 mb-1">
+        @if($hasUserReviews)
+            <a href="{{ route('user.reviews', ['user' => auth()->user(),'movie' => $movie]) }}"
+               class="hover:text-primary-600">
+                Reviewed
+            </a>
+        @else
+            {{ $isWatched ? 'Watched' : 'Watch' }}
+        @endif
+    </label>
     <input type="hidden" name="isWatched" wire:model="isWatched"/>
     <div class="relative flex items-center group">
         <div
@@ -8,10 +17,16 @@
             wire:loading.class="opacity-50"
         >
             <x-icon-eye-outline
-                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isWatched ? 'fill-primary-500
-                text-zinc-900'
-                : 'fill-none text-primary-500' }}"
+                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isWatched ? 'fill-primary-500 text-zinc-900' : 'fill-none text-primary-500' }}"
             />
+
+            @if($totalReviews > 0)
+                <span
+                    class="absolute bottom-0 right-0 -mb-1 -mr-1 bg-primary-800 text-white text-xs rounded-full
+                    min-w-[1.25rem] h-5 px-1 flex items-center justify-center">
+                    {{ $totalReviews }}
+                </span>
+            @endif
 
             <div wire:loading class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <svg class="animate-spin w-4 h-4 text-primary-500" xmlns="http://www.w3.org/2000/svg"

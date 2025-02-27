@@ -16,25 +16,31 @@ class MovieController extends Controller
         // Get the newest movies from db
         $movies = [
             'newest' => Movie::select(['id', 'title', 'poster_path'])
-                ->withReelStats()
+                ->withCount([
+                    'userInteractions',
+                    'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
+                    'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
+                ])
+                ->withAvg('userInteractions as ratings_avg_rating', 'rating')
                 ->latest()
                 ->take(5)
                 ->get(),
 
             'popular' => Movie::select(['id', 'title', 'poster_path'])
-                ->withReelStats()
+                ->withCount([
+                    'userInteractions',
+                    'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
+                    'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
+                ])
+                ->withAvg('userInteractions as ratings_avg_rating', 'rating')
                 ->orderByDesc('likes_count')
-                ->orderByDesc('avg_rating')
+                ->orderByDesc('ratings_avg_rating')
                 ->take(5)
                 ->get(),
 
             'latestReviews' => Movie::select(['id', 'title', 'poster_path'])
-                ->whereHas('reels.reviews')
-                ->withCount([
-                    'reels' => function ($query) {
-                        $query->whereHas('reviews');
-                    },
-                ])
+                ->whereHas('reelEntries', fn($query) => $query->whereNotNull('review_content'))
+                ->withCount('reelEntries as reviews_count')
                 ->latest()
                 ->take(10)
                 ->get(),
@@ -67,22 +73,50 @@ class MovieController extends Controller
         $userId = auth()->id();
         $cacheKey = 'movie_details_'.$movie->id;
 
-
         $cachedMovie = Cache::remember($cacheKey, 3600, function () use ($movie, $userId) {
-            $movie = Movie::withFullDetails()->findOrFail($movie->id);
-
-            // Add computed properties to the model instance
-            $movie->likes_count = $movie->reels->where('is_liked', true)->count();
-            $movie->ratings_count = $movie->reels->whereNotNull('rating')->count();
-            $movie->avg_rating = $movie->reels->avg('rating');
-            $movie->user_reel = $userId ? $movie->reels->firstWhere('user_id', $userId) : null;
-            $movie->reviews = $movie->reels->pluck('reviews')->filter();
-
-            return $movie;
+            return Movie::withFullDetails()
+                ->with([
+                    'userInteractions' => fn($query) => $query->where('user_id', $userId),
+                    'reelEntries' => fn($query) => $query
+                        ->where('user_id', $userId)
+                        ->latest('watched_at'),
+                    'reviews' => fn($query) => $query->from('reel_entries')
+                        ->whereNotNull('review_content')
+                        ->where('reelable_type', Movie::class)
+                        ->where('reelable_id', $movie->id)
+                        ->with('user')
+                        ->latest('watched_at'),
+                ])
+                ->findOrFail($movie->id);
         });
 
+        // Move these calculations outside the cache block to get live data
+        $cachedMovie->likes_count = $movie->userInteractions()
+            ->where('is_liked', true)
+            ->count();
 
-        // Return the view
+        $cachedMovie->ratings_count = $movie->userInteractions()
+            ->whereNotNull('rating')
+            ->count();
+
+        $cachedMovie->avg_rating = $movie->userInteractions()
+            ->whereNotNull('rating')
+            ->avg('rating');
+
+        // Load reviews separately (not cached)
+        $cachedMovie->reviews = $movie->reviews()
+            ->whereNotNull('review_content')
+            ->where('reelable_type', Movie::class)
+            ->where('reelable_id', $movie->id)
+            ->with('user')
+            ->latest('watched_at')
+            ->get();
+
+
+        // User-specific interactions should also be live
+        $cachedMovie->user_interaction = $userId ? $cachedMovie->userInteractions->first() : null;
+        $cachedMovie->user_reel = $userId ? $cachedMovie->reelEntries->first() : null;
+
         return view('movies.show', ['movie' => $cachedMovie]);
     }
 }

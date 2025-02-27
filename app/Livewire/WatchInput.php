@@ -4,30 +4,66 @@ namespace App\Livewire;
 
 use App\Models\Movie;
 use Illuminate\View\View;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class WatchInput extends Component
 {
+    public Movie $movie;
 
     #[Validate('required|boolean')]
     public bool $isWatched = false;
 
-    #[Validate('required|integer|min:1')]
-    public int $movieId;
+    public bool $hasUserReviews = false;
+    public int $totalReviews = 0;
 
-    public function mount(): void
+// Helpers
+    #[On('movie-rated')]
+    public function setWatched(): void
     {
-        $this->isWatched = $this->movie()->isWatched();
+        if (!$this->isWatched) {
+            $this->isWatched = true;
+            $this->movie->userInteractions()->updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                ],
+                ['is_watched' => true]
+            );
+        }
     }
 
+// End Helpers
 
-    #[Computed]
-    public function movie(): Movie
+    public function mount(Movie $movie): void
     {
-        return Movie::findOrFail($this->movieId);
+        $this->movie = $movie;
+
+        $this->isWatched = $this->movie
+            ->userInteractions()
+            ->where('user_id', auth()->id())
+            ->where('is_watched', true)
+            ->exists();
+
+        $this->checkUserReviews();
+        $this->totalReviews = $this->getTotalReviews();
+    }
+
+    private function checkUserReviews(): void
+    {
+        $this->hasUserReviews = $this->movie
+            ->reelEntries()
+            ->where('user_id', auth()->id())
+            ->whereNotNull('review_content')
+            ->exists();
+    }
+
+    private function getTotalReviews(): int
+    {
+        return $this->movie
+            ->reelEntries()
+            ->whereNotNull('review_content')
+            ->count();
     }
 
     public function toggleWatch(): void
@@ -35,26 +71,14 @@ class WatchInput extends Component
         $this->validate();
         $this->isWatched = !$this->isWatched;
 
-        $this->movie()->reels()->updateOrCreate(
-            ['user_id' => auth()->id()],
-            ['watch_date' => $this->isWatched ? now() : null]
+        // Only update user_interactions - this is a quick action
+        $this->movie->userInteractions()->updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+            ],
+            ['is_watched' => $this->isWatched]
         );
     }
-
-
-    #[On('movie-rated')]
-    public function setWatched(): void
-    {
-        if (!$this->isWatched) {
-            $this->isWatched = true;
-
-            $this->movie()->reels()->updateOrCreate(
-                ['user_id' => auth()->id()],
-                ['watch_date' => now()]
-            );
-        }
-    }
-
 
     public function render(): View
     {

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class TvSeries extends Model implements Watchable
+class TvSeries extends Model
 {
     protected $fillable = [
         'backdrop_path',
@@ -44,16 +44,6 @@ class TvSeries extends Model implements Watchable
     public function tvSeriesEpisodes(): HasManyThrough
     {
         return $this->hasManyThrough(TvSeriesEpisode::class, TvSeriesSeason::class, 'tv_series_id', 'season_id');
-    }
-
-    public function getTitle(): string
-    {
-        return $this->name;
-    }
-
-    public function getId(): int|string
-    {
-        return $this->id;
     }
 
     public function activities(): MorphMany

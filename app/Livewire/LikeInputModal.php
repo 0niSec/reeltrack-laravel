@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Movie;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -11,21 +10,26 @@ use Livewire\Component;
 class LikeInputModal extends Component
 {
 
-    #[Validate('required|boolean')]
+    public Movie $movie;
+
+    #[Validate('boolean')]
     public bool $isLiked = false;
 
     #[Validate('required|integer|min:1')]
     public int $movieId;
 
-    public function mount(): void
+// Helpers
+    #[On('movie-liked')]
+    public function setLikeStatus(bool $isLiked): void
     {
-        $this->isLiked = $this->movie()->isLiked();
+        $this->isLiked = $isLiked;
     }
+// End Helpers
 
-    #[Computed]
-    public function movie(): Movie
+    public function mount(Movie $movie): void
     {
-        return Movie::findOrFail($this->movieId);
+        $this->movie = $movie;
+        $this->isLiked = $this->movie->isLiked();
     }
 
     public function toggleLike(): void
@@ -34,12 +38,6 @@ class LikeInputModal extends Component
 
         // Toggle the state
         $this->isLiked = !$this->isLiked;
-    }
-
-    #[On('movie-liked')]
-    public function setLikeStatus(bool $isLiked): void
-    {
-        $this->isLiked = $isLiked;
     }
 
     public function render()

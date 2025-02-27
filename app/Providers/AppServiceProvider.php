@@ -2,14 +2,12 @@
 
 namespace App\Providers;
 
-use App\Events\RatingEvent;
-use App\Events\WatchlistEvent;
-use App\Listeners\LogUserActivityListener;
+use App\Models\Movie;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,20 +28,16 @@ class AppServiceProvider extends ServiceProvider
         // Prevent Lazy Loading globally
         Model::preventLazyLoading(!app()->isProduction());
 
+        Route::bind('movie', function ($value) {
+            $id = explode('-', $value)[0];
+            $movie = Movie::findOrFail($id);
+
+            return $id.'-'.str($movie->title)->slug();
+        });
+
         // Rate Limit Login
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(10, 5)->by($request->username)->by($request->ip());
         });
-
-        // Event Registration
-        Event::listen(
-            WatchlistEvent::class,
-            LogUserActivityListener::class,
-        );
-
-        Event::listen(
-            RatingEvent::class,
-            LogUserActivityListener::class,
-        );
     }
 }

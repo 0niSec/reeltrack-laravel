@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Contracts\Watchable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Movie extends Model implements Watchable
+class Movie extends Model
 {
+
     protected $fillable = [
         'title',
         'backdrop_path',
@@ -26,57 +26,10 @@ class Movie extends Model implements Watchable
         'total_likes',
     ];
 
-    public function getRouteKey(): string
-    {
-        return $this->id.'-'.str($this->title)->slug();
-    }
+    // Relationships
+    // End Relationships
 
-    public function resolveRouteBinding($value, $field = null): Model|Movie|null
-    {
-        $id = explode('-', $value)[0];
-
-        return $this->where('id', $id)->firstOrFail();
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getId(): int|string
-    {
-        return $this->id;
-    }
-
-    public function scopeLatestReviews(Builder $query): void
-    {
-        $query->withCount('reviews')->latest()->take(10);
-    }
-
-    public function scopeWithReelStats($query)
-    {
-        return $query->withCount([
-            'reels as likes_count' => function ($query) {
-                $query->where('is_liked', true);
-            },
-            'reels as ratings_count' => function ($query) {
-                $query->whereNotNull('rating');
-            },
-            'reels as watch_count' => function ($query) {
-                $query->whereNotNull('watch_date');
-            },
-        ])->withAvg('reels as avg_rating', 'rating');
-    }
-
-    public function scopeWithReelReviewsCount($query)
-    {
-        return $query->withCount([
-            'reels as reviews_count' => function ($query) {
-                $query->whereHas('reviews');
-            },
-        ]);
-    }
-
+    // Scopes
     public function scopeWithFullDetails($query)
     {
         return $query->with([
@@ -96,24 +49,110 @@ class Movie extends Model implements Watchable
                     ->with(['person:id,name,profile_path']);
             },
             'genres',
-            'reels' => function ($query) {
-                $query->with('reviews')
-                    ->withCount('reviews');
-            },
-            'reels.user:id,username', // Add if needed for displaying review authors
-        ])->withReelStats()
-            ->withReelReviewsCount();
+        ])
+            ->withCount('reelEntries')
+            ->withAvg('reelEntries as rating_avg', 'rating');
     }
+    // End Scopes
 
-
-    public function url(): string
+    // Helpers
+    public function getRating(?User $user = null): ?float
     {
-        return route('movies.show', $this);
+        $user ??= auth()->user();
+
+        // Check latest reel entry first
+        $latestReel = $this->reelEntries()
+            ->where('user_id', $user->id)
+            ->latest()
+            ->first();
+
+        if ($latestReel) {
+            return $latestReel->rating;
+        }
+
+        // Fall back to user interactions
+        return $this->userInteractions()
+            ->where('user_id', $user->id)
+            ->value('rating');
     }
+
+    public function reelEntries(): MorphMany
+    {
+        return $this->morphMany(ReelEntry::class, 'reelable');
+    }
+
+    public function userInteractions(): MorphMany
+    {
+        return $this->morphMany(UserInteraction::class, 'interactable');
+    }
+
+    public function getRouteKey(): string
+    {
+        return $this->id.'-'.str($this->title)->slug();
+    }
+
+    public function isInWatchlist(?User $user = null): bool
+    {
+        $user ??= auth()->user();
+
+        return (bool) $this->userInteractions()
+            ->where('user_id', $user->id)
+            ->value('is_in_watchlist');
+    }
+
+    public function isLiked(?User $user = null): bool
+    {
+        $user ??= auth()->user();
+
+        // Check latest reel entry first
+        $latestReel = $this->reelEntries()
+            ->where('user_id', $user->id)
+            ->latest()
+            ->first();
+
+        if ($latestReel) {
+            return (bool) $latestReel->is_liked;
+        }
+
+        // Fall back to user interactions
+        return (bool) $this->userInteractions()
+            ->where('user_id', $user->id)
+            ->value('is_liked');
+    }
+
+    public function isWatched(?User $user = null): bool
+    {
+        $user ??= auth()->user();
+
+        // Check if any reel entries exist
+        $hasReelEntry = $this->reelEntries()
+            ->where('user_id', $user->id)
+            ->exists();
+
+        if ($hasReelEntry) {
+            return true;
+        }
+
+        // Fall back to user interactions
+        return (bool) $this->userInteractions()
+            ->where('user_id', $user->id)
+            ->value('is_watched');
+    }
+
+    // End Helpers
 
     public function cast(): MorphMany
     {
         return $this->morphMany(Cast::class, 'castable');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ReelEntry::class, 'reelable_id')
+            ->whereNotNull('review_content')
+            ->where('reelable_type', Movie::class)
+            ->with('user')
+            ->latest('watched_at');
     }
 
     public function crew(): MorphMany
@@ -121,53 +160,17 @@ class Movie extends Model implements Watchable
         return $this->morphMany(Crew::class, 'crewable');
     }
 
-    public function reviews(): MorphMany
-    {
-        return $this->morphMany(Review::class, 'reviewable');
-    }
-
-    public function watchlists(): MorphMany
-    {
-        return $this->morphMany(Watchlist::class, 'watchlistable');
-    }
-
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);
     }
 
-    public function activities(): MorphMany
+    public function resolveRouteBinding($value, $field = null): Model|Movie|null
     {
-        return $this->morphMany(Activity::class, 'subject');
+        $id = explode('-', $value)[0];
+
+        return $this->where('id', $id)->firstOrFail();
     }
-
-    public function getRating(?User $user = null): ?float
-    {
-        return $this->getReel($user)?->rating;
-    }
-
-    public function getReel(?User $user = null): ?Reel
-    {
-        $user ??= auth()->user();
-
-        return $this->reels()->where('user_id', $user->id)->first();
-    }
-
-    public function reels(): MorphMany
-    {
-        return $this->morphMany(Reel::class, 'reelable');
-    }
-
-    public function isLiked(?User $user = null): bool
-    {
-        return (bool) $this->getReel($user)?->is_liked;
-    }
-
-    public function isWatched(?User $user = null): bool
-    {
-        return $this->getReel($user)?->watch_date !== null;
-    }
-
 
     protected function casts(): array
     {

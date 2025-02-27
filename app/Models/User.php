@@ -47,25 +47,16 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
-    public function reviews(): HasMany
+    public function reelEntries(): HasMany
     {
-        return $this->hasMany(Review::class, 'user_id');
+        return $this->hasMany(ReelEntry::class, 'user_id');
     }
 
-    public function watchlists(): HasMany
+    public function userInteractions(): HasMany
     {
-        return $this->hasMany(Watchlist::class, 'user_id');
+        return $this->hasMany(UserInteraction::class, 'user_id');
     }
 
-    public function reels(): HasMany
-    {
-        return $this->hasMany(Reel::class, 'user_id');
-    }
-
-    public function activities(): HasMany
-    {
-        return $this->hasMany(Activity::class, 'user_id');
-    }
 
     /**
      * Get the attributes that should be cast.

@@ -40,20 +40,32 @@
                 >
                     @csrf
 
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li class="text-red-600 text-xs mt-2">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+
                     {{-- Watch --}}
-                    <livewire:watched-date/>
+                    <x-watch-date :movie="$movie"/>
 
                     {{-- Review Text --}}
                     <div>
-                        <x-form-label for="review" value="Review">Review</x-form-label>
-                        <x-form-textarea name="review" rows="10" class="w-full"/>
+                        <x-form-label for="review_content" value="Review">Review</x-form-label>
+                        <x-form-textarea name="review_content" rows="10" class="w-full"/>
+                        <x-form-error name="review_content"/>
 
                         <div class="w-full rounded-md mt-2">
                             <label class="flex items-center text-sm gap-2">
                                 <div class="relative flex items-center">
                                     <input type="checkbox"
-                                           name="containsSpoilers"
-                                           wire:model="containsSpoilers"
+                                           name="contains_spoilers"
+                                           :checked="{{old('contains_spoilers')}}"
                                            class="peer appearance-none w-5 h-5 rounded border-2 border-gray-600
               checked:bg-primary-500 checked:border-primary-500
               hover:border-primary-400 focus:ring-2 focus:ring-primary-500/20
@@ -76,8 +88,8 @@
 
                     {{-- Rating and Like Row --}}
                     <div class="flex items-center w-full justify-end space-x-10">
-                        <livewire:rating-input-modal :movie-id="$movie->id"/>
-                        <livewire:like-input-modal :movie-id="$movie->id"/>
+                        <livewire:rating-input-modal :movie="$movie"/>
+                        <livewire:like-input-modal :movie="$movie"/>
                     </div>
 
                     {{-- Submit Button --}}

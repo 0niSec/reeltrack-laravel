@@ -3,6 +3,7 @@
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ReelController;
 use App\Http\Controllers\RegisteredUserController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
@@ -48,6 +49,8 @@ Route::get('/users/{user:username}/profile', [UserProfileController::class, 'sho
     ->whereAlphaNumeric('user:username')
     ->name('profile');
 
+Route::redirect('/users/{user:username}', '/users/{user:username}/profile');
+
 Route::post('/users/{user:username}/profile/delete',
     [UserProfileController::class, 'destroy'])
     ->name('profile.delete')
@@ -55,6 +58,11 @@ Route::post('/users/{user:username}/profile/delete',
     ->middleware('auth')
     ->can('delete',
         'user.profile');
+
+Route::get('/users/{user:username}/{movie}/reviews',
+    [ReviewController::class, 'show'])
+    ->where('movie', '[0-9]+[-a-zA-Z0-9]+')
+    ->name('user.reviews');
 
 
 //*************************************************************************************************************//

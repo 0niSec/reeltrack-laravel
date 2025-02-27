@@ -8,25 +8,50 @@
     </x-slot:title>
 
     {{-- Flash Message Container --}}
-    @if(session('status'))
-        <div class="absolute bg-green-600 rounded-md p-4 top-10 bottom-10 left-10 right-10">
-            <div class="alert">
-                {{ session('status') }}
+    @if(session('success'))
+        <div x-data="{ show: true }"
+             x-show="show"
+             x-init="setTimeout(() => show = false, 4000)"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2"
+             class="fixed top-4 right-4 max-w-sm bg-green-600 text-white rounded-md p-4 shadow-lg">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <div class="alert">{{ session('success') }}</div>
             </div>
         </div>
     @endif
 
     @if(session('error'))
-        <div class="absolute bg-red-600 rounded-md p-4 top-50 bottom-0 left-0 right-0 z-10">
-            <div class="alert">
-                {{ session('error') }}
+        <div x-data="{ show: true }"
+             x-show="show"
+             x-init="setTimeout(() => show = false, 4000)"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2"
+             class="fixed top-4 right-4 max-w-sm bg-red-600 text-white rounded-md p-4 shadow-lg">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <div class="alert">{{ session('error') }}</div>
             </div>
         </div>
     @endif
 
+
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-linear-to-t from-slate-950 "></div>
+        <div class="absolute inset-0 bg-linear-to-t from-gray-950 "></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -113,17 +138,17 @@
                         <div class="flex items-center space-x-10 my-4">
                             <!-- TODO: Make one parent component that holds all 3? -->
                             {{-- Watched Date --}}
-                            <livewire:watch-input :movie-id="$movie->id"/>
+                            <livewire:watch-input :movie="$movie"/>
 
                             {{-- Rating Input --}}
-                            <livewire:rating-input :movie-id="$movie->id"/>
+                            <livewire:rating-input :movie="$movie"/>
 
                             {{-- Like Input --}}
-                            <livewire:like-input :movie-id="$movie->id"/>
+                            <livewire:like-input :movie="$movie"/>
 
                             {{-- Watchlist --}}
                             {{-- Kebab case for the prop is okay --}}
-                            <livewire:watchlist-input :movie-id="$movie->id"/>
+                            <livewire:watchlist-input :movie="$movie"/>
                         </div>
                     </form>
                 @else
@@ -147,9 +172,9 @@
 
                 {{-- Reviews --}}
                 <h2 class="mt-10">Reviews</h2>
-                {{--                <div class="mt-8" id="movie_reviews">--}}
-                {{--                    <x-reviews/>--}}
-                {{--                </div>--}}
+                <div class="mt-8" id="movie_reviews">
+                    <x-reviews :reviews="$movie->reviews" :movie="$movie"/>
+                </div>
             </div>
         </div>
     </div>

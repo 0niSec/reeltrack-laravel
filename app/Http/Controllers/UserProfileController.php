@@ -14,19 +14,19 @@ class UserProfileController extends Controller
         // Eager load relationships
         $user->load([
             'profile',
-            'activities.subject',
         ]);
 
         // Get liked movies with eager loading
-        $likedMovies = $user->reels()
-            ->where('reelable_type', Movie::class)
+        $likedMovies = $user->userInteractions()
+            ->with('interactable')
             ->where('is_liked', true)
-            ->with('reelable')
+            ->where('interactable_type', Movie::class)
+            ->orderBy('updated_at', 'desc')
             ->get()
-            ->pluck('reelable');
+            ->pluck('interactable');
 
         // Get recently watched content
-        $recentlyWatched = $user->reels()
+        $recentlyWatched = $user->reelEntries()
             ->whereNotNull('watch_date')
             ->orderBy('watch_date', 'desc')
             ->with('reelable')
@@ -35,7 +35,7 @@ class UserProfileController extends Controller
             ->pluck('reelable');
 
         // Get highly rated content
-        $highlyRated = $user->reels()
+        $highlyRated = $user->reelEntries()
             ->whereNotNull('rating')
             ->where('rating', '>=', 4)
             ->with('reelable')
@@ -45,21 +45,21 @@ class UserProfileController extends Controller
             ->pluck('reelable');
 
         $stats = [
-            'films_count' => $user->reels()
+            'films_count' => $user->reelEntries()
                 ->where('reelable_type', Movie::class)
                 ->whereNotNull('watch_date')
                 ->count(),
-            'tv_count' => $user->reels()
+            'tv_count' => $user->reelEntries()
                 ->where('reelable_type', TvSeries::class)
                 ->whereNotNull('watch_date')
                 ->count(),
-            'this_year_count' => $user->reels()
-                ->whereYear('watch_date', Carbon::now()->year)
+            'this_year_count' => $user->reelEntries()
+                ->whereYear('watched_at', Carbon::now()->year)
                 ->count(),
-            'rated_count' => $user->reels()
+            'rated_count' => $user->reelEntries()
                 ->whereNotNull('rating')
                 ->count(),
-            'liked_count' => $user->reels()
+            'liked_count' => $user->reelEntries()
                 ->where('is_liked', true)
                 ->count(),
         ];
