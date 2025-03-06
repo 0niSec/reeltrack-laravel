@@ -4,7 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -39,6 +41,61 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // Relationships
+    // End Relationships
+
+    //region Helpers
+// Helpers
+    public function getRouteKeyName(): string
+    {
+        return 'username';
+    }
+
+    /**
+     * Retrieve all reviews associated with the given model.
+     *
+     * @param  Model  $model  The model for which reviews are being fetched.
+     * @return ?Collection A collection of reviews for the specified model, or null if none exists.
+     */
+    public function getReviewsFor(Model $model): ?Collection
+    {
+        return $this->reviews()->whereHas('reelEntry', function ($query) use ($model) {
+            $query->whereMorphedTo('reelable', $model);
+        })->get();
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+    public function hasReviews(): bool
+    {
+        return $this->reviews()->exists();
+    }
+    //endregion
+
+    //region Model Relationships
+
+    /**
+     * Retrieve the current review for the user.
+     *
+     * @return ?Review The user's current review, or null if none exists.
+     */
+    public function getCurrentReviewFor(Model $model): ?Review
+    {
+        return $this->reviews()->whereHas('reelEntry', function ($query) use ($model) {
+            $query->whereMorphedTo('reelable', $model);
+        })->first();
+    }
+
+// End Helpers
+
+    public function reelEntries(): HasMany
+    {
+        return $this->hasMany(ReelEntry::class, 'user_id');
+    }
+
     /**
      * @return HasOne<UserProfile>
      */
@@ -47,16 +104,16 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
-    public function reelEntries(): HasMany
-    {
-        return $this->hasMany(ReelEntry::class, 'user_id');
-    }
-
     public function userInteractions(): HasMany
     {
         return $this->hasMany(UserInteraction::class, 'user_id');
     }
 
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class, 'user_id');
+    }
+    //endregion
 
     /**
      * Get the attributes that should be cast.

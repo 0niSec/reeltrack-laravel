@@ -16,6 +16,26 @@ class UserProfileController extends Controller
             'profile',
         ]);
 
+        // Get recent activities
+        $recentActivities = $user->activities()
+            ->with(['subjectable']) // Eager load the morphed relationship
+            ->latest()
+            ->take(10)
+            ->get();
+
+        $recentReviews = $user->reelEntries()
+            ->whereNotNull('review_content')
+            ->orderBy('watched_at', 'desc')
+            ->take(5)
+            ->with([
+                'reelable' => function ($query) {
+                    $query->select('id', 'title', 'slug', 'poster_path');
+                },
+            ])
+            ->get()
+            ->pluck('reelable');
+
+
         // Get liked movies with eager loading
         $likedMovies = $user->userInteractions()
             ->with('interactable')
@@ -70,6 +90,8 @@ class UserProfileController extends Controller
             'likedMovies',
             'recentlyWatched',
             'highlyRated',
+            'recentActivities',
+            'recentReviews'
         ));
     }
 }

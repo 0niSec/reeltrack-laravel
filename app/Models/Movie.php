@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
 
 class Movie extends Model
 {
@@ -86,9 +87,9 @@ class Movie extends Model
         return $this->morphMany(UserInteraction::class, 'interactable');
     }
 
-    public function getRouteKey(): string
+    public function getRouteKeyName(): string
     {
-        return $this->id.'-'.str($this->title)->slug();
+        return 'slug';
     }
 
     public function isInWatchlist(?User $user = null): bool
@@ -138,21 +139,30 @@ class Movie extends Model
             ->where('user_id', $user->id)
             ->value('is_watched');
     }
-
     // End Helpers
+
+    /**
+     * Boot the model and register a saving event to set the slug attribute
+     * based on the model's title property using Str::slug.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            $model->slug = Str::slug($model->title);
+        });
+    }
 
     public function cast(): MorphMany
     {
         return $this->morphMany(Cast::class, 'castable');
     }
 
-    public function reviews(): HasMany
+    public function reviews(): HasManyThrough
     {
-        return $this->hasMany(ReelEntry::class, 'reelable_id')
-            ->whereNotNull('review_content')
-            ->where('reelable_type', Movie::class)
-            ->with('user')
-            ->latest('watched_at');
+        return $this->hasManyThrough(Review::class, ReelEntry::class, 'reelable_id', 'reel_entry_id', 'id', 'id')
+            ->where('reelable_type', self::class);
     }
 
     public function crew(): MorphMany
@@ -163,13 +173,6 @@ class Movie extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);
-    }
-
-    public function resolveRouteBinding($value, $field = null): Model|Movie|null
-    {
-        $id = explode('-', $value)[0];
-
-        return $this->where('id', $id)->firstOrFail();
     }
 
     protected function casts(): array

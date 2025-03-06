@@ -3,11 +3,11 @@
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ReelController;
 use App\Http\Controllers\RegisteredUserController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\UserReviewController;
 use App\Livewire\UserSettings;
 use App\Livewire\UserSettingsAuth;
 use Illuminate\Support\Facades\Route;
@@ -45,13 +45,13 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 
 //*************************************************************************************************************//
 // PROFILES
-Route::get('/users/{user:username}/profile', [UserProfileController::class, 'show'])
+Route::get('/users/{user}/profile', [UserProfileController::class, 'show'])
     ->whereAlphaNumeric('user:username')
     ->name('profile');
 
-Route::redirect('/users/{user:username}', '/users/{user:username}/profile');
+Route::redirect('/users/{user}', '/users/{user}/profile');
 
-Route::post('/users/{user:username}/profile/delete',
+Route::post('/users/{user}/profile/delete',
     [UserProfileController::class, 'destroy'])
     ->name('profile.delete')
     ->whereAlphaNumeric('user:username')
@@ -59,10 +59,7 @@ Route::post('/users/{user:username}/profile/delete',
     ->can('delete',
         'user.profile');
 
-Route::get('/users/{user:username}/{movie}/reviews',
-    [ReviewController::class, 'show'])
-    ->where('movie', '[0-9]+[-a-zA-Z0-9]+')
-    ->name('user.reviews');
+Route::get('/users/{user}/{movie}/reviews', [UserReviewController::class, 'show'])->name('user.reviews');
 
 
 //*************************************************************************************************************//
@@ -89,8 +86,15 @@ Route::get('/tmdb/{type}/{id}', [TmdbController::class, 'findOrCreate'])
 //*************************************************************************************************************//
 // MOVIES
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
+Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
 Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
 Route::get('/movies/{movie}/cast-and-crew', [MovieController::class, 'castAndCrew'])->name('movies.cast-and-crew');
+//*************************************************************************************************************//
+
+//*************************************************************************************************************//
+// REELS
+
 Route::post('/movies/{movie}/reel', [ReelController::class, 'store'])
     ->name('movies.reel.store')
     ->middleware('auth');
@@ -98,13 +102,12 @@ Route::patch('/movies/{movie}/reel/{reel}/edit', [ReelController::class, 'update
     ->name('movies.reel.edit')
     ->middleware('auth')
     ->can('update', 'reel');
-Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
-Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
+
 //*************************************************************************************************************//
 
 //*************************************************************************************************************//
 // TV TODO: These are placeholders
-Route::resource('series', TvSeriesController::class)->only([
+Route::resource('tv', TvSeriesController::class)->only([
     'index', 'show', 'create', 'store', 'edit', 'update', 'destroy',
 ]);
 //*************************************************************************************************************//

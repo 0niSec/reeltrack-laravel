@@ -15,7 +15,7 @@ class WatchInput extends Component
     #[Validate('required|boolean')]
     public bool $isWatched = false;
 
-    public bool $hasUserReviews = false;
+    public bool $isReviewedByLoggedOnUser = false;
     public int $totalReviews = 0;
 
 // Helpers
@@ -51,7 +51,7 @@ class WatchInput extends Component
 
     private function checkUserReviews(): void
     {
-        $this->hasUserReviews = $this->movie
+        $this->isReviewedByLoggedOnUser = $this->movie
             ->reelEntries()
             ->where('user_id', auth()->id())
             ->whereNotNull('review_content')

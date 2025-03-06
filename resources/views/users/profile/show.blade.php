@@ -120,7 +120,9 @@
                     <x-display-heading href="#" :heading="'Recent Likes'"/>
                     <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
                         @foreach($likedMovies as $movie)
-                            <x-movie-card :movie="$movie"/>
+                            <a href="{{ route('movies.show', $movie) }}">
+                                <x-movie-card :movie="$movie"/>
+                            </a>
                         @endforeach
                     </div>
                 </div>
@@ -128,85 +130,101 @@
                 <!-- Recent Reviews -->
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Recent Reviews'"/>
+                    <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
+                        @foreach($recentReviews as $movie)
+                            <a href="{{ route('movies.show', $movie) }}">
+                                <x-movie-card :movie="$movie"/>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
             <div class="col-span-4">
                 <x-display-heading href="#" :heading="'Activity'"/>
 
-                <div class="space-y-4 ">
-                    {{--                    @forelse($user->activities as $activity)--}}
-                    {{--                        <div class="flex items-center space-x-4">--}}
-                    {{--                            <div>--}}
-                    {{--                                <p class="text-xs text-gray-400">--}}
-                    {{--                                    You--}}
-                    {{--                                    @if($activity->event_type === 'watchlist')--}}
-                    {{--                                        @if($activity->action === 'added')--}}
-                    {{--                                            added--}}
-                    {{--                                        @else--}}
-                    {{--                                            removed--}}
-                    {{--                                        @endif--}}
-                    {{--                                        <a href="{{ $activity->subject->reelable->url() }}"--}}
-                    {{--                                           class="font-medium text-gray-300 hover:text-primary-400--}}
-                    {{--                                           transition-colors"--}}
-                    {{--                                           wire:navigate>--}}
-                    {{--                                            {{ $activity->subject->title }}--}}
-                    {{--                                        </a>--}}
-                    {{--                                        {{ $activity->action === 'added' ? 'to' : 'from' }} your watchlist--}}
-                    {{--                                    @elseif($activity->event_type === 'review')--}}
-                    {{--                                        @if($activity->action === 'created')--}}
-                    {{--                                            reviewed--}}
-                    {{--                                        @elseif($activity->action === 'updated')--}}
-                    {{--                                            updated your review of--}}
-                    {{--                                        @else--}}
-                    {{--                                            removed your review from--}}
-                    {{--                                        @endif--}}
-                    {{--                                        <a href="{{ $activity->subject->reelable->url() }}"--}}
-                    {{--                                           class="font-medium text-gray-300 hover:text-primary-400 transition-colors"--}}
-                    {{--                                           wire:navigate>--}}
-                    {{--                                            {{ $activity->subject->reelable->title }}--}}
-                    {{--                                        </a>--}}
-                    {{--                                    @elseif($activity->event_type === 'rating')--}}
-                    {{--                                        @if($activity->action === 'rated')--}}
-                    {{--                                            rated--}}
-                    {{--                                        @endif--}}
-                    {{--                                        <a href="{{ $activity->subject->reelable->url() }}"--}}
-                    {{--                                           class="font-medium text-gray-300 hover:text-primary-400 transition-colors"--}}
-                    {{--                                           wire:navigate>--}}
-                    {{--                                            {{ $activity->subject->reelable->title }}--}}
-                    {{--                                        </a>--}}
+                <!-- Activity Feed -->
+                <!-- TODO: Make this a compoent -->
+                <div class="flex flex-col space-y-2">
+                    @forelse($recentActivities as $activity)
+                        <div>
+                            @php
+                                $properties = $activity->properties ?? [];
+                                $subject = $activity->subjectable;
+                                $actionText = '';
 
-                    {{--                                        @for ($i = 1; $i <= $activity->metadata['rating']; $i++)--}}
-                    {{--                                            <svg xmlns="http://www.w3.org/2000/svg"--}}
-                    {{--                                                 class="inline-block h-4 w-4 {{ $i <= floor($activity->metadata['rating']) ? 'text-yellow-500' : ($i - 0.5 <= $activity->metadata['rating'] ? 'text-yellow-300' : 'text-gray-500') }}"--}}
-                    {{--                                                 viewBox="0 0 20 20"--}}
-                    {{--                                                 fill="currentColor">--}}
-                    {{--                                                <path--}}
-                    {{--                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.908c.969 0 1.371 1.244.588 1.81l-3.98 2.942a1 1 0 00-.36 1.118l1.519 4.674c.3.921-.755 1.688-1.54 1.118l-3.98-2.942a1 1 0 00-1.175 0l-3.98 2.942c-.785.57-1.84-.197-1.54-1.118l1.519-4.674a1 1 0 00-.36-1.118L2.44 10.1c-.783-.566-.38-1.81.588-1.81h4.908a1 1 0 00.95-.69l1.518-4.674z"/>--}}
-                    {{--                                            </svg>--}}
-                    {{--                                        @endfor--}}
-                    {{--                                        @if(fmod($activity->metadata['rating'], 1.0) !== 0.0 &&--}}
-                    {{--                                        $activity->metadata['rating'] < 5)--}}
-                    {{--                                            <span class="text-xs text-yellow-300">½</span>--}}
-                    {{--                                        @endif--}}
-                    {{--                                    @endif--}}
-                    {{--                                </p>--}}
-                    {{--                                <p class="text-xs text-gray-500">--}}
-                    {{--                                    {{ Carbon::parse($activity->created_at)->diffInMinutes() < 5 ? 'Just now' :--}}
-                    {{--                                        (Carbon::parse($activity->created_at)->diffInDays() > 7 ?--}}
-                    {{--                                            Carbon::parse($activity->created_at)->format('M d, Y') :--}}
-                    {{--                                            Carbon::parse($activity->created_at)->diffForHumans()) }}--}}
-                    {{--                                </p>--}}
-                    {{--                            </div>--}}
-                    {{--                        </div>--}}
-                    {{--                    @empty--}}
-                    {{--                        <p class="text-sm text-gray-500">--}}
-                    {{--                            No recent activities to display.--}}
-                    {{--                        </p>--}}
-                    {{--                    @endforelse--}}
+                                $rating = $properties['rating'];
+                                $fullStars = 0;
+                                $hasHalfStar = 0;
+
+                                $timeAgo = Carbon::parse($activity->created_at)->diffForHumans();
+
+                                switch($activity->action) {
+                                    case 'reeled':
+                                        $actions = [];
+                                        if (isset($properties['is_liked'])) {
+                                            $actions[] = 'liked';
+                                        }
+                                        if (isset($properties['rating'])) {
+                                            $actions[] = "rated";
+                                            $fullStars = floor($properties['rating']);
+                                            $hasHalfStar = $rating - $fullStars >= 0.5; // TODO: Fix
+                                        }
+                                        if (!empty($properties['review_content'])) {
+                                            $actions[] = "reviewed";
+                                        }
+
+                                        // If there's only one item, return it as is
+                                        if (count($actions) === 1) {
+                                            $actionText = $actions[0];
+                                        }
+                                        // If there are two items, join with "and"
+                                        elseif (count($actions) === 2) {
+                                            $actionText = implode(' and ', $actions);
+                                        }
+                                        // For three or more items, use Oxford comma with "and"
+                                        else {
+                                            $lastAction = array_pop($actions);
+                                            $actionText = implode(', ', $actions) . ', and ' . $lastAction;
+                                        }
+                                        break;
+
+                                    case 'rated':
+                                        $actionText = "rated";
+                                        break;
+                                }
+                            @endphp
+
+                            <div class="flex-col items-center text-xs">
+                                <p>
+                                    @if(auth()->user())
+                                        You
+                                    @else
+                                        {{ $user->username }}
+                                    @endif
+                                    {{ $actionText }}
+                                    @if($subject)
+                                        <a href="{{ $subject instanceof Movie
+                        ? route('movies.show', $subject)
+                        : route('tv.show', $subject) }}"
+                                           class="text-blue-400 hover:underline">
+                                            {{ $subject->title }}
+                                        </a>
+                                    @endif
+                                    <!-- TODO: Add star rating -->
+                                </p>
+                                @if(isset($timeAgo))
+                                    <span class="text-gray-500">{{ $timeAgo }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center text-gray-500">
+                            No activity yet
+                        </div>
+                    @endforelse
                 </div>
             </div>
-
         </div>
     </div>
 </x-app>

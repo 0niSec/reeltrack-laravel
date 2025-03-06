@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Movie;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,7 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
@@ -27,13 +29,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // Prevent Lazy Loading globally
         Model::preventLazyLoading(!app()->isProduction());
-
-        Route::bind('movie', function ($value) {
-            $id = explode('-', $value)[0];
-            $movie = Movie::findOrFail($id);
-
-            return $id.'-'.str($movie->title)->slug();
-        });
 
         // Rate Limit Login
         RateLimiter::for('login', function (Request $request) {

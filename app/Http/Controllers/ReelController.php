@@ -38,7 +38,7 @@ class ReelController extends Controller
 
         // Create or update the reel entry
         try {
-            $reelEntry = ReelEntry::updateOrCreate(
+            ReelEntry::updateOrCreate(
                 [
                     'user_id' => auth()->id(),
                     'reelable_type' => Movie::class,

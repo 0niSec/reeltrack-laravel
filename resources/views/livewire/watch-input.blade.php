@@ -1,8 +1,8 @@
 <div>
     <label class="block text-sm text-primary-400 mb-1">
-        @if($hasUserReviews)
+        @if($isReviewedByLoggedOnUser)
             <a href="{{ route('user.reviews', ['user' => auth()->user(),'movie' => $movie]) }}"
-               class="hover:text-primary-600">
+               class="hover:text-primary-600 ">
                 Reviewed
             </a>
         @else
@@ -17,7 +17,8 @@
             wire:loading.class="opacity-50"
         >
             <x-icon-eye-outline
-                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isWatched ? 'fill-primary-500 text-zinc-900' : 'fill-none text-primary-500' }}"
+                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isWatched || $isReviewedByLoggedOnUser ? 'fill-primary-500
+                text-zinc-900' : 'fill-none text-primary-500' }}"
             />
 
             @if($totalReviews > 0)

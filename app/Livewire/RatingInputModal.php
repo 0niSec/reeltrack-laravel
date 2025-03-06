@@ -15,9 +15,6 @@ class RatingInputModal extends Component
     public float $rating = 0.0;
     public float $hoverRating = 0.0;
 
-    #[Validate('required|integer|min:1')]
-    public int $movieId;
-
 // Helpers
     #[On('movie-rated')]
     public function setRating(float $value): void

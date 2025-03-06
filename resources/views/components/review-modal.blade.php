@@ -65,7 +65,7 @@
                                 <div class="relative flex items-center">
                                     <input type="checkbox"
                                            name="contains_spoilers"
-                                           :checked="{{old('contains_spoilers')}}"
+                                           {{ old('contains_spoilers') ? 'checked' : '' }}
                                            class="peer appearance-none w-5 h-5 rounded border-2 border-gray-600
               checked:bg-primary-500 checked:border-primary-500
               hover:border-primary-400 focus:ring-2 focus:ring-primary-500/20

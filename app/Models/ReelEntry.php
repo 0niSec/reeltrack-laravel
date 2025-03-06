@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Observers\ReelEntryObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+#[ObservedBy(ReelEntryObserver::class)]
 class ReelEntry extends Model
 {
     protected $fillable = [
@@ -14,11 +18,28 @@ class ReelEntry extends Model
         'reelable_type',
         'watched_at',
         'is_rewatch',
-        'contains_spoilers',
         'is_liked',
         'rating',
-        'review_content',
     ];
+
+// Helpers
+
+    /**
+     * Determines if the entity has associated reviews.
+     *
+     * @return bool
+     */
+    public function hasReviews(): bool
+    {
+        return $this->reviews()->exists();
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'reel_entry_id');
+    }
+
+// End Helpers
 
     public function user(): BelongsTo
     {
@@ -35,7 +56,6 @@ class ReelEntry extends Model
         return [
             'watched_at' => 'date',
             'is_rewatch' => 'boolean',
-            'contains_spoilers' => 'boolean',
         ];
     }
 }

@@ -1,5 +1,6 @@
 @php
     use Carbon\Carbon;
+    $currentUserReview = auth()->user()?->getCurrentReviewFor($movie);
 @endphp
 
 <x-app>
@@ -18,7 +19,7 @@
              x-transition:leave="transition ease-in duration-300"
              x-transition:leave-start="opacity-100 transform translate-y-0"
              x-transition:leave-end="opacity-0 transform -translate-y-2"
-             class="fixed top-4 right-4 max-w-sm bg-green-600 text-white rounded-md p-4 shadow-lg">
+             class="fixed top-10 right-0 left-0 bottom-0 max-w-sm bg-green-600 text-white rounded-md p-4 shadow-lg">
             <div class="flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -63,7 +64,7 @@
     <div class="container max-w-6xl mx-auto -mt-64 relative z-10">
         <div class="flex gap-8">
             {{-- Left column: Poster and actions --}}
-            <div class="w-[300px] shrink-0" x-data="{ isOpen: false }">
+            <div class="w-[300px] shrink-0" x-data="{ isOpen: false }" @open-review-modal.window="isOpen = true">
                 <img
                     src="{{ $movie->poster_path }}"
                     alt="{{ $movie->poster_path }}"
@@ -78,12 +79,22 @@
 
                         <button
                             type="button"
-                            @click="isOpen = true"
+                            @click="isOpen = true; $dispatch('init-review-modal', { mode: 'create' })"
                             class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
                             transition-colors"
                         >
                             Leave a Reel or Review
                         </button>
+                        @if($currentUserReview)
+                            <button
+                                type="button"
+                                @click="isOpen = true; $dispatch('init-review-modal', { mode: 'edit', reviewId: {{ $currentUserReview->id }} })"
+                                class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
+                            transition-colors"
+                            >
+                                Edit your review...
+                            </button>
+                        @endif
                         <x-share-button/>
 
                         {{-- Modal --}}
@@ -131,12 +142,10 @@
                 </div>
 
                 {{-- User Actions Row --}}
-                <!-- TODO: All of these components need to talk to each other in the modal -->
                 @if (Auth::check())
                     <form>
                         @csrf
                         <div class="flex items-center space-x-10 my-4">
-                            <!-- TODO: Make one parent component that holds all 3? -->
                             {{-- Watched Date --}}
                             <livewire:watch-input :movie="$movie"/>
 

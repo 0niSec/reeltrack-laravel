@@ -13,10 +13,7 @@ class LikeInputModal extends Component
     public Movie $movie;
 
     #[Validate('boolean')]
-    public bool $isLiked = false;
-
-    #[Validate('required|integer|min:1')]
-    public int $movieId;
+    public bool $isLiked;
 
 // Helpers
     #[On('movie-liked')]
@@ -24,6 +21,7 @@ class LikeInputModal extends Component
     {
         $this->isLiked = $isLiked;
     }
+
 // End Helpers
 
     public function mount(Movie $movie): void
