@@ -9,8 +9,7 @@
     </x-slot:title>
 
     {{-- Flash Message Container --}}
-    <x-flash-message type="success" :message="session('success')"/>
-    <x-flash-message type="error" :message="session('error')"/>
+    <x-flash-message :type="session('flash.type')" :message="session('flash.message')"/>
 
 
     {{-- Backdrop with gradient overlay --}}
@@ -143,6 +142,7 @@
                 <div class="mt-8" id="movie_reviews">
                     <x-reviews :reviews="$movie->reviews" :movie="$movie"/>
                 </div>
+                {{ $movie->reviews->links() }}
             </div>
         </div>
     </div>

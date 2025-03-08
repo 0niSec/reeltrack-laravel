@@ -2,19 +2,7 @@
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
 
-    @if(session('success'))
-        <div
-            x-data="{ show: true }"
-            x-show="show"
-            x-init="setTimeout(() => show = false, 5000)"
-            class="absolute bg-green-600 rounded-md p-4 w-auto max-w-md h-auto max-h-32 top-25 left-1/2
-            transform
-            -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
-            <div class="alert flex items-center">
-                <x-icon-check-circle class="w-8 h-8 mr-4"/> {{ session('success') }}
-            </div>
-        </div>
-    @endif
+    <x-flash-message :type="session('flash.type')" :message="session('flash.message')"/>
 
     <div class="container max-w-6xl mx-auto min-h-screen space-y-10">
 
@@ -130,7 +118,8 @@
                 <!-- Recent Reviews -->
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Recent Reviews'"/>
-                    <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
+                    <!-- TODO: I want the cards to fit 5 always and not have to change the minmax value below -->
+                    <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(125px,1fr))] gap-x-4 gap-y-4">
                         @foreach($recentReviews as $review)
                             <a href="{{ route('movies.show', $review->reviewable) }}">
                                 <x-movie-card :movie="$review->reviewable"/>

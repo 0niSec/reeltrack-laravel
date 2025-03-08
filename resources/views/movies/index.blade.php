@@ -194,8 +194,6 @@
                 <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-x-4 gap-y-4">
                     @foreach ($movies['latestReviews'] as $movie)
                         <div class="flex flex-col">
-                            <!-- TODO: The user should be whoever left the review -->
-                            <!-- Do we need to retreive that? -->
                             @if($latestReview = $movie->reviews->first())
                                 <a href="{{ route('user.reviews', ['user' => $latestReview->user, 'movie' =>
                             $movie]) }}"

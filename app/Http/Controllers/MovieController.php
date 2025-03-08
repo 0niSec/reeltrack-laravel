@@ -87,10 +87,9 @@ class MovieController extends Controller
 
         // Load reviews with related data in a single query
         $cachedMovie->reviews = $movie->reviews()
-            ->with('user')  // Eager load the user relationship
-            ->with('reelEntry')
+            ->with(['user', 'reelEntry'])
             ->latest()
-            ->get();
+            ->paginate(5);
 
 
         return view('movies.show', ['movie' => $cachedMovie]);
