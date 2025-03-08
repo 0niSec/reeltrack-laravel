@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
@@ -27,6 +27,11 @@ class Movie extends Model
         'total_likes',
     ];
 
+    protected $casts = [
+        'release_date' => 'date',
+        'runtime' => 'integer',
+    ];
+
     // Relationships
     // End Relationships
 
@@ -35,7 +40,7 @@ class Movie extends Model
     {
         return $query->with([
             'cast' => function ($query) {
-                $query->orderBy('order', 'asc')
+                $query->orderBy('order')
                     ->with(['person:id,name,profile_path'])
                     ->take(10);
             },
@@ -51,8 +56,44 @@ class Movie extends Model
             },
             'genres',
         ])
-            ->withCount('reelEntries')
             ->withAvg('reelEntries as rating_avg', 'rating');
+    }
+
+    public function scopePopular(Builder $query)
+    {
+        return $query->withCount([
+            'userInteractions',
+            'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
+            'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
+        ])
+            ->withAvg('userInteractions as ratings_avg_rating', 'rating')
+            ->orderByDesc('likes_count')
+            ->orderByDesc('ratings_avg_rating');
+    }
+
+    public function scopeNewest($query)
+    {
+        return $query->withCount([
+            'userInteractions',
+            'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
+            'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
+        ])
+            ->withAvg('userInteractions as ratings_avg_rating', 'rating')
+            ->latest();
+    }
+
+    public function scopeLatestReviews($query)
+    {
+        return $query->whereHas('reviews', function ($query) {
+            $query->whereNotNull('content');
+        })
+            ->with([
+                'reviews' => function ($query) {
+                    $query->latest()->take(1) // Only the latest review for that movie
+                    ->with('user');
+                },
+            ])
+            ->latest();
     }
     // End Scopes
 
@@ -159,10 +200,9 @@ class Movie extends Model
         return $this->morphMany(Cast::class, 'castable');
     }
 
-    public function reviews(): HasManyThrough
+    public function reviews(): MorphMany
     {
-        return $this->hasManyThrough(Review::class, ReelEntry::class, 'reelable_id', 'reel_entry_id', 'id', 'id')
-            ->where('reelable_type', self::class);
+        return $this->morphMany(Review::class, 'reviewable');
     }
 
     public function crew(): MorphMany
@@ -173,13 +213,5 @@ class Movie extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(MovieGenre::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'release_date' => 'date',
-            'runtime' => 'integer',
-        ];
     }
 }

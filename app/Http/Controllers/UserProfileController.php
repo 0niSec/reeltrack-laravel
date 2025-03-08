@@ -23,18 +23,7 @@ class UserProfileController extends Controller
             ->take(10)
             ->get();
 
-        $recentReviews = $user->reelEntries()
-            ->whereNotNull('review_content')
-            ->orderBy('watched_at', 'desc')
-            ->take(5)
-            ->with([
-                'reelable' => function ($query) {
-                    $query->select('id', 'title', 'slug', 'poster_path');
-                },
-            ])
-            ->get()
-            ->pluck('reelable');
-
+        $recentReviews = $user->reviews()->with('reviewable')->latest()->take(5)->get();
 
         // Get liked movies with eager loading
         $likedMovies = $user->userInteractions()

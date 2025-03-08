@@ -59,9 +59,10 @@ class User extends Authenticatable
      */
     public function getReviewsFor(Model $model): ?Collection
     {
-        return $this->reviews()->whereHas('reelEntry', function ($query) use ($model) {
-            $query->whereMorphedTo('reelable', $model);
-        })->get();
+        return $this->reviews()
+            ->where('reviewable_type', $model->getMorphClass())
+            ->where('reviewable_id', $model->getKey())
+            ->get();
     }
 
     public function reviews(): HasMany
@@ -78,16 +79,28 @@ class User extends Authenticatable
     //region Model Relationships
 
     /**
-     * Retrieve the current review for the user.
-     *
-     * @return ?Review The user's current review, or null if none exists.
+     * Get the current review for a specific reviewable model.
      */
     public function getCurrentReviewFor(Model $model): ?Review
     {
-        return $this->reviews()->whereHas('reelEntry', function ($query) use ($model) {
-            $query->whereMorphedTo('reelable', $model);
-        })->first();
+        return $this->reviews()
+            ->where('reviewable_type', $model->getMorphClass())
+            ->where('reviewable_id', $model->getKey())
+            ->latest()
+            ->first();
     }
+
+    /**
+     * Check if user has reviewed a specific model.
+     */
+    public function hasReviewedModel(Model $model): bool
+    {
+        return $this->reviews()
+            ->where('reviewable_type', $model->getMorphClass())
+            ->where('reviewable_id', $model->getKey())
+            ->exists();
+    }
+
 
 // End Helpers
 
@@ -96,9 +109,6 @@ class User extends Authenticatable
         return $this->hasMany(ReelEntry::class, 'user_id');
     }
 
-    /**
-     * @return HasOne<UserProfile>
-     */
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);

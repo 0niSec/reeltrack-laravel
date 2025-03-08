@@ -192,16 +192,18 @@
 
             @if (count($movies['latestReviews']) > 0)
                 <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-x-4 gap-y-4">
-                    @foreach ($movies['latestReviews'] as $review)
+                    @foreach ($movies['latestReviews'] as $movie)
                         <div class="flex flex-col">
                             <!-- TODO: The user should be whoever left the review -->
                             <!-- Do we need to retreive that? -->
-                            <a href="{{ route('user.reviews', ['user' => $review->user, 'movie' =>
-                            $review->reelable]) }}"
-                               class="hover:opacity-75 transition-opacity">
-                                <x-movie-card :movie="$review->reelable"/>
-                            </a>
-                            <x-mini-stats-row class="mt-1" :stats="$review->reelable"/>
+                            @if($latestReview = $movie->reviews->first())
+                                <a href="{{ route('user.reviews', ['user' => $latestReview->user, 'movie' =>
+                            $movie]) }}"
+                                   class="hover:opacity-75 transition-opacity">
+                                    <x-movie-card :movie="$movie"/>
+                                </a>
+                                <x-mini-stats-row class="mt-1" :stats="$movie"/>
+                            @endif
                         </div>
                     @endforeach
                 </div>

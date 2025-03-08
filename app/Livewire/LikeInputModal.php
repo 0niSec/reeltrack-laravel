@@ -12,7 +12,7 @@ class LikeInputModal extends Component
 
     public Movie $movie;
 
-    #[Validate('boolean')]
+    #[Validate('required|boolean')]
     public bool $isLiked;
 
 // Helpers

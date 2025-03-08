@@ -57,33 +57,11 @@
                     {{-- Review Text --}}
                     <div>
                         <x-form-label for="review_content" value="Review">Review</x-form-label>
-                        <x-form-textarea name="review_content" rows="10" class="w-full"/>
+                        <x-form-textarea name="review_content" rows="10" class="w-full"
+                        />
                         <x-form-error name="review_content"/>
 
-                        <div class="w-full rounded-md mt-2">
-                            <label class="flex items-center text-sm gap-2">
-                                <div class="relative flex items-center">
-                                    <input type="checkbox"
-                                           name="contains_spoilers"
-                                           {{ old('contains_spoilers') ? 'checked' : '' }}
-                                           class="peer appearance-none w-5 h-5 rounded border-2 border-gray-600
-              checked:bg-primary-500 checked:border-primary-500
-              hover:border-primary-400 focus:ring-2 focus:ring-primary-500/20
-              bg-gray-700 transition-all duration-200 ease-in-out cursor-pointer"
-                                           id="contains-spoilers"/>
-
-                                    <svg
-                                        class="absolute w-5 h-5 pointer-events-none text-white peer-checked:block hidden"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M5 13l4 4L19 7"/>
-                                    </svg>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span>Contains spoilers</span>
-                                </div>
-                            </label>
-                        </div>
+                        <x-form-checkbox name="contains_spoilers">Contains Spoilers</x-form-checkbox>
                     </div>
 
                     {{-- Rating and Like Row --}}

@@ -9,45 +9,8 @@
     </x-slot:title>
 
     {{-- Flash Message Container --}}
-    @if(session('success'))
-        <div x-data="{ show: true }"
-             x-show="show"
-             x-init="setTimeout(() => show = false, 4000)"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform -translate-y-2"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform -translate-y-2"
-             class="fixed top-10 right-0 left-0 bottom-0 max-w-sm bg-green-600 text-white rounded-md p-4 shadow-lg">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <div class="alert">{{ session('success') }}</div>
-            </div>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div x-data="{ show: true }"
-             x-show="show"
-             x-init="setTimeout(() => show = false, 4000)"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform -translate-y-2"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform -translate-y-2"
-             class="fixed top-4 right-4 max-w-sm bg-red-600 text-white rounded-md p-4 shadow-lg">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-                <div class="alert">{{ session('error') }}</div>
-            </div>
-        </div>
-    @endif
+    <x-flash-message type="success" :message="session('success')"/>
+    <x-flash-message type="error" :message="session('error')"/>
 
 
     {{-- Backdrop with gradient overlay --}}
@@ -64,7 +27,7 @@
     <div class="container max-w-6xl mx-auto -mt-64 relative z-10">
         <div class="flex gap-8">
             {{-- Left column: Poster and actions --}}
-            <div class="w-[300px] shrink-0" x-data="{ isOpen: false }" @open-review-modal.window="isOpen = true">
+            <div class="w-[300px] shrink-0" x-data="{ isOpen: false }">
                 <img
                     src="{{ $movie->poster_path }}"
                     alt="{{ $movie->poster_path }}"
@@ -79,7 +42,8 @@
 
                         <button
                             type="button"
-                            @click="isOpen = true; $dispatch('init-review-modal', { mode: 'create' })"
+                            @click="isOpen = true"
+
                             class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
                             transition-colors"
                         >
@@ -88,11 +52,12 @@
                         @if($currentUserReview)
                             <button
                                 type="button"
-                                @click="isOpen = true; $dispatch('init-review-modal', { mode: 'edit', reviewId: {{ $currentUserReview->id }} })"
+                                @click="isOpen = true"
+
                                 class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
                             transition-colors"
                             >
-                                Edit your review...
+                                Edit your Reel or review...
                             </button>
                         @endif
                         <x-share-button/>
@@ -121,13 +86,7 @@
                 @if (!empty($movie->genres))
                     <div class="flex gap-2 mt-4">
                         @foreach ($movie->genres as $genre)
-                            <a
-                                href="{{ route('movies.index', ['genre' => $genre->name ?? 'genre-placeholder']) }}"
-                                class="px-3 py-1 font-medium rounded-full border border-primary-500 text-sm
-                                hover:bg-primary-500 hover:text-white transition-colors"
-                            >
-                                {{ $genre->name }}
-                            </a>
+                            <x-genre-pill-link :genre="$genre"/>
                         @endforeach
                     </div>
                 @endif

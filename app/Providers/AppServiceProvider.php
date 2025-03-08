@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (DB::connection() instanceof SQLiteConnection) {
+            DB::raw('PRAGMA foreign_keys=1');
+        }
+
+
         // Prevent Lazy Loading globally
         Model::preventLazyLoading(!app()->isProduction());
 

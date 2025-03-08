@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ReviewEvent;
 use App\Models\Movie;
 use App\Models\ReelEntry;
-use Exception;
+use App\Models\Review;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ReelController extends Controller
 {
@@ -32,31 +32,30 @@ class ReelController extends Controller
         // Determine watch date based on date type
         $watchedAt = match ($validated['date_type']) {
             'specific_date' => $validated['watch_date'],
-            'estimated_year' => $validated['estimated_year'].'-01-01',
+            'estimated_year' => $validated['estimated_year'].'-01-01', // TODO: 1/1 cant be the date
             default => null
         };
 
-        // Create or update the reel entry
-        try {
-            ReelEntry::updateOrCreate(
-                [
-                    'user_id' => auth()->id(),
-                    'reelable_type' => Movie::class,
-                    'reelable_id' => $movie->id,
-                ],
-                [
-                    'watched_at' => $watchedAt,
-                    'is_rewatch' => $validated['is_rewatch'] ?? false,
-                    'rating' => $validated['rating'] ?? null,
-                    'is_liked' => $validated['is_liked'],
-                    'review_content' => $validated['review_content'] ?? null,
-                    'contains_spoilers' => $validated['contains_spoilers'] ?? false,
-                ]
-            );
-        } catch (Exception $e) {
-            Log::error('Error creating reel entry: '.$e);
+        $reelEntry = ReelEntry::create([
+            'user_id' => auth()->id(),
+            'reelable_id' => $movie->id,
+            'reelable_type' => Movie::class,
+            'watched_at' => $watchedAt,
+            'rating' => $validated['rating'],
+            'is_liked' => $validated['is_liked'],
+            'is_rewatch' => $validated['is_rewatch'],
+        ]);
 
-            return redirect()->back()->with('error', 'Error creating reel entry');
+
+        if (isset($validated['review_content'])) {
+            Review::create([
+                'user_id' => auth()->id(),
+                'reel_entry_id' => $reelEntry->id,
+                'reviewable_id' => $movie->id,
+                'reviewable_type' => $movie->getMorphClass(),
+                'content' => $validated['review_content'],
+                'contains_spoilers' => $validated['contains_spoilers'],
+            ]);
         }
 
         return redirect()

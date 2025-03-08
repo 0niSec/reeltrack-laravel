@@ -3,7 +3,7 @@
 
     <div class="flex items-center justify-center min-h-screen">
         <div
-            class="p-6 border-2 border-gray-700 rounded-lg shadow-xl shadow-gray-800/50 bg-gray-800 max-w-md w-full
+            class="p-6 border-2 border-gray-700 rounded-lg shadow-xl shadow-gray-800/50 bg-gray-900 max-w-md w-full
             mx-auto">
             <div class="flex flex-col items-center justify-center mb-8 space-y-2">
                 <h1
@@ -48,10 +48,7 @@
 
                 <!-- Remember Me -->
                 <div class="flex flex-row space-x-2 items-center">
-                    <x-form-checkbox name="remember" id="remember"/>
-                    <x-form-label for="remember" value="Remember Me" aria-for="remember">Remember
-                        Me
-                    </x-form-label>
+                    <x-form-checkbox name="remember" id="remember">Remember Me</x-form-checkbox>
                 </div>
 
             </form>

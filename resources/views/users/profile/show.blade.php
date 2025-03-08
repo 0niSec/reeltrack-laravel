@@ -131,9 +131,9 @@
                 <div class="flex flex-col">
                     <x-display-heading href="#" :heading="'Recent Reviews'"/>
                     <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(175px,1fr))] gap-x-4 gap-y-4">
-                        @foreach($recentReviews as $movie)
-                            <a href="{{ route('movies.show', $movie) }}">
-                                <x-movie-card :movie="$movie"/>
+                        @foreach($recentReviews as $review)
+                            <a href="{{ route('movies.show', $review->reviewable) }}">
+                                <x-movie-card :movie="$review->reviewable"/>
                             </a>
                         @endforeach
                     </div>
@@ -144,86 +144,86 @@
                 <x-display-heading href="#" :heading="'Activity'"/>
 
                 <!-- Activity Feed -->
-                <!-- TODO: Make this a compoent -->
-                <div class="flex flex-col space-y-2">
-                    @forelse($recentActivities as $activity)
-                        <div>
-                            @php
-                                $properties = $activity->properties ?? [];
-                                $subject = $activity->subjectable;
-                                $actionText = '';
+                <!-- TODO: Make this a component -->
+                {{--                <div class="flex flex-col space-y-2">--}}
+                {{--                    @forelse($recentActivities as $activity)--}}
+                {{--                        <div>--}}
+                {{--                            @php--}}
+                {{--                                $properties = $activity->properties ?? [];--}}
+                {{--                                $subject = $activity->subjectable;--}}
+                {{--                                $actionText = '';--}}
 
-                                $rating = $properties['rating'];
-                                $fullStars = 0;
-                                $hasHalfStar = 0;
+                {{--                                $rating = $properties['rating'];--}}
+                {{--                                $fullStars = 0;--}}
+                {{--                                $hasHalfStar = 0;--}}
 
-                                $timeAgo = Carbon::parse($activity->created_at)->diffForHumans();
+                {{--                                $timeAgo = Carbon::parse($activity->created_at)->diffForHumans();--}}
 
-                                switch($activity->action) {
-                                    case 'reeled':
-                                        $actions = [];
-                                        if (isset($properties['is_liked'])) {
-                                            $actions[] = 'liked';
-                                        }
-                                        if (isset($properties['rating'])) {
-                                            $actions[] = "rated";
-                                            $fullStars = floor($properties['rating']);
-                                            $hasHalfStar = $rating - $fullStars >= 0.5; // TODO: Fix
-                                        }
-                                        if (!empty($properties['review_content'])) {
-                                            $actions[] = "reviewed";
-                                        }
+                {{--                                switch($activity->action) {--}}
+                {{--                                    case 'reeled':--}}
+                {{--                                        $actions = [];--}}
+                {{--                                        if (isset($properties['is_liked'])) {--}}
+                {{--                                            $actions[] = 'liked';--}}
+                {{--                                        }--}}
+                {{--                                        if (isset($properties['rating'])) {--}}
+                {{--                                            $actions[] = "rated";--}}
+                {{--                                            $fullStars = floor($properties['rating']);--}}
+                {{--                                            $hasHalfStar = $rating - $fullStars >= 0.5; // TODO: Fix--}}
+                {{--                                        }--}}
+                {{--                                        if (!empty($properties['review_content'])) {--}}
+                {{--                                            $actions[] = "reviewed";--}}
+                {{--                                        }--}}
 
-                                        // If there's only one item, return it as is
-                                        if (count($actions) === 1) {
-                                            $actionText = $actions[0];
-                                        }
-                                        // If there are two items, join with "and"
-                                        elseif (count($actions) === 2) {
-                                            $actionText = implode(' and ', $actions);
-                                        }
-                                        // For three or more items, use Oxford comma with "and"
-                                        else {
-                                            $lastAction = array_pop($actions);
-                                            $actionText = implode(', ', $actions) . ', and ' . $lastAction;
-                                        }
-                                        break;
+                {{--                                        // If there's only one item, return it as is--}}
+                {{--                                        if (count($actions) === 1) {--}}
+                {{--                                            $actionText = $actions[0];--}}
+                {{--                                        }--}}
+                {{--                                        // If there are two items, join with "and"--}}
+                {{--                                        elseif (count($actions) === 2) {--}}
+                {{--                                            $actionText = implode(' and ', $actions);--}}
+                {{--                                        }--}}
+                {{--                                        // For three or more items, use Oxford comma with "and"--}}
+                {{--                                        else {--}}
+                {{--                                            $lastAction = array_pop($actions);--}}
+                {{--                                            $actionText = implode(', ', $actions) . ', and ' . $lastAction;--}}
+                {{--                                        }--}}
+                {{--                                        break;--}}
 
-                                    case 'rated':
-                                        $actionText = "rated";
-                                        break;
-                                }
-                            @endphp
+                {{--                                    case 'rated':--}}
+                {{--                                        $actionText = "rated";--}}
+                {{--                                        break;--}}
+                {{--                                }--}}
+                {{--                            @endphp--}}
 
-                            <div class="flex-col items-center text-xs">
-                                <p>
-                                    @if(auth()->user())
-                                        You
-                                    @else
-                                        {{ $user->username }}
-                                    @endif
-                                    {{ $actionText }}
-                                    @if($subject)
-                                        <a href="{{ $subject instanceof Movie
-                        ? route('movies.show', $subject)
-                        : route('tv.show', $subject) }}"
-                                           class="text-blue-400 hover:underline">
-                                            {{ $subject->title }}
-                                        </a>
-                                    @endif
-                                    <!-- TODO: Add star rating -->
-                                </p>
-                                @if(isset($timeAgo))
-                                    <span class="text-gray-500">{{ $timeAgo }}</span>
-                                @endif
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center text-gray-500">
-                            No activity yet
-                        </div>
-                    @endforelse
-                </div>
+                {{--                            <div class="flex-col items-center text-xs">--}}
+                {{--                                <p>--}}
+                {{--                                    @if(auth()->user())--}}
+                {{--                                        You--}}
+                {{--                                    @else--}}
+                {{--                                        {{ $user->username }}--}}
+                {{--                                    @endif--}}
+                {{--                                    {{ $actionText }}--}}
+                {{--                                    @if($subject)--}}
+                {{--                                        <a href="{{ $subject instanceof Movie--}}
+                {{--                        ? route('movies.show', $subject)--}}
+                {{--                        : route('tv.show', $subject) }}"--}}
+                {{--                                           class="text-blue-400 hover:underline">--}}
+                {{--                                            {{ $subject->title }}--}}
+                {{--                                        </a>--}}
+                {{--                                    @endif--}}
+                {{--                                    <!-- TODO: Add star rating -->--}}
+                {{--                                </p>--}}
+                {{--                                @if(isset($timeAgo))--}}
+                {{--                                    <span class="text-gray-500">{{ $timeAgo }}</span>--}}
+                {{--                                @endif--}}
+                {{--                            </div>--}}
+                {{--                        </div>--}}
+                {{--                    @empty--}}
+                {{--                        <div class="text-center text-gray-500">--}}
+                {{--                            No activity yet--}}
+                {{--                        </div>--}}
+                {{--                    @endforelse--}}
+                {{--                </div>--}}
             </div>
         </div>
     </div>

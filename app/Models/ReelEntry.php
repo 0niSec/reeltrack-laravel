@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use App\Observers\ReelEntryObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-#[ObservedBy(ReelEntryObserver::class)]
 class ReelEntry extends Model
 {
+
     protected $fillable = [
         'user_id',
         'reelable_id',
@@ -20,6 +19,12 @@ class ReelEntry extends Model
         'is_rewatch',
         'is_liked',
         'rating',
+    ];
+
+    protected $casts = [
+        'is_liked' => 'boolean',
+        'is_rewatch' => 'boolean',
+        'rating' => 'float',
     ];
 
 // Helpers
@@ -41,6 +46,7 @@ class ReelEntry extends Model
 
 // End Helpers
 
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -56,6 +62,7 @@ class ReelEntry extends Model
         return [
             'watched_at' => 'date',
             'is_rewatch' => 'boolean',
+            'is_liked' => 'boolean',
         ];
     }
 }

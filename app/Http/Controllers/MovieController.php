@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
-use App\Models\ReelEntry;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,42 +14,11 @@ class MovieController extends Controller
     public function index(): View
     {
         // Use eager loading with select and only retrieve necessary fields
-        $newestMovies = Movie::select(['id', 'slug', 'poster_path'])
-            ->withCount([
-                'userInteractions',
-                'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
-                'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
-            ])
-            ->withAvg('userInteractions as ratings_avg_rating', 'rating')
-            ->latest()
-            ->take(5)
-            ->get();
+        $newestMovies = Movie::newest()->take(5)->get();
 
-        $popularMovies = Movie::select(['id', 'slug', 'poster_path'])
-            ->withCount([
-                'userInteractions',
-                'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
-                'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
-            ])
-            ->withAvg('userInteractions as ratings_avg_rating', 'rating')
-            ->orderByDesc('likes_count')
-            ->orderByDesc('ratings_avg_rating')
-            ->take(5)
-            ->get();
+        $popularMovies = Movie::popular()->take(5)->get();
 
-        $latestReviews = ReelEntry::select([
-            'id', 'user_id', 'reelable_id', 'reelable_type',
-            'rating', 'is_liked', 'watched_at', 'review_content',
-        ])
-            ->whereNotNull('review_content')
-            ->where('reelable_type', Movie::class)
-            ->with([
-                'reelable:id,slug,poster_path',
-                'user:id,username',
-            ])
-            ->latest('watched_at')
-            ->take(5)
-            ->get();
+        $latestReviews = Movie::latestReviews()->take(5)->get();
 
         $movies = [
             'newest' => $newestMovies,
@@ -118,16 +86,11 @@ class MovieController extends Controller
         $cachedMovie->avg_rating = $userInteractions->whereNotNull('rating')->avg('rating');
 
         // Load reviews with related data in a single query
-        $cachedMovie->reviews = $movie->reelEntries()
-            ->with(['reviews.user', 'user'])
-            ->whereHas('reviews')
+        $cachedMovie->reviews = $movie->reviews()
+            ->with('user')  // Eager load the user relationship
+            ->with('reelEntry')
             ->latest()
-            ->get()
-            ->flatMap(function ($reelEntry) {
-                // Map reviews with their author data for the view
-                return $reelEntry->reviews;
-            })
-            ->sortByDesc('created_at');
+            ->get();
 
 
         return view('movies.show', ['movie' => $cachedMovie]);

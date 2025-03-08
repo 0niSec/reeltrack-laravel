@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->boolean('contains_spoilers');
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->foreignIdFor(ReelEntry::class)->constrained('reel_entries')->cascadeOnDelete();
+            $table->morphs('reviewable');
             $table->index(['user_id', 'reel_entry_id']);
             $table->timestamps();
         });
