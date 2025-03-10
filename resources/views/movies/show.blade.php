@@ -26,7 +26,7 @@
     <div class="container max-w-6xl mx-auto -mt-64 relative z-10">
         <div class="flex gap-8">
             {{-- Left column: Poster and actions --}}
-            <div class="w-[300px] shrink-0" x-data="{ isOpen: false }">
+            <div class="w-[300px] shrink-0">
                 <img
                     src="{{ $movie->poster_path }}"
                     alt="{{ $movie->poster_path }}"
@@ -38,37 +38,15 @@
                     <div
                         class="mt-4 space-y-2"
                     >
-
-                        <button
-                            type="button"
-                            @click="isOpen = true"
-
-                            class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
-                            transition-colors"
-                        >
-                            Leave a Reel or Review
-                        </button>
-                        @if($currentUserReview)
-                            <button
-                                type="button"
-                                @click="isOpen = true"
-
-                                class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
-                            transition-colors"
-                            >
-                                Edit your Reel or review...
-                            </button>
-                        @endif
+                        {{-- Modal & Action Buttons --}}
+                        <livewire:review-modal :movie="$movie"/>
                         <x-share-button/>
-
-                        {{-- Modal --}}
-                        <x-review-modal :movie="$movie"/>
                     </div>
                 @endauth
             </div>
 
             {{-- Right column: Movie details --}}
-            <div class="grow ">
+            <div class="grow">
                 {{-- Title and tagline --}}
                 <h1 class="text-4xl text-primary-500 font-bold">{{ $movie->title }}</h1>
                 @if (!empty($movie->tagline))
@@ -130,12 +108,9 @@
                 {{-- Cast & Crew Tabs --}}
                 <x-cast-crew-tabs :cast="$movie->cast" :crew="$movie->crew"/>
 
-                <a href="{{ route('movies.cast-and-crew', $movie) }}" class="block mt-4
-                text-primary-500 font-medium
-                hover:text-primary-600
-                underline
-                transition-all underline-offset-2">Full
-                    Cast & Crew</a>
+                <x-underlined-link href="{{ route('movies.cast-and-crew', $movie) }}" :movie="$movie"
+                                   class="block font-medium mt-4">Full Cast & Crew
+                </x-underlined-link>
 
                 {{-- Reviews --}}
                 <h2 class="mt-10">Reviews</h2>

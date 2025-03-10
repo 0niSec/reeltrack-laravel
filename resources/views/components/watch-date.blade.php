@@ -4,6 +4,7 @@
         <div class="relative flex items-center">
             <input type="radio"
                    name="date_type"
+                   wire:model="dateType"
                    value="specific_date"
                    class="peer appearance-none w-5 h-5 rounded-full border-2 border-gray-600
                           checked:bg-primary-500 checked:border-primary-500
@@ -21,6 +22,7 @@
             <input type="date"
                    class="bg-transparent border-none text-sm text-gray-200 focus:ring-0 cursor-pointer"
                    name="watch_date"
+                   wire:model="watchDate"
                    value="{{  now()->format('Y-m-d') }}"
                    max="{{ date('Y-m-d') }}"
                    id="watched-date-picker"/>
@@ -32,6 +34,7 @@
         <div class="relative flex items-center">
             <input type="radio"
                    name="date_type"
+                   wire:model="dateType"
                    value="unknown"
                    class="peer appearance-none w-5 h-5 rounded-full border-2 border-gray-600
                           checked:bg-primary-500 checked:border-primary-500
@@ -51,11 +54,12 @@
         <div class="relative flex items-center">
             <input type="radio"
                    name="date_type"
+                   wire:model="dateType"
                    value="estimated_year"
                    class="peer appearance-none w-5 h-5 rounded-full border-2 border-gray-600
-                          checked:bg-primary-500 checked:border-primary-500
-                          hover:border-primary-400 focus:ring-2 focus:ring-primary-500/20
-                          bg-gray-700 transition-all duration-200 ease-in-out cursor-pointer"
+            checked:bg-primary-500 checked:border-primary-500
+            hover:border-primary-400 focus:ring-2 focus:ring-primary-500/20
+            bg-gray-700 transition-all duration-200 ease-in-out cursor-pointer"
                    id="date-type-specific"/>
             <svg class="absolute w-4 h-4 pointer-events-none text-white peer-checked:block hidden left-0.5"
                  viewBox="0 0 24 24">
@@ -65,6 +69,7 @@
         <div class="flex items-center gap-2">
             <span>I watched this sometime in</span>
             <select name="estimated_year"
+                    wire:model="estimatedYear"
                     class="bg-gray-700 px-2 py-1 border-gray-600 text-sm rounded-md focus:ring-primary-500
                     focus:border-primary-500 cursor-pointer">
                 @for($y = date('Y'); $y >= 1920; $y--)
@@ -79,6 +84,7 @@
         <div class="relative flex items-center">
             <input type="checkbox"
                    name="is_rewatch"
+                   wire:model="isRewatch"
                    class="peer appearance-none w-5 h-5 rounded border-2 border-gray-600
                           checked:bg-primary-500 checked:border-primary-500
                           hover:border-primary-400 focus:ring-2 focus:ring-primary-500/20

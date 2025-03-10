@@ -7,7 +7,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
 use App\Http\Controllers\TvSeriesController;
 use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\UserReviewController;
+use App\Http\Controllers\UserReviewsController;
 use App\Livewire\UserSettings;
 use App\Livewire\UserSettingsAuth;
 use Illuminate\Support\Facades\Route;
@@ -59,7 +59,8 @@ Route::post('/users/{user}/profile/delete',
     ->can('delete',
         'user.profile');
 
-Route::get('/users/{user}/{movie}/reviews', [UserReviewController::class, 'show'])->name('user.reviews');
+Route::get('/users/{user}/{movie}/reviews', [UserReviewsController::class, 'index'])->name('user.reviews');
+Route::get('/user/{user}/{movie}/{review}', [UserReviewsController::class, 'show'])->name('user.review');
 
 
 //*************************************************************************************************************//

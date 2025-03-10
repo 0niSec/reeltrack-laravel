@@ -1,8 +1,8 @@
 <div>
-    <label class="block text-sm text-primary-400 mb-1">{{ $isLiked ? 'Liked' : 'Like' }}</label>
+    <label class="block text-sm text-primary-400 mb-1" wire:text="isLiked ? 'Liked' : 'Like'"></label>
 
     <div class="relative flex items-center group">
-        <input type="hidden" name="is_liked" x-ref="isLiked" wire:model="isLiked" :value="$wire.isLiked"/>
+        <input type="hidden" name="is_liked" wire:model.live="isLiked"/>
         <div
             class="cursor-pointer relative"
             wire:click="toggleLike"

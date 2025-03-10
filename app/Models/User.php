@@ -101,6 +101,18 @@ class User extends Authenticatable
             ->exists();
     }
 
+    public function getIntreactionsFor(Model $model): Collection
+    {
+        return $this->userInteractions()
+            ->where('interactable_type', $model->getMorphClass())
+            ->where('interactable_id', $model->getKey())
+            ->get();
+    }
+
+    public function userInteractions(): HasMany
+    {
+        return $this->hasMany(UserInteraction::class, 'user_id');
+    }
 
 // End Helpers
 
@@ -112,11 +124,6 @@ class User extends Authenticatable
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
-    }
-
-    public function userInteractions(): HasMany
-    {
-        return $this->hasMany(UserInteraction::class, 'user_id');
     }
 
     public function activities(): HasMany

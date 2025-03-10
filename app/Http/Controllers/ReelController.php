@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ReviewEvent;
 use App\Models\Movie;
 use App\Models\ReelEntry;
 use App\Models\Review;
