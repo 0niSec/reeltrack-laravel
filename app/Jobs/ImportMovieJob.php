@@ -41,15 +41,37 @@ class ImportMovieJob implements ShouldQueue, ShouldBeUnique
         try {
             $credits = $tmdb->movieCredits($this->movieDetails->id);
 
-            // Download images first
-            $storagePaths = $imageService->downloadMovieImages(
-                $this->movieDetails->id,
-                $this->movieDetails->poster_path,
-                $this->movieDetails->backdrop_path
-            );
+            DB::transaction(function () use ($creditsService, $credits, $imageService) {
+                // First create the movie without images
+                $movie = Movie::create([
+                    'title' => $this->movieDetails->title,
+                    'overview' => $this->movieDetails->overview,
+                    'budget' => $this->movieDetails->budget,
+                    'revenue' => $this->movieDetails->revenue,
+                    'original_title' => $this->movieDetails->original_title,
+                    'original_language' => $this->movieDetails->original_language,
+                    'status' => $this->movieDetails->status ?? 'Released',
+                    'release_date' => $this->movieDetails->release_date,
+                    'runtime' => $this->movieDetails->runtime,
+                    'tagline' => $this->movieDetails->tagline,
+                    'tmdb_id' => $this->movieDetails->id,
+                    'poster_path' => null,
+                    'backdrop_path' => null
+                ]);
 
-            DB::transaction(function () use ($creditsService, $credits, $storagePaths) {
-                $movie = $this->createOrUpdateMovie($storagePaths);
+                // Now download images with the database ID
+                $storagePaths = $imageService->downloadMovieImages(
+                    $movie->id,
+                    $this->movieDetails->poster_path,
+                    $this->movieDetails->backdrop_path
+                );
+
+                // Update the movie with the image paths
+                $movie->update([
+                    'poster_path' => $storagePaths['poster_path'],
+                    'backdrop_path' => $storagePaths['backdrop_path']
+                ]);
+
                 $this->syncGenres($movie);
                 $creditsService->storeCastMembers($credits['cast'], $movie);
                 $creditsService->storeCrewMembers($credits['crew'], $movie);

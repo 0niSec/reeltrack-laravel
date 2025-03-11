@@ -2,23 +2,23 @@
 
 namespace App\DataTransferObjects;
 
-class MovieDetailsDTO
+readonly class MovieDetailsDTO
 {
     public function __construct(
-        public readonly string $id,
-        public readonly string $title,
-        public readonly string $overview,
-        public readonly ?int $budget,
-        public readonly ?int $revenue,
-        public readonly ?string $original_title,
-        public readonly ?string $original_language,
-        public readonly ?string $status,
-        public readonly ?string $poster_path,
-        public readonly ?string $backdrop_path,
-        public readonly string $release_date,
-        public readonly int $runtime,
-        public readonly ?string $tagline,
-        public readonly array $genres
+        public string $id,
+        public string $title,
+        public string $overview,
+        public ?int $budget,
+        public ?int $revenue,
+        public ?string $original_title,
+        public ?string $original_language,
+        public ?string $status,
+        public ?string $poster_path,
+        public ?string $backdrop_path,
+        public string $release_date,
+        public int $runtime,
+        public ?string $tagline,
+        public array $genres
     ) {
     }
 
