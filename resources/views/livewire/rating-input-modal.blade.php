@@ -27,7 +27,7 @@
     </label>
 
     <!-- 5 stars, each split into half increments -->
-    <div class="flex relative items-center" x-cloak>
+    <div class="flex relative items-center" wire:cloak>
         <!-- Clear icon -->
         <div
             class="absolute -left-8 flex items-center justify-center w-8 h-8 rounded-full cursor-pointer transition-opacity"
@@ -51,13 +51,13 @@
         @for($i = 0; $i < 5; $i++)
             {{-- The width and height affects this component being in line with the rest --}}
             <div class="relative w-8 h-10">
-                <input type="hidden" name="rating" :value="livewireRating" x-ref="ratingInput" wire:model="rating"/>
+                <input type="hidden" name="rating" wire:model.live="rating"/>
                 <!-- Left half-star -->
                 <div
                     class="cursor-pointer absolute inset-0 w-1 h-1"
                     @mouseover="setHover({{ $i + 0.5 }})"
                     @mouseleave="clearHover()"
-                    @click="$wire.setRating({{ $i + 0.5 }}); livewireRating = {{ $i + 0.5 }}"
+                    x-on:click="$wire.setRating({{ $i + 0.5 }}); livewireRating = {{ $i + 0.5 }}"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +80,7 @@
                     class="cursor-pointer absolute inset-0 left-4 w-1 h-1"
                     @mouseover="setHover({{ $i + 1.0 }})"
                     @mouseleave="clearHover()"
-                    @click="$wire.setRating({{ $i + 1.0 }}); livewireRating = {{ $i + 1.0 }}"
+                    x-on:click="$wire.setRating({{ $i + 1.0 }}); livewireRating = {{ $i + 1.0 }}"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

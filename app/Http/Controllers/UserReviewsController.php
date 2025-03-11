@@ -11,14 +11,14 @@ class UserReviewsController extends Controller
 {
     public function index(User $user, Movie $movie): View
     {
-        $reviews = $user->getReviewsFor($movie);
+        $reviews = $user->getReviewsFor($movie)->load('user');
 
-        return view('users.reviews', compact('user', 'movie', 'reviews'));
+        return view('users.reviews.index', compact('user', 'movie', 'reviews'));
     }
 
 
     public function show(User $user, Movie $movie, Review $review): View
     {
-        return view('users.review', compact('user', $movie, 'review'));
+        return view('users.reviews.show', compact('user', $movie, 'review'));
     }
 }

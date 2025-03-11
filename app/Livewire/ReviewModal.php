@@ -6,6 +6,8 @@ use App\Models\Movie;
 use App\Models\ReelEntry;
 use App\Models\Review;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ReviewModal extends Component
@@ -29,6 +31,18 @@ class ReviewModal extends Component
         $this->movie = $movie;
         $this->watchDate = Carbon::today()->format('Y-m-d');
         $this->isLiked = $this->movie->isLiked();
+    }
+
+    #[On('liked-in-modal')]
+    public function handleLikeUpdate(bool $value): void
+    {
+        $this->isLiked = $value;
+    }
+
+    #[On('rated-in-modal')]
+    public function handleRatingUpdate(float $value): void
+    {
+        $this->rating = $value;
     }
 
     public function save()
@@ -61,6 +75,8 @@ class ReviewModal extends Component
             'is_liked' => $validated['isLiked'],
             'is_rewatch' => $validated['isRewatch'],
         ]);
+
+        Log::debug('Reel Entry created:', [$reelEntry]);
 
         if (!empty($validated['reviewContent'])) {
             Review::create([

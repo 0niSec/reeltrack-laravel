@@ -36,6 +36,9 @@ class LikeInputModal extends Component
 
         // Toggle the state
         $this->isLiked = !$this->isLiked;
+
+        // Dispatch to the Review Modal for child -> parent communication
+        $this->dispatch('liked-in-modal', $this->isLiked)->to(ReviewModal::class);
     }
 
     public function render()

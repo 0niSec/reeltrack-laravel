@@ -39,17 +39,17 @@ class ReelEntry extends Model
         return $this->reviews()->exists();
     }
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class, 'reel_entry_id');
-    }
-
 // End Helpers
 
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'reel_entry_id');
     }
 
     public function reelable(): MorphTo

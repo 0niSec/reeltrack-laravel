@@ -21,6 +21,9 @@ class RatingInputModal extends Component
     {
         $this->validate();
         $this->rating = $value;
+
+        // Dispatch to the Review Modal for child -> parent communication
+        $this->dispatch('rated-in-modal', $this->rating);
     }
 
 // End Helpers
