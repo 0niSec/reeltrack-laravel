@@ -11,11 +11,11 @@
          x-transition:leave-start="opacity-100 transform translate-y-0"
          x-transition:leave-end="opacity-0 transform translate-y-2"
         @class([
-            'fixed bottom-4 right-4 max-w-sm text-white rounded-md p-4 shadow-lg',
-            'bg-green-600' => session()->has('success') || $type === 'success',
-            'bg-red-600' => session()->has('error') || $type === 'error',
-            'bg-blue-600' => session()->has('info') || $type === 'info',
-            'bg-yellow-600' => session()->has('warning') || $type === 'warning',
+            'fixed bottom-10 right-4 max-w-sm text-white rounded-md p-4 shadow-lg z-50',
+            'bg-green-700' => session()->has('success') || $type === 'success',
+            'bg-red-700' => session()->has('error') || $type === 'error',
+            'bg-blue-700' => session()->has('info') || $type === 'info',
+            'bg-yellow-700' => session()->has('warning') || $type === 'warning',
         ])>
         <div class="flex items-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

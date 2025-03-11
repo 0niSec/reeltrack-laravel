@@ -23,6 +23,9 @@
 
 <!-- Main Content -->
 <main class="grow">
+    {{-- Flash Message --}}
+    <x-flash-message :type="session('flash.type')" :message="session('flash.message')"/>
+    
     {{ $slot }}
 </main>
 
