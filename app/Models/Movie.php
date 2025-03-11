@@ -13,13 +13,19 @@ class Movie extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'backdrop_path',
         'poster_path',
         'overview',
         'tagline',
         'runtime',
+        'budget',
+        'original_language',
+        'original_title',
+        'revenue',
         'tmdb_id',
         'release_date',
+        'status',
         'ratings_count',
         'rating_average',
         'total_reviews',
@@ -73,13 +79,7 @@ class Movie extends Model
 
     public function scopeNewest($query)
     {
-        return $query->withCount([
-            'userInteractions',
-            'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
-            'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
-        ])
-            ->withAvg('userInteractions as ratings_avg_rating', 'rating')
-            ->latest();
+        return $query->latest();
     }
 
     public function scopeLatestReviews($query)
