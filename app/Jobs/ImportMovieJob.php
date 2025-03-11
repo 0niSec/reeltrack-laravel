@@ -87,28 +87,6 @@ class ImportMovieJob implements ShouldQueue, ShouldBeUnique
         }
     }
 
-    private function createOrUpdateMovie(array $storagePaths): Movie
-    {
-        return Movie::firstOrCreate(
-            ['tmdb_id' => $this->movieDetails->id],
-            [
-                'title' => $this->movieDetails->title,
-                'overview' => $this->movieDetails->overview,
-                'budget' => $this->movieDetails->budget,
-                'revenue' => $this->movieDetails->revenue,
-                'original_title' => $this->movieDetails->original_title,
-                'original_language' => $this->movieDetails->original_language,
-                'status' => $this->movieDetails->status,
-                'poster_path' => $storagePaths['poster_path'],
-                'backdrop_path' => $storagePaths['backdrop_path'],
-                'release_date' => $this->movieDetails->release_date,
-                'runtime' => $this->movieDetails->runtime,
-                'tagline' => $this->movieDetails->tagline,
-                'tmdb_id' => $this->movieDetails->id,
-            ]
-        );
-    }
-
     private function syncGenres(Movie $movie): void
     {
         foreach ($this->movieDetails->genres as $genre) {
