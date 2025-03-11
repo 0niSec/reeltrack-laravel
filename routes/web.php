@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\MovieController;
-use App\Http\Controllers\ReelController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TmdbController;
@@ -91,19 +90,6 @@ Route::get('/movies/new', [MovieController::class, 'new'])->name('movies.new');
 Route::get('/movies/popular', [MovieController::class, 'popular'])->name('movies.popular');
 Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
 Route::get('/movies/{movie}/cast-and-crew', [MovieController::class, 'castAndCrew'])->name('movies.cast-and-crew');
-//*************************************************************************************************************//
-
-//*************************************************************************************************************//
-// REELS
-
-Route::post('/movies/{movie}/reel', [ReelController::class, 'store'])
-    ->name('movies.reel.store')
-    ->middleware('auth');
-Route::patch('/movies/{movie}/reel/{reel}/edit', [ReelController::class, 'update'])
-    ->name('movies.reel.edit')
-    ->middleware('auth')
-    ->can('update', 'reel');
-
 //*************************************************************************************************************//
 
 //*************************************************************************************************************//
