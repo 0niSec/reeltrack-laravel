@@ -36,8 +36,8 @@ class UserProfileController extends Controller
 
         // Get recently watched content
         $recentlyWatched = $user->reelEntries()
-            ->whereNotNull('watch_date')
-            ->orderBy('watch_date', 'desc')
+            ->whereNotNull('watched_at')
+            ->orderBy('watched_at', 'desc')
             ->with('reelable')
             ->take(5)
             ->get()
@@ -56,11 +56,11 @@ class UserProfileController extends Controller
         $stats = [
             'films_count' => $user->reelEntries()
                 ->where('reelable_type', Movie::class)
-                ->whereNotNull('watch_date')
+                ->whereNotNull('watched_at')
                 ->count(),
             'tv_count' => $user->reelEntries()
                 ->where('reelable_type', TvSeries::class)
-                ->whereNotNull('watch_date')
+                ->whereNotNull('watched_at')
                 ->count(),
             'this_year_count' => $user->reelEntries()
                 ->whereYear('watched_at', Carbon::now()->year)

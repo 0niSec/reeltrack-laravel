@@ -52,17 +52,17 @@ class WatchInput extends Component
     private function checkUserReviews(): void
     {
         $this->isReviewedByLoggedOnUser = $this->movie
-            ->reelEntries()
+            ->reviews()
             ->where('user_id', auth()->id())
-            ->whereNotNull('review_content')
+            ->whereNotNull('content')
             ->exists();
     }
 
     private function getTotalReviews(): int
     {
         return $this->movie
-            ->reelEntries()
-            ->whereNotNull('review_content')
+            ->reviews()
+            ->whereNotNull('content')
             ->count();
     }
 
