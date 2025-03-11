@@ -12,11 +12,11 @@ export default defineConfig({
 
     ],
     server: {
-        host: 'reeltrack-laravel.test',
+        host: 'localhost',
         watch: true,
         cors: true,
         hmr: {
-            host: 'reeltrack-laravel.test',
+            host: 'localhost',
         },
 
     }
