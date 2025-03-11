@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Movie;
+use App\Models\ReelEntry;
+use App\Models\Review;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -41,12 +43,40 @@ class ReviewModal extends Component
             'reviewContent' => 'nullable|string',
             'containsSpoilers' => 'nullable|boolean',
         ]);
-        dd($validated);
+
+        // Determine watch date based on date type
+        $watchedAt = match ($validated['dateType']) {
+            'specific_date' => $validated['watchDate'],
+            'estimated_year' => $validated['estimatedYear'].'-01-01', // TODO: 1/1 cant be the date
+            default => null
+        };
+
+        // Add the items to the database
+        $reelEntry = ReelEntry::create([
+            'user_id' => auth()->id(),
+            'reelable_id' => $this->movie->id,
+            'reelable_type' => Movie::class,
+            'watched_at' => $watchedAt,
+            'rating' => $validated['rating'],
+            'is_liked' => $validated['isLiked'],
+            'is_rewatch' => $validated['isRewatch'],
+        ]);
+
+        if (!empty($validated['reviewContent'])) {
+            Review::create([
+                'user_id' => auth()->id(),
+                'reel_entry_id' => $reelEntry->id,
+                'reviewable_id' => $this->movie->getKey(),
+                'reviewable_type' => $this->movie->getMorphClass(),
+                'content' => $validated['reviewContent'],
+                'contains_spoilers' => $validated['containsSpoilers'],
+            ]);
+        }
 
         $this->showModal = false; // Close the modal after saving
 
         return redirect()
-            ->route('movies.show', $movie)
+            ->route('movies.show', $this->movie)
             ->with('success', 'Movie added to your reel successfully');
     }
 
