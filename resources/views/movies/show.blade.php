@@ -8,10 +8,6 @@
         {{ $movie->title }}
     </x-slot:title>
 
-    {{-- Flash Message Container --}}
-    <x-flash-message :type="session('flash.type')" :message="session('flash.message')"/>
-
-
     {{-- Backdrop with gradient overlay --}}
     <div class="relative aspect-[2.76/1] w-full">
         <div class="absolute inset-0 bg-linear-to-t from-gray-950 "></div>

@@ -21,73 +21,7 @@
     <x-slot:title>
         Movies
     </x-slot:title>
-
-    {{-- Flash Message Container --}}
-    @if(session('status'))
-        <div
-            x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 4000)" {{-- 4-second auto-dismiss --}}
-            x-show="show"
-            x-transition
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-800 text-white p-4 rounded shadow-md
-           flex items-center justify-between gap-2 max-w-md z-50"
-            style="display: none;" {{-- ensures Alpine’s x-show binding works cleanly --}}
-        >
-            <span class="mr-2">{{ session('status') }}</span>
-            <button
-                type="button"
-                class="font-bold px-2 hover:text-black"
-                @click="show = false"
-            >
-                &times;
-            </button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div
-            x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 4000)" {{-- 4-second auto-dismiss --}}
-            x-show="show"
-            x-transition
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-800 text-white p-4 rounded shadow-md
-           flex items-center justify-between gap-2 max-w-md z-50"
-            style="display: none;" {{-- ensures Alpine’s x-show binding works cleanly --}}
-        >
-            <span class="mr-2">{{ session('error') }}</span>
-            <button
-                type="button"
-                class="font-bold px-2 hover:text-black"
-                @click="show = false"
-            >
-                <x-icon-close class="w-4 h-4"/>
-            </button>
-        </div>
-    @endif
-
-    @if(session('warning'))
-        <div
-            x-data="{ show: true }"
-            x-init="setTimeout(() => show = false, 4000)" {{-- 4-second auto-dismiss --}}
-            x-show="show"
-            x-transition
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-yellow-800 text-white p-4 rounded shadow-md
-           flex items-center justify-between gap-2 max-w-md z-50"
-            style="display: none;" {{-- ensures Alpine’s x-show binding works cleanly --}}
-        >
-            <span class="mr-2">{{ session('warning') }}</span>
-            <button
-                type="button"
-                class="font-bold px-2 hover:text-black"
-                @click="show = false"
-            >
-                &times;
-            </button>
-        </div>
-
-    @endif
-
-
+    
     <div class="container max-w-6xl my-10 flex flex-row items-center space-x-2">
         <span class="font-medium">Browse By</span>
 

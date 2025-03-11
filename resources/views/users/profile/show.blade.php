@@ -1,9 +1,7 @@
 @php use App\Models\Movie;use App\Models\TvShow;use Carbon\Carbon; @endphp
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
-
-    <x-flash-message :type="session('flash.type')" :message="session('flash.message')"/>
-
+    
     <div class="container max-w-6xl mx-auto min-h-screen space-y-10">
 
         <!-- Top container/stats -->
