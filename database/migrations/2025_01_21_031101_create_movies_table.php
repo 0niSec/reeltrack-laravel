@@ -13,16 +13,16 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->string('backdrop_path')->nullable();
             $table->string('poster_path')->nullable();
-            $table->string('overview');
+            $table->text('overview');
             $table->string('tagline');
             $table->integer('runtime');
-            $table->integer('budget');
-            $table->string('original_language');
-            $table->string('original_title');
-            $table->integer('revenue');
+            $table->integer('budget')->nullable();
+            $table->string('original_language')->nullable();
+            $table->string('original_title')->nullable();
+            $table->unsignedBigInteger('revenue')->nullable();
             $table->unsignedBigInteger('tmdb_id')->unique();
             $table->string('release_date');
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->unsignedBigInteger('ratings_count')->default(0);
             $table->decimal('rating_average', 3)->default(0);
             $table->unsignedBigInteger('total_reviews')->default(0);
@@ -30,7 +30,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('total_likes')->default(0);
 
             // Indexes
-            $table->index('timestamps');
             $table->index('release_date');
             $table->index('title');
 

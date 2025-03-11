@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('tmdb_id')->unique();
-            $table->text('biography')->nullable();
+            $table->mediumText('biography')->nullable();
             $table->string('profile_path')->nullable();
             $table->string('birthday')->nullable();
             $table->string('deathday')->nullable();
