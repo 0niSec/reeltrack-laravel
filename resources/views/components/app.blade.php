@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-950 text-gray-200">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-background text-neutral-200">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,15 +17,15 @@
     @endif
 </head>
 
-<body class="font-sans antialiased flex flex-col min-h-screen">
+<body class="font-sans antialiased flex flex-col">
 <!-- Header -->
-@include('layouts.header', ['user' => auth()->user()])
+@include('layouts.header')
 
 <!-- Main Content -->
-<main class="grow">
+<main class="grow min-h-screen">
     {{-- Flash Message --}}
     <x-flash-message :type="session('flash.type')" :message="session('flash.message')"/>
-    
+
     {{ $slot }}
 </main>
 

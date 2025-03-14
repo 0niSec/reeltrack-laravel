@@ -18,7 +18,7 @@
                 <h3 class="text-lg font-bold mb-4">Quick Links</h3>
                 <ul class="space-y-2">
                     <li>
-                        <x-nav-link href="{{ route('index') }}">
+                        <x-nav-link href="{{ route('home') }}">
                             Home
                         </x-nav-link>
                     </li>

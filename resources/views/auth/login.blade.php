@@ -3,14 +3,14 @@
 
     <div class="flex items-center justify-center min-h-screen">
         <div
-            class="p-6 border-2 border-gray-700 rounded-lg shadow-xl shadow-gray-800/50 bg-gray-900 max-w-md w-full
+            class="p-6 border-2 border-neutral-700 rounded-lg shadow-lg shadow-neutral-900/50 bg-neutral-900 max-w-md w-full
             mx-auto">
             <div class="flex flex-col items-center justify-center mb-8 space-y-2">
                 <h1
-                    class="text-2xl text-gray-200 font-bold text-center"
+                    class="text-2xl text-neutral-200 font-bold text-center"
                     id="login-heading">Log in to your
                     account</h1>
-                <span class="block text-gray-400 text-sm">Enter your username and password below to log in</span>
+                <span class="block text-neutral-400 text-sm">Enter your username and password below to log in</span>
             </div>
 
             <!-- Form Components -->
@@ -62,8 +62,8 @@
 
                 </div>
 
-                <a class="text-sm rounded-md bg-gray-600 hover:bg-gray-500 transition-colors text-gray-100 px-4 py-2"
-                   href="{{route('index')}}"
+                <a class="text-sm rounded-md bg-neutral-600 hover:bg-neutral-500 transition-colors text-neutral-100 px-4 py-2"
+                   href="{{route('home')}}"
                    type="button"
                    id="back-button">
                     Back

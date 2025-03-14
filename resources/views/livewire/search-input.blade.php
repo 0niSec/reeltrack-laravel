@@ -3,7 +3,7 @@
         <input
             type="text"
             placeholder="Search"
-            class="w-full text-sm border border-zinc-700 rounded-lg px-2 py-1 text-zinc-200 bg-zinc-900
+            class="w-full text-sm border border-neutral-500 rounded-md px-2 py-1 bg-neutral-800
                focus:border-primary-500 focus:outline-none focus:ring-none focus:ring-primary-500"
             wire:model.live.debounce.300ms="searchText"
             wire:keydown.enter.prevent

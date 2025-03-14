@@ -3,9 +3,9 @@
 
     <div class="flex items-center justify-center min-h-screen">
         <div
-            class="p-6 border-2 border-zinc-700 rounded-lg shadow-lg bg-zinc-800 max-w-md w-full mx-auto">
+            class="p-6 border-2 border-neutral-700 rounded-lg shadow-lg bg-neutral-900 max-w-md w-full mx-auto">
             <h1 class="text-2xl text-primary-500 font-bold text-center" id="register-heading">Register</h1>
-            <p class="text-sm text-center text-zinc-300 mb-10">We're looking forward to having you!</p>
+            <p class="text-sm text-center text-neutral-300 mb-10">We're looking forward to having you!</p>
 
             <!-- Form Components -->
             <form action="/register" method="POST" class="flex flex-col space-y-4"
@@ -54,10 +54,10 @@
             </form>
             <div class="flex flex-row mt-10 items-center justify-between">
                 <p class="text-sm">Need to make an account?
-                    <x-inline-link href="{{route('login')}}">Login</x-inline-link>
+                    <x-underlined-link href="{{ route('login') }}">Log in</x-underlined-link>
                 </p>
 
-                <a class="text-sm rounded-md bg-zinc-600 text-zinc-100 px-4 py-2" href="{{route('index')}}"
+                <a class="text-sm rounded-md bg-neutral-600 text-neutral-100 px-4 py-2" href="{{route('home')}}"
                    type="button"
                    id="back-button">
                     Back

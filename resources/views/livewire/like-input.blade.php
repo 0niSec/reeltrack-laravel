@@ -1,5 +1,5 @@
 <div>
-    <label class="block text-sm text-primary-400 mb-1">{{ $isLiked ? 'Liked' : 'Like' }}</label>
+    <label class="block text-sm text-neutral-400 mb-1">{{ $isLiked ? 'Liked' : 'Like' }}</label>
 
     <div class="relative flex items-center group">
         <div
@@ -8,8 +8,9 @@
             wire:loading.class="opacity-50"
         >
             <x-icon-heart-outline
-                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isLiked ? 'fill-primary-500 text-primary-500' : 'fill-none text-primary-500' }}"
+                class="w-10 h-10 hover:text-accent-300 hover:fill-accent-300 transition-colors {{ $isLiked ? 'fill-accent-400 text-accent-400' : 'fill-none text-primary-500' }} focus:ring-2 focus:ring-accent-400 focus:outline-none"
             />
+
 
             <div wire:loading class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <svg class="animate-spin w-4 h-4 text-primary-500" xmlns="http://www.w3.org/2000/svg"

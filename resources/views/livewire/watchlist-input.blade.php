@@ -1,5 +1,5 @@
 <div>
-    <label class="block text-sm text-primary-400 mb-1">{{ $isWatchlisted ? 'Watchlisted' : 'Watchlist' }}</label>
+    <label class="block text-sm text-neutral-400 mb-1">{{ $isWatchlisted ? 'Watchlisted' : 'Watchlist' }}</label>
 
     <div class="relative flex items-center group">
         <div
@@ -8,9 +8,8 @@
             wire:loading.class="opacity-50"
         >
             <x-icon-bookmark
-                class="w-10 h-10 hover:text-primary-400 transition-colors {{ $isWatchlisted ? 'text-primary-500
-                fill-primary-500'
-                : 'fill-none text-primary-500' }}"
+                class="w-10 h-10 hover:text-primary-300 transition-colors {{ $isWatchlisted ? 'text-primary-400
+    fill-primary-400' : 'fill-none text-primary-500' }} focus:ring-2 focus:ring-primary-400 focus:outline-none"
             />
 
             <div wire:loading class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

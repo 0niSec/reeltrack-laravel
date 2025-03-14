@@ -2,8 +2,8 @@
     <input
         type="{{ $type ?? 'text' }}"
         name="{{ $name }}"
-        {{ $attributes->merge(['class' => 'border border-gray-500 text-gray-400 bg-gray-900 focus:bg-gray-800
-        focus:text-gray-300 rounded-md
+        {{ $attributes->merge(['class' => 'border border-neutral-500 bg-neutral-800 focus:bg-neutral-800
+        rounded-md
         shadow-sm py-1.5 px-1.5 text-sm
         w-full
         focus:outline-none

@@ -2,82 +2,107 @@
     <x-slot:title>
         Home
     </x-slot:title>
-    <div class="relative">
-        <!-- Background gradient -->
-        <div class="absolute min-h-screen inset-x-0 -z-10">
-            <div class="min-h-screen bg-linear-to-b from-primary-600/20 bg-no-repeat"></div>
-        </div>
 
-        <!-- Anime.js animation container -->
-        <div id="animation-container" class="absolute inset-0 -z-5">
-            <!-- Circles will be dynamically added here -->
-        </div>
-
+    <div class="relative mt-20">
         <!-- Hero Section -->
-        <div class="relative z-10 flex flex-col min-h-screen justify-center">
-            <div class="flex flex-col justify-center">
-                <div>
-                    <h1 class="text-8xl font-bold text-center mb-6">Reeltrack</h1>
-                    <p class="text-xl font-medium text-center text-primary-200">Movies and TV. All in one place.</p>
-                    <p class="text-xl font-medium text-center text-primary-200">Add movies and TV shows to your
-                        watchlist,
-                        track your progress, and get recommendations.</p>
+        <div class="relative z-10 flex flex-col container max-w-6xl justify-center">
+            <div class="flex flex-col">
+                <div class="w-fit">
+                    <h1 class="text-8xl font-bold underline underline-offset-8">Reeltrack</h1>
+                    <p class="text-2xl -mr-10 font-medium text-end text-primary-200">Movies and TV. All in one
+                        place.</p>
                 </div>
 
-                <div class="mt-12 text-center flex flex-row justify-center space-x-4">
-                    <button class="inline-block px-8 py-4 bg-primary-600
-                hover:bg-primary-700 text-white font-bold rounded-lg transform transition hover:scale-105
-                hover:rotate-1">Browse Movies
-                    </button>
+                <!-- Stats Section -->
+                <div class="container max-w-6xl mt-4">
+                    <div class="grid grid-cols-4 md:grid-cols-10">
+                        <div>
+                            <div class="flex items-center space-x-1">
+                                <div class="block w-2 h-2 rounded-xs bg-primary-500"></div>
+                                <div class="text-neutral-300 text-sm">Movies</div>
+                            </div>
+                            <div
+                                class="text-primary-400 mb-2">
+                                <span class="text-xl">{{ Number::abbreviate($siteStats['total_movies']) }}</span></div>
+                        </div>
 
-                    <button class="inline-block px-8 py-4 bg-primary-600
-                hover:bg-primary-700 text-white font-bold rounded-lg transform transition hover:scale-105
-                hover:rotate-1">Browse Shows
-                    </button>
+                        <div>
+                            <div class="flex items-center space-x-1">
+                                <div class="block w-2 h-2 rounded-xs bg-accent-500"></div>
+                                <div class="text-neutral-300 text-sm">Users</div>
+                            </div>
+                            <div
+                                class="text-primary-400 mb-2">
+                                <span class="text-xl">{{ Number::abbreviate($siteStats['total_users']) }}</span></div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center space-x-1">
+                                <div class="block w-2 h-2 rounded-xs bg-cyan-500"></div>
+                                <div class="text-neutral-300 text-sm">Reviews</div>
+                            </div>
+                            <div
+                                class="text-primary-400 mb-2">
+                                <span class="text-xl">{{ Number::abbreviate($siteStats['total_reviews']) }}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center space-x-1">
+                                <div class="block w-2 h-2 rounded-xs bg-indigo-500"></div>
+                                <div class="text-neutral-300 text-sm">Ratings</div>
+                            </div>
+                            <div
+                                class="text-primary-400 mb-2">{{ Number::abbreviate($siteStats['total_ratings']) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="mt-12 text-center flex flex-row space-x-2 items-center">
+                    <x-button-link href="{{ route('register') }}">Create a free account</x-button-link>
+                    <span class="text-neutral-400">or <x-underlined-link
+                            href="{{ route('login') }}">log in</x-underlined-link> if you have an account</span>
+                </div>
+
+                <!-- 🔥 What's Trending -->
+                <div class="mt-12">
+                    <h1 class="text-xl font-light mb-2">🔥 What's Trending</h1>
+                    <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
+                        @foreach($trending as $movie)
+                            <a href="{{ route('movies.show', $movie) }}"
+                               class="hover:opacity-75 transition-opacity" wire:navigate>
+                                <x-movie-card :movie="$movie"/>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
-            <!-- Feature Cards -->
-            <div class="container mt-40">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Track Card -->
-                    <x-hero-card :title="'Track Your Progress'">Keep a record of every movie and show you've watched,
-                        want
-                        to watch,
-                        or
-                        are currently watching.
-                    </x-hero-card>
 
-                    <!-- Discover Card -->
-                    <div class=" bg-primary-700/30
-                    /30 p-6 rounded-lg backdrop-blur-sm border border-primary-700">
-                        <div class="text-primary-400 mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Discover New Content</h3>
-                        <p class="text-zinc-300">Find new movies and shows based on your watching history and
-                            preferences.</p>
-                    </div>
+            <!-- Feature Descriptions -->
+            <h1 class="mt-10 mb-3">What is Reeltrack?</h1>
+            <p>Reeltrack is your personal cinematic companion. Easily log the movies and TV shows you watch, rate them,
+                and share your thoughts with reviews and real-time reactions. Keep track of everything you've seen and
+                discover new favorites.</p>
 
-                    <!-- Share Card -->
-                    <div class="bg-primary-700/30 p-6 rounded-lg backdrop-blur-sm border border-primary-700">
-                        <div class="text-primary-400 mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Share With Friends</h3>
-                        <p class="text-zinc-300">Share your watchlists and recommendations with friends and
-                            family.</p>
-                    </div>
+
+            <div class="grid grid-cols-2 gap-8 space-y-20 mt-20">
+                <div class="feature-item">
+                    <h1 class="mt-10 mb-3">Log Movies and TV Shows</h1>
+                    <p>Log the movies and TV shows you've seen, rate them, and share your thoughts with reviews and
+                        real-time reactions.</p>
                 </div>
+                <img src="{{ asset('images/log_movies.png') }}" alt="Log Movies" class="border border-neutral-500">
+
+                <div class="feature-item order-last">
+                    <h1 class="mt-10 mb-3">Create and Organize Lists</h1>
+                    <p>Create and curate custom lists for your movie and TV show adventures. Organize your favorites,
+                        keep track of must-watch titles, and share them with friends!</p>
+                </div>
+                <img src="{{ asset('images/log_movies.png') }}" alt="Log Movies" class="border border-neutral-500">
             </div>
+
         </div>
     </div>
 </x-app>

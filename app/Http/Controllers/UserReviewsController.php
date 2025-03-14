@@ -11,7 +11,7 @@ class UserReviewsController extends Controller
 {
     public function index(User $user, Movie $movie): View
     {
-        $reviews = $user->getReviewsFor($movie)->load('user');
+        $reviews = $user->getReviewsFor($movie);
 
         return view('users.reviews.index', compact('user', 'movie', 'reviews'));
     }

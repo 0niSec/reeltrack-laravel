@@ -21,7 +21,7 @@
     <x-slot:title>
         Movies
     </x-slot:title>
-    
+
     <div class="container max-w-6xl my-10 flex flex-row items-center space-x-2">
         <span class="font-medium">Browse By</span>
 
@@ -76,7 +76,7 @@
 
             {{-- Movies --}}
             @if (count($movies['popular']) > 0)
-                <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-4 gap-y-4">
+                <div class="movies-grid grid grid-cols-6 gap-x-4 gap-y-4">
                     @foreach ($movies['popular'] as $movie)
                         <div class="flex flex-col">
                             <a href="{{ route('movies.show', $movie) }}" class="hover:opacity-75
@@ -100,7 +100,7 @@
 
 
             @if (count($movies['newest']) > 0)
-                <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-x-4 gap-y-4">
+                <div class="movies-grid grid grid-cols-6 gap-x-4 gap-y-4">
                     @foreach ($movies['newest'] as $movie)
                         <div class="flex flex-col">
                             <a href="{{ route('movies.show', $movie) }}"
@@ -141,7 +141,7 @@
                 </div>
             @else
                 <div class="flex flex-col items-center justify-center py-8 text-center w-full">
-                    <p class="text-lg text-primary-400">No movies have been added yet!</p>
+                    <p class="text-lg text-neutral-400">Nobody has reviewed anything!</p>
                 </div>
             @endif
         </div>

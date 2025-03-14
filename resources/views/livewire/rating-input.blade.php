@@ -22,7 +22,7 @@
         hoveringCloseIcon: false
     }"
 >
-    <label class="block text-sm text-primary-400 mb-1">
+    <label class="block text-sm text-neutral-400 mb-1">
         {{ $rating > 0 ? 'Rated' : 'Rating' }}
     </label>
 
@@ -39,7 +39,7 @@
             x-transition
             :class="{ 'opacity-100': hoverRating > 0 || hoveringCloseIcon, 'opacity-50': !(hoverRating > 0 || hoveringCloseIcon) }"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-zinc-500" viewBox="0 0 24 24"
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-neutral-500" viewBox="0 0 24 24"
                  fill="currentColor">
                 <path
                     d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
@@ -63,8 +63,8 @@
                         viewBox="0 0 24 24"
                         class="w-10 h-10 transition-colors"
                         :class="(currentValue() >= {{ $i + 0.5 }})
-                            ? 'text-yellow-500'
-                            : 'text-zinc-600'"
+                            ? 'text-primary-400'
+                            : 'text-neutral-600'"
                         style="clip-path: inset(0 50% 0 0);"
                     >
                         <path
@@ -86,8 +86,8 @@
                         viewBox="0 0 24 24"
                         class="w-10 h-10 transition-colors"
                         :class="(currentValue() >= {{ $i + 1.0 }})
-                            ? 'text-yellow-500'
-                            : 'text-zinc-600'"
+                            ? 'text-primary-400'
+                            : 'text-neutral-600'"
                         style="clip-path: inset(0 0 0 50%); margin-left: -16px;"
                     >
                         <path

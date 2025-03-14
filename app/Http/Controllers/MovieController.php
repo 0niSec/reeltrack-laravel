@@ -14,16 +14,10 @@ class MovieController extends Controller
     public function index(): View
     {
         // Use eager loading with select and only retrieve necessary fields
-        $newestMovies = Movie::newest()->take(5)->get();
-
-        $popularMovies = Movie::popular()->take(5)->get();
-
-        $latestReviews = Movie::latestReviews()->take(5)->get();
-
         $movies = [
-            'newest' => $newestMovies,
-            'popular' => $popularMovies,
-            'latestReviews' => $latestReviews,
+            'newest' => Movie::newest()->take(6)->get(),
+            'popular' => Movie::popular()->take(6)->get(),
+            'latestReviews' => Movie::latestReviews()->take(6)->get(),
         ];
 
         return view('movies.index', compact('movies'));
@@ -62,36 +56,43 @@ class MovieController extends Controller
                 ->findOrFail($movie->id);
         });
 
-        // Load user-specific data separately, since it changes frequently and shouldn't be cached
+        // For authenticated users, load their specific interactions
         if ($userId) {
-            $cachedMovie->load([
-                'userInteractions' => fn($query) => $query->where('user_id', $userId),
-                'reelEntries' => fn($query) => $query->where('user_id', $userId)->latest('watched_at'),
-            ]);
+            // Load both user-specific interactions in a single query with conditional selects
+            $userSpecificData = $movie->userInteractions()
+                ->where('user_id', $userId)
+                ->first();
 
-            // Set user-specific properties using loaded relationships
-            $cachedMovie->user_interaction = $cachedMovie->userInteractions->first();
-            $cachedMovie->user_reel = $cachedMovie->reelEntries->first();
+            $userReelEntry = $movie->reelEntries()
+                ->where('user_id', $userId)
+                ->latest('watched_at')
+                ->first();
+
+            $cachedMovie->user_interaction = $userSpecificData;
+            $cachedMovie->user_reel = $userReelEntry;
         } else {
             $cachedMovie->user_interaction = null;
             $cachedMovie->user_reel = null;
         }
 
-        // Load all interactions and calculate stats from them (single query)
-        $userInteractions = $movie->userInteractions()->get();
 
-        // Use collection methods for calculations
-        $cachedMovie->likes_count = $userInteractions->where('is_liked', true)->count();
-        $cachedMovie->ratings_count = $userInteractions->whereNotNull('rating')->count();
-        $cachedMovie->avg_rating = $userInteractions->whereNotNull('rating')->avg('rating');
+        // Use Query Builder to calculate stats directly in the database
+        $interactionStats = $movie->userInteractions()
+            ->selectRaw('
+            SUM(CASE WHEN is_liked = true THEN 1 ELSE 0 END) as likes_count,
+            COUNT(CASE WHEN rating IS NOT NULL THEN 1 ELSE NULL END) as ratings_count,
+            AVG(CASE WHEN rating IS NOT NULL THEN rating ELSE NULL END) as avg_rating
+        ')
+            ->first();
 
-        // Load reviews with related data in a single query
-        $cachedMovie->reviews = $movie->reviews()
-            ->with(['user', 'reelEntry'])
-            ->latest()
-            ->paginate(5);
+        $cachedMovie->likes_count = $interactionStats->likes_count ?? 0;
+        $cachedMovie->ratings_count = $interactionStats->ratings_count ?? 0;
+        $cachedMovie->avg_rating = $interactionStats->avg_rating ?? 0;
 
 
-        return view('movies.show', ['movie' => $cachedMovie]);
+        $reviews = $movie->reviews()->with(['user', 'reelEntry'])->latest()->paginate(5);
+
+
+        return view('movies.show')->with(['movie' => $cachedMovie, 'reviews' => $reviews]);
     }
 }

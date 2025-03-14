@@ -2,31 +2,15 @@
     $currentUserReview = auth()->user()?->getCurrentReviewFor($movie);
 @endphp
 <div>
-    <div class="flex flex-col mt-4 space-y-2">
-        <button
-            type="button"
-            x-on:click="$wire.showModal = true"
-
-            class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
-                            transition-colors"
-        >
-            Leave a Reel or Review
-        </button>
+    <div class="flex flex-col mt-2 space-y-1">
+        <x-open-modal-button>Reel or Review</x-open-modal-button>
         @if($currentUserReview)
-            <button
-                type="button"
-                x-on:click="$wire.showModal = true"
-
-                class="w-full bg-gray-800 text-primary-500 py-2 rounded-md hover:bg-gray-900
-                            transition-colors"
-            >
-                Edit your Reel or review...
-            </button>
+            <x-open-modal-button>Edit your Reel or Review...</x-open-modal-button>
         @endif
     </div>
     <!-- Modal backdrop -->
     <div
-        class="fixed inset-0 bg-gray-800/30 backdrop-blur-lg z-50"
+        class="fixed inset-0 bg-background/30 backdrop-blur-lg z-50"
         x-on:click="$wire.showModal = false"
         wire:cloak
         wire:transition
@@ -39,7 +23,7 @@
             @click.stop {{-- Prevent clicks inside from closing the modal --}}
         >
             {{-- Modal content --}}
-            <div class="bg-gray-950 rounded-lg shadow-xl max-w-3xl w-full p-6 relative">
+            <div class="bg-background rounded-lg shadow-xl max-w-3xl w-full p-6 relative">
                 {{-- Modal Header --}}
                 <div>
                     <div class="flex justify-between items-center border-b pb-4 mb-4 border-gray-500">

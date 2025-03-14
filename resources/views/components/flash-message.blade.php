@@ -11,7 +11,7 @@
          x-transition:leave-start="opacity-100 transform translate-y-0"
          x-transition:leave-end="opacity-0 transform translate-y-2"
         @class([
-            'fixed bottom-10 right-4 max-w-sm text-white rounded-md p-4 shadow-lg z-50',
+            'fixed bottom-10 right-4 max-w-sm text-white rounded-md p-2 shadow-lg z-50',
             'bg-green-700' => session()->has('success') || $type === 'success',
             'bg-red-700' => session()->has('error') || $type === 'error',
             'bg-blue-700' => session()->has('info') || $type === 'info',

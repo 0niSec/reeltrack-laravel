@@ -1,6 +1,6 @@
 @php
     use Carbon\Carbon;
-    $currentUserReview = auth()->user()?->getCurrentReviewFor($movie);
+//    $currentUserReview = auth()->user()?->getCurrentReviewFor($movie);
 @endphp
 
 <x-app>
@@ -9,8 +9,8 @@
     </x-slot:title>
 
     {{-- Backdrop with gradient overlay --}}
-    <div class="relative aspect-[2.76/1] w-full">
-        <div class="absolute inset-0 bg-linear-to-t from-gray-950 "></div>
+    <div class="relative aspect-[3/1] w-full">
+        <div class="absolute inset-0 bg-linear-to-t from-background to-background/50"></div>
         <img
             src="{{ $movie->backdrop_path }}"
             alt="{{ $movie->title }}"
@@ -19,10 +19,10 @@
     </div>
 
     {{-- Main content --}}
-    <div class="container max-w-6xl mx-auto -mt-64 relative z-10">
+    <div class="container max-w-6xl mx-auto -mt-80 relative z-10">
         <div class="flex gap-8">
             {{-- Left column: Poster and actions --}}
-            <div class="w-[300px] shrink-0">
+            <div class="w-[250px] shrink-0">
                 <img
                     src="{{ $movie->poster_path }}"
                     alt="{{ $movie->poster_path }}"
@@ -32,7 +32,7 @@
                 {{-- Action buttons --}}
                 @auth
                     <div
-                        class="mt-4 space-y-2"
+                        class="mt-4 space-y-1"
                     >
                         {{-- Modal & Action Buttons --}}
                         <livewire:review-modal :movie="$movie"/>
@@ -69,7 +69,7 @@
 
                 {{-- Overview --}}
                 <div class="mt-8">
-                    <h2 class="text-primary-500 font-semibold mb-2">Overview</h2>
+                    <h2 class="text-primary-400 font-semibold mb-2">Overview</h2>
                     <p class="leading-relaxed">{{ $movie->overview }}</p>
                 </div>
 
@@ -111,9 +111,9 @@
                 {{-- Reviews --}}
                 <h2 class="mt-10">Reviews</h2>
                 <div class="mt-8" id="movie_reviews">
-                    <x-reviews :reviews="$movie->reviews" :movie="$movie"/>
+                    <x-reviews :reviews="$reviews" :movie="$movie"/>
                 </div>
-                {{ $movie->reviews->links() }}
+                {{ $reviews->links() }}
             </div>
         </div>
     </div>

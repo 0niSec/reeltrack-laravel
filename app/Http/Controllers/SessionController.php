@@ -48,7 +48,7 @@ class SessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('index')->with('status', 'You have been logged out.');
+        return redirect()->route('home')->with('status', 'You have been logged out.');
     }
 
 }
