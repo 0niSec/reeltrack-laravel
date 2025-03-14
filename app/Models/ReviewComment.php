@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ReviewComment extends Model
 {
@@ -21,5 +23,15 @@ class ReviewComment extends Model
     public function review(): BelongsTo
     {
         return $this->belongsTo(Review::class);
+    }
+
+    public function replies(): HasMany
+    {
+        return $this->hasMany(ReviewComment::class, 'parent_id');
+    }
+
+    public function commentable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

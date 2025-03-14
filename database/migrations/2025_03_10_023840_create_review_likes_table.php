@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(User::class)->constrained('users');
             $table->foreignIdFor(Review::class)->constrained('reviews');
+            $table->morphs('likeable');
             $table->timestamps();
         });
     }
