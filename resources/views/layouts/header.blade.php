@@ -1,4 +1,4 @@
-<header class="bg-gradient-to-b from-primary-950/20 to-primary-900/10 border-b border-primary-800 shadow-2xl">
+<header class="bg-gradient-to-b from-primary-950/20 to-primary-900/10 border-b border-primary-800">
     <div class="container max-w-6xl">
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}

@@ -76,7 +76,7 @@
 }
 
 :root {
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 ::selection {
@@ -109,5 +109,16 @@ article h1:not(:first-child), article h2, article h3 {
     @apply mt-8;
     /* Adds top margin to create space before the heading */
 }
+
+.tippy-box[data-theme~='custom'] {
+    background-color: theme('colors.primary.800');
+    border-radius: 0.125rem; /* 2px */
+    font-size: 0.75rem; /* xs */
+}
+
+.tippy-box[data-theme~='custom'] .tippy-arrow {
+    color: theme('colors.primary.800');
+}
+
 
 
