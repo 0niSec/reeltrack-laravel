@@ -10,7 +10,7 @@
                 <div class="w-fit">
                     <h1 class="text-8xl font-bold underline underline-offset-8">Reeltrack</h1>
                     <p class="text-2xl -mr-10 font-medium text-end text-primary-200">Movies and TV. All in one
-                        place.</p>
+                                                                                     place.</p>
                 </div>
 
                 <!-- Stats Section -->
@@ -67,7 +67,7 @@
 
                 <!-- 🔥 What's Trending -->
                 <div class="mt-12">
-                    <h1 class="text-xl font-light mb-2">🔥 What's Trending</h1>
+                    <h1 class="text-xl font-light tracking-tight mb-2">🔥 What's Trending</h1>
                     <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
                         @foreach($trending as $movie)
                             <a href="{{ route('movies.show', $movie) }}"
@@ -83,25 +83,41 @@
             <!-- Feature Descriptions -->
             <h1 class="mt-10 mb-3">What is Reeltrack?</h1>
             <p>Reeltrack is your personal cinematic companion. Easily log the movies and TV shows you watch, rate them,
-                and share your thoughts with reviews and real-time reactions. Keep track of everything you've seen and
-                discover new favorites.</p>
+               and share your thoughts with reviews and real-time reactions. Keep track of everything you've seen and
+               discover new favorites.</p>
 
 
-            <div class="grid grid-cols-2 gap-8 space-y-20 mt-20">
-                <div class="feature-item">
-                    <h1 class="mt-10 mb-3">Log Movies and TV Shows</h1>
-                    <p>Log the movies and TV shows you've seen, rate them, and share your thoughts with reviews and
-                        real-time reactions.</p>
-                </div>
-                <img src="{{ asset('images/log_movies.png') }}" alt="Log Movies" class="border border-neutral-500">
+            <x-feature-section image-position="left"
+                               title="Let others know how you feel"
+                               description="Log the movies and TV shows you've seen, rate them, and share your thoughts with reviews and
+                   real-time reactions."
+                               :image-src="asset('images/log_movies.png')"
+                               image-alt="Watch anywhere">
+                <x-button-link href="{{ route('movies.index') }}">Browse Movies</x-button-link>
+            </x-feature-section>
 
-                <div class="feature-item order-last">
-                    <h1 class="mt-10 mb-3">Create and Organize Lists</h1>
-                    <p>Create and curate custom lists for your movie and TV show adventures. Organize your favorites,
-                        keep track of must-watch titles, and share them with friends!</p>
-                </div>
-                <img src="{{ asset('images/log_movies.png') }}" alt="Log Movies" class="border border-neutral-500">
-            </div>
+            <x-feature-section image-position="right"
+                               title="Express yourself with lists"
+                               description="Your personal list of best Ridley Scott movies? What about best animated films? Or even best medical TV shows (though, we all know it's Scrubs)? Create lists and express yourself with your favorite movies and TV shows."
+                               image-src="https://via.assets.so/game.jpg?w=1280&h=720"
+                               image-alt="Discover new favorites">
+
+            </x-feature-section>
+
+            <x-feature-section image-position="left"
+                               title="Discover what's trending"
+                               description="Explore trending movies and TV shows, and find your next favorite with ease."
+                               image-src="https://via.assets.so/game.jpg?w=1280&h=720"
+                               image-alt="Trending movies and TV shows">
+                <x-button-link href="#">Find your next favorite</x-button-link>
+            </x-feature-section>
+
+            <x-feature-section image-position="right"
+                               title="Build Your Watchlist"
+                               description="Create a personalized watchlist to keep track of movies and TV shows you want to see."
+                               image-src="https://via.assets.so/game.jpg?w=1280&h=720"
+                               image-alt="Watchlist management"></x-feature-section>
+
 
         </div>
     </div>
