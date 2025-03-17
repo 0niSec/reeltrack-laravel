@@ -1,4 +1,4 @@
-@php use App\Models\Movie;use App\Models\TvShow;use Carbon\Carbon; @endphp
+@php use App\Models\Movie;use Carbon\Carbon; @endphp
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
 
