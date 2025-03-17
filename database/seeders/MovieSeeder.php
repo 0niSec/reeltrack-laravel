@@ -30,7 +30,7 @@ class MovieSeeder extends Seeder
     {
         $this->debugStorageSetup();
 
-        $movieIdList = [245891, 324552, 458156, 603692];
+        $movieIdList = [245891, 324552, 458156, 603692, 299536];
 
         // Fetch all movie details and credits concurrently
         $moviePromises = array_map(fn($id) => $this->fetchMovieDetailsAsync($id), $movieIdList);
