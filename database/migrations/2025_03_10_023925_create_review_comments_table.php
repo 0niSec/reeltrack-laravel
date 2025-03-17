@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignIdFor(User::class)->constrained('users');
             $table->foreignIdFor(Review::class)->nullable()->constrained('reviews');
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->morphs('commentable');
             $table->timestamps();
         });
     }

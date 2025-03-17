@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ReviewLike extends Model
 {
@@ -20,5 +21,10 @@ class ReviewLike extends Model
     public function review(): BelongsTo
     {
         return $this->belongsTo(Review::class);
+    }
+
+    public function likeable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

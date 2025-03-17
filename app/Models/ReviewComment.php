@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasLikeable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ReviewComment extends Model
 {
+    use HasLikeable;
+
     protected $fillable = [
         'content',
         'user_id',
@@ -28,10 +30,5 @@ class ReviewComment extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(ReviewComment::class, 'parent_id');
-    }
-
-    public function commentable(): MorphTo
-    {
-        return $this->morphTo();
     }
 }
