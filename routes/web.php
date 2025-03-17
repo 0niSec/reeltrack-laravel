@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionController;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 //*************************************************************************************************************//
 // INDEX
-Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 //*************************************************************************************************************//
 
 // WELCOME
@@ -57,7 +58,11 @@ Route::post('/users/{user}/profile/delete',
         'user.profile');
 
 Route::get('/users/{user}/{movie}/reviews', [UserReviewsController::class, 'index'])->name('user.reviews');
-Route::get('/user/{user}/{movie}/{review}', [UserReviewsController::class, 'show'])->name('user.review');
+Route::get('/users/{user}/{movie}/reviews/{review}',
+    [UserReviewsController::class, 'show'])->name('user.review');
+Route::delete('/users/{user}/{movie}/reviews/{review}/delete',
+    [UserReviewsController::class, 'destroy'])->name('user.review.destroy')->middleware('auth')->can('destroy',
+    'review');
 
 
 //*************************************************************************************************************//
@@ -74,11 +79,13 @@ Route::middleware(['auth'])->prefix('settings')->name('settings.')->group(functi
 
 //*************************************************************************************************************//
 // TMDB IMPORT ROUTE SINGLETON
+
 Route::get('/tmdb/{type}/{id}', [TmdbController::class, 'findOrCreate'])
     ->whereIn('type', ['movie', 'tv'])
     ->whereNumber('id')
     ->name('findOrCreate')
     ->middleware('auth');
+
 //*************************************************************************************************************//
 
 //*************************************************************************************************************//

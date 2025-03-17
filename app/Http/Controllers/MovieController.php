@@ -17,7 +17,7 @@ class MovieController extends Controller
         $movies = [
             'newest' => Movie::newest()->take(6)->get(),
             'popular' => Movie::popular()->take(6)->get(),
-            'latestReviews' => Movie::latestReviews()->take(6)->get(),
+            'latestReviews' => Movie::latestReviews()->take(4)->get(),
         ];
 
         return view('movies.index', compact('movies'));

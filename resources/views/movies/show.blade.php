@@ -65,8 +65,8 @@
                 @endif
 
                 {{-- Movie Stats --}}
-                @include('movies.partials.movie-stats', ['movie' => $movie])
-
+                <x-movie-stats :movie="$movie"/>
+                
                 {{-- Overview --}}
                 <div class="mt-8">
                     <h2 class="text-primary-400 font-semibold mb-2">Overview</h2>
@@ -97,7 +97,8 @@
                     <div class="my-6"><a href="{{ route('login') }}"
                                          class="p-2 rounded-md bg-primary-700 text-gray-200 shadow-md
                                          inset-shadow-sm hover:bg-primary-800 transition-all ">Login
-                            to rate or review</a></div>
+                                                                                               to rate or review</a>
+                    </div>
                 @endauth
 
 

@@ -62,6 +62,7 @@ class User extends Authenticatable
         return $this->reviews()
             ->where('reviewable_type', $model->getMorphClass())
             ->where('reviewable_id', $model->getKey())
+            ->withCount('likes', 'comments')
             ->with(['reelEntry', 'user'])
             ->latest()
             ->get();

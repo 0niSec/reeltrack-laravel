@@ -18,8 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+        if ($this->app->environment('local') && class_exists(TelescopeServiceProvider::class)) {
+            $this->app->register(TelescopeServiceProvider::class);
 
             $this->app->register(TelescopeServiceProvider::class);
         }
@@ -33,8 +33,7 @@ class AppServiceProvider extends ServiceProvider
         if (DB::connection() instanceof SQLiteConnection) {
             DB::raw('PRAGMA foreign_keys=1');
         }
-
-
+        
         // Prevent Lazy Loading globally
         Model::preventLazyLoading(!app()->isProduction());
 

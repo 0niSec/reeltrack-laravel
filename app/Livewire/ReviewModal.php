@@ -45,7 +45,7 @@ class ReviewModal extends Component
         $this->rating = $value;
     }
 
-    public function save()
+    public function save(): void
     {
         $validated = $this->validate([
             'dateType' => 'required|in:specific_date,estimated_year,unknown',
@@ -76,7 +76,7 @@ class ReviewModal extends Component
             'is_rewatch' => $validated['isRewatch'],
         ]);
 
-        Log::debug('Reel Entry created:', [$reelEntry]);
+        Log::info('Reel Entry created:', [$reelEntry]);
 
         if (!empty($validated['reviewContent'])) {
             Review::create([
@@ -91,9 +91,8 @@ class ReviewModal extends Component
 
         $this->showModal = false; // Close the modal after saving
 
-        return redirect()
-            ->route('movies.show', $this->movie)
-            ->with('success', 'Movie added to your reel successfully');
+        $this->redirectRoute('movies.show', parameters: [$this->movie], navigate: true);
+        session()->flash('success', 'Review saved!');
     }
 
     public function render()

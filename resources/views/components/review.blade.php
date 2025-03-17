@@ -6,8 +6,8 @@
         : $createdAt->format('M d, Y');
 @endphp
 
-<div class="review-item border-b border-primary-500/50 py-4 last:border-b-0">
-    <div class="flex items-center space-x-3 mb-3">
+<div class="review-item flex flex-col h-full border-b border-primary-500/50 py-4 last:border-b-0">
+    <div class="flex items-center space-x-3 mb-3" x-data="{ isOpen: false, showReply: false }">
         <div class="flex items-center space-x-3">
             @if($review->user->avatar)
                 <img src="{{ $review->user->avatar }}" alt="{{ $review->user->username }}"
@@ -21,44 +21,18 @@
             <div>
                 <a href="{{ route('profile', $review->user) }}"
                    class="hover:text-neutral-300">{{ $review->user->username }}</a>
-                <div class="text-neutral-500 text-sm">
+                <div class="text-neutral-400 text-xs">
                     {{ $timeDisplay }}
                 </div>
             </div>
         </div>
+        <!-- Rating and Like Icons -->
         <div class="flex items-center">
-            @php
-                $rating = $review->reelEntry->rating;
-                $fullStars = floor($rating);
-                $hasHalfStar = ($rating - $fullStars) >= 0.5;
-            @endphp
-
             @if($review->reelEntry->rating !== null)
-                @for ($i = 1; $i <= 5; $i++)
-                    @if ($i <= $fullStars)
-                        <svg class="w-5 h-5 text-primary-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                    @elseif ($i == $fullStars + 1 && $hasHalfStar)
-                        <svg class="w-5 h-5 text-primary-400" fill="currentColor" viewBox="0 0 20 20">
-                            <defs>
-                                <linearGradient id="half-fill" x1="0" x2="100%" y1="0" y2="0">
-                                    <stop offset="50%" stop-color="currentColor"/>
-                                    <stop offset="50%" stop-color="#E5E7EB"/>
-                                </linearGradient>
-                            </defs>
-                            <path fill="url(#half-fill)"
-                                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                    @else
-                        <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                    @endif
-                @endfor
+                <x-star-rating-display :rating="$review->reelEntry->rating" icon-size="w-5 h-5"
+                                       icon-color="text-primary-400" icon-fill="fill-primary-400"/>
             @endif
+
 
             @if($review->reelEntry->is_liked)
                 <x-icon-heart-filled class="w-5 h-5 ml-2 text-accent-500"/>
@@ -66,7 +40,86 @@
         </div>
     </div>
 
-    <div class="review-content text-sm leading-relaxed">
-        {{ $review->content }}
+    <!-- Review Content -->
+    <div class="review-content text-sm leading-relaxed mb-8">
+        @if(!Route::is('user.review'))
+            {!! nl2br(e(Str::limit($review->content, 300, preserveWords: true))) !!}
+        @else
+            {!! nl2br(e($review->content)) !!}
+        @endif
     </div>
+
+    <!-- Actions Row -->
+    <div class="mt-4 flex items-center space-x-10">
+        <!-- Likes -->
+        <div class="flex space-x-1 items-center">
+            <!-- TODO: Apply middleware or Gate to make sure a user is logged in to like -->
+            <x-icon-heart-outline
+                class="w-6 h-6 text-neutral-500 cursor-pointer hover:fill-accent-500 hover:text-accent-500 transition-colors"/>
+            <p class="text-sm">{{ Number::abbreviate($review->likes_count ?? 0) }} Likes</p>
+        </div>
+
+        <!-- Comments -->
+        <div class="flex space-x-1 items-center">
+            <x-icon-reply class="w-6 h-6 text-neutral-500 cursor-pointer"/>
+            <p class="text-sm">
+                <a href="{{ route('user.review', ['user' => $review->user, 'movie' => $movie, 'review' => $review]) }}">{{ Number::abbreviate($review->comments_count ?? 0) }}
+                    Comments</a>
+            </p>
+        </div>
+
+        <!-- Reply Button Container -->
+        @if (Route::is('user.review'))
+            <div id="reply-button-container" class="relative text-sm"
+                 x-data="{ isOpen: false, showReply: false }">
+                <button role="button"
+                        class="px-4 py-2 w-fit bg-neutral-600 cursor-pointer border border-transparent hover:bg-neutral-700 hover:border-accent-500 transition-colors"
+                        @click="isOpen = !isOpen">
+                    ...
+                </button>
+
+                <!-- Reply Dropdown -->
+                <div id="reply-dropdown"
+                     class="font-semibold absolute top-full right-0 shadow-lg z-50"
+                     @click="isOpen = ! isOpen"
+                     x-show="isOpen"
+                     @click.away="isOpen = false"
+                     x-transition x-cloak>
+                    <!-- Actions Outer Container -->
+                    <div class="mt-2 bg-neutral-600 py-1 min-w-[160px]">
+                        <!-- TODO: Reply should open either a component from the bottom (like Laracasts) or direct to the review page -->
+                        <a href="#"
+                           class="block px-2 py-1 hover:bg-neutral-700">Reply</a>
+                        @auth
+                            @if(auth()->id() === $review->user_id)
+                                <a href="#"
+                                   class="block px-2 py-1 hover:bg-neutral-700 transition-colors">Edit</a>
+
+                                <button form="delete-form"
+                                        wire:confirm.prompt="Are you sure you want to delete this review?"
+                                        class="w-full text-left text-red-500 px-2 py-1 hover:bg-neutral-700 transition-colors">
+                                    Delete
+                                </button>
+                            @else
+                                <a href="#"
+                                   class="block px-2 py-1 hover:bg-neutral-700">Report Spam</a>
+                            @endif
+                        @endauth
+                    </div>
+                </div>
+            </div>
+        @else
+            <x-underlined-link
+                href="{{ route('user.review', ['user' => $review->user, 'movie' => $movie, 'review' => $review]) }}">
+                Read
+                more
+            </x-underlined-link>
+        @endif
+    </div>
+    <form id="delete-form"
+          action="{{ route('user.review.destroy', ['user' => $review->user, 'movie' => $movie, 'review' => $review]) }}"
+          method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
 </div>

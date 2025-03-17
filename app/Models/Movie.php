@@ -42,6 +42,20 @@ class Movie extends Model
     // End Relationships
 
     // Scopes
+
+    /**
+     * Boot the model and register a saving event to set the slug attribute
+     * based on the model's title property using Str::slug.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            $model->slug = Str::slug($model->title);
+        });
+    }
+
     public function scopeWithFullDetails($query)
     {
         return $query->with([
@@ -69,6 +83,7 @@ class Movie extends Model
     {
         return $query->withCount([
             'userInteractions',
+            'userInteractions as watched_count' => fn($query) => $query->where('is_watched', true),
             'userInteractions as likes_count' => fn($query) => $query->where('is_liked', true),
             'userInteractions as ratings_count' => fn($query) => $query->whereNotNull('rating'),
         ])
@@ -81,6 +96,9 @@ class Movie extends Model
     {
         return $query->latest();
     }
+    // End Scopes
+
+    // Helpers
 
     public function scopeLatestReviews($query)
     {
@@ -90,14 +108,22 @@ class Movie extends Model
             ->with([
                 'reviews' => function ($query) {
                     $query->latest()->take(1) // Only the latest review for that movie
-                    ->with('user');
+                    ->with([
+                        'user', 'reelEntry'
+                    ]); // Get the user and reel entry for tracking likes and ratings on review
                 },
             ])
-            ->latest();
-    }
-    // End Scopes
+            ->orderBy(function ($query) {
+                $query->select('created_at')
+                    ->from('reviews')
+                    ->whereColumn('reviewable_id', 'movies.id')
+                    ->whereNotNull('content')
+                    ->orderByDesc('created_at')
+                    ->limit(1);
+            }, 'desc');
 
-    // Helpers
+    }
+
     public function getRating(?User $user = null): ?float
     {
         $user ??= auth()->user();
@@ -161,6 +187,7 @@ class Movie extends Model
             ->where('user_id', $user->id)
             ->value('is_liked');
     }
+    // End Helpers
 
     public function isWatched(?User $user = null): bool
     {
@@ -179,20 +206,6 @@ class Movie extends Model
         return (bool) $this->userInteractions()
             ->where('user_id', $user->id)
             ->value('is_watched');
-    }
-    // End Helpers
-
-    /**
-     * Boot the model and register a saving event to set the slug attribute
-     * based on the model's title property using Str::slug.
-     */
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::saving(function ($model) {
-            $model->slug = Str::slug($model->title);
-        });
     }
 
     public function cast(): MorphMany

@@ -1,7 +1,7 @@
 @php use App\Models\Movie;use App\Models\TvShow;use Carbon\Carbon; @endphp
 <x-app>
     <x-slot:title>{{ $user->username }}'s Profile</x-slot:title>
-    
+
     <div class="container max-w-6xl mx-auto min-h-screen space-y-10">
 
         <!-- Top container/stats -->
@@ -119,7 +119,7 @@
                     <!-- TODO: I want the cards to fit 5 always and not have to change the minmax value below -->
                     <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(125px,1fr))] gap-x-4 gap-y-4">
                         @foreach($recentReviews as $review)
-                            <a href="{{ route('movies.show', $review->reviewable) }}">
+                            <a href="{{ route('user.review', ['user' => $user, 'movie' => $review->reviewable, 'review' => $review]) }}">
                                 <x-movie-card :movie="$review->reviewable"/>
                             </a>
                         @endforeach
