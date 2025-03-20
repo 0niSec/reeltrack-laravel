@@ -1,7 +1,7 @@
 <div>
     <label class="block text-sm text-neutral-400 mb-1">
         @if($isReviewedByLoggedOnUser)
-            <a href="{{ route('user.reviews', ['user' => auth()->user(),'movie' => $movie]) }}"
+            <a href="{{ route('reviews.index', ['user' => auth()->user(),'movie' => $movie]) }}"
                class="hover:text-primary-600 ">
                 Reviewed
             </a>

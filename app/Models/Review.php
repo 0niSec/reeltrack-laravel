@@ -43,7 +43,7 @@ class Review extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(ReviewComment::class)->whereNull('parent_id')->latest();
+        return $this->hasMany(ReviewComment::class)->whereNull('parent_id');
     }
 
     protected function casts(): array

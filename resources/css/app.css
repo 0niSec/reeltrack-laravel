@@ -9,7 +9,10 @@
 
     /* Base Colors */
     --color-background: #121212;  /* Very dark blue-gray */
-    --color-surface: #1e293b;     /* Slightly lighter surface color */
+    --color-surface: #1e1e1e;     /* Slightly lighter surface color */
+    --color-surface-100: #282828;
+    --color-surface-200: #333333;    /* Even lighter surface */
+    --color-surface-300: #404040;    /* Accent surface */
     /* Primary: Violet (Modern Streaming) */
     --color-primary-50: #f5f3ff;
     --color-primary-100: #ede9fe;

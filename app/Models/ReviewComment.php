@@ -17,6 +17,8 @@ class ReviewComment extends Model
         'review_id',
     ];
 
+    protected $with = ['user', 'review', 'replies'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -27,8 +29,13 @@ class ReviewComment extends Model
         return $this->belongsTo(Review::class);
     }
 
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(ReviewComment::class, 'parent_id');
+    }
+
     public function replies(): HasMany
     {
-        return $this->hasMany(ReviewComment::class, 'parent_id');
+        return $this->hasMany(ReviewComment::class, 'parent_id')->orderBy('created_at', 'asc');
     }
 }

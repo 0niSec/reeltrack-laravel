@@ -70,7 +70,6 @@
     </div>
 
     {{-- Popular --}}
-    {{-- Movie Showcase --}}
     <div class="px-4 py-10 flex flex-col space-y-20">
         {{-- Popular Movies - Horizontal Slider --}}
         <div class="container mx-auto max-w-6xl">
@@ -88,22 +87,21 @@
             </div>
 
             @if (count($movies['popular']) > 0)
-                <div class="overflow-x-auto pb-4 scrollbar-hide">
-                    <div class="flex gap-4 min-w-max">
-                        @foreach ($movies['popular'] as $movie)
-                            <div class="w-44 flex-shrink-0">
-                                <a href="{{ route('movies.show', $movie) }}" class="block">
-                                    <div
-                                        class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-                                        <x-movie-card :movie="$movie"/>
-                                    </div>
-                                </a>
-                                <div class="mt-1">
-                                    <x-mini-stats-row :stats="$movie"/>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4">
+                    @foreach ($movies['popular'] as $movie)
+                        <div class="">
+                            <a href="{{ route('movies.show', $movie) }}" class="block">
+                                <div
+                                    class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                                    <x-movie-card :movie="$movie"/>
                                 </div>
+                            </a>
+                            <div class="mt-1">
+                                <x-mini-stats-row :stats="$movie"/>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
+
                 </div>
             @else
                 <div class="bg-white dark:bg-neutral-800 rounded-xl p-10 text-center">
@@ -127,8 +125,9 @@
                 </a>
             </div>
 
+            <!-- Newest -->
             @if (count($movies['newest']) > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
                     @foreach ($movies['newest'] as $movie)
                         <div class="rounded-xl shadow-md">
                             <a href="{{ route('movies.show', $movie) }}" wire:navigate class="block">
@@ -188,7 +187,7 @@
                                         <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
                                             Reviewed by
                                             <x-underlined-link
-                                                href="{{ route('profile', $latestReview->user->username) }}"
+                                                href="{{ route('users.profile', $latestReview->user->username) }}"
                                                 class="hover:underline">{{ $latestReview->user->username }}</x-underlined-link>
                                         </p>
                                         <div class="mb-2 flex flex-row space-x-2 items-center">
@@ -210,7 +209,7 @@
 
                                         <!-- TODO: Link to the individual review -->
                                         <x-underlined-link
-                                            href="{{ route('user.review', ['user' => $latestReview->user, 'movie' => $movie, 'review' => $latestReview]) }}"
+                                            href="{{ route('reviews.show', ['user' => $latestReview->user, 'movie' => $movie, 'review' => $latestReview]) }}"
                                             class="absolute bottom-0 right-4">Read more...
                                         </x-underlined-link>
                                     </div>

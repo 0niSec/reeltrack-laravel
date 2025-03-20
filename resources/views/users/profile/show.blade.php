@@ -73,15 +73,15 @@
 
         <!-- Profile Navigation -->
         <div class="flex justify-center items-center space-x-4 p-2 border border-gray-700">
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Profile</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Activity</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Movies</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">TV</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Reviews</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Reels</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Watchlist</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Lists</a>
-            <a href="{{ route('profile', $user) }}" class="text-gray-200 hover:text-primary-400">Likes</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Profile</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Activity</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Movies</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">TV</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Reviews</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Reels</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Watchlist</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Lists</a>
+            <a href="{{ route('users.profile', $user) }}" class="text-gray-200 hover:text-primary-400">Likes</a>
         </div>
 
         <!-- Favorites Grid Container -->
@@ -119,7 +119,7 @@
                     <!-- TODO: I want the cards to fit 5 always and not have to change the minmax value below -->
                     <div class="movies-grid grid grid-cols-[repeat(auto-fill,minmax(125px,1fr))] gap-x-4 gap-y-4">
                         @foreach($recentReviews as $review)
-                            <a href="{{ route('user.review', ['user' => $user, 'movie' => $review->reviewable, 'review' => $review]) }}">
+                            <a href="{{ route('reviews.show', ['user' => $user, 'movie' => $review->reviewable, 'review' => $review]) }}">
                                 <x-movie-card :movie="$review->reviewable"/>
                             </a>
                         @endforeach

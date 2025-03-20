@@ -71,7 +71,7 @@
                                 <span class="font-bold">{{ auth()->user()->username }}</span>
                             </div>
                             <div>
-                                <a href="{{ route('profile', auth()->user()->username) }}"
+                                <a href="{{ route('users.profile', auth()->user()->username) }}"
                                    class="block px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors">
                                     {{__('Profile')}}
                                 </a>

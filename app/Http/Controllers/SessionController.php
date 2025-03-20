@@ -34,9 +34,12 @@ class SessionController extends Controller
         // Regenerate session token
         $request->session()->regenerate();
 
-        // Redirect back
-        return redirect()->route('profile', ['user' => Auth::user()->username])->with('success',
+        return redirect()->intended(route('users.profile', ['user' => Auth::user()->username]))->with('success',
             'You have been logged in.');
+
+        // Redirect back
+//        return redirect()->route('profile', ['user' => Auth::user()->username])->with('success',
+//            'You have been logged in.');
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -48,7 +51,7 @@ class SessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home')->with('status', 'You have been logged out.');
+        return redirect()->route('home');
     }
 
 }

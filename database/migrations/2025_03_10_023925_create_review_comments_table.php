@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->id();
             $table->text('content');
             $table->foreignIdFor(User::class)->constrained('users');
-            $table->foreignIdFor(Review::class)->nullable()->constrained('reviews');
+            $table->foreignIdFor(Review::class)->nullable()->constrained('reviews')->cascadeOnDelete();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
         });

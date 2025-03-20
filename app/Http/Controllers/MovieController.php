@@ -15,7 +15,7 @@ class MovieController extends Controller
     {
         // Use eager loading with select and only retrieve necessary fields
         $movies = [
-            'newest' => Movie::newest()->take(6)->get(),
+            'newest' => Movie::newest()->take(5)->get(),
             'popular' => Movie::popular()->take(6)->get(),
             'latestReviews' => Movie::latestReviews()->take(4)->get(),
         ];
