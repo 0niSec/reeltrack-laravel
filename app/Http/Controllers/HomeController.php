@@ -12,6 +12,7 @@ class HomeController extends Controller
 {
     public function index(User $user)
     {
+        $genreSpotlights = Movie::getGenreSpotlights();
         $siteStats = [
             'total_movies' => Movie::count(),
             'total_users' => User::count(),
@@ -35,6 +36,8 @@ class HomeController extends Controller
             ->get();
 
 
-        return view('index', compact('user', 'siteStats', 'trending'));
+        return view('index', compact('user', 'siteStats', 'trending', 'genreSpotlights'));
     }
+
+
 }

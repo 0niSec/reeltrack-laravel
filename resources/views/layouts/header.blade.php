@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between h-16">
             {{-- Logo/Brand --}}
             <div class="shrink-0">
-                <a href="{{ route('home') }}" class="hover:text-primary-500 text-2xl font-bold transition-colors">
+                <a href="{{ url('/') }}" class="hover:text-primary-500 text-2xl font-bold transition-colors">
                     <span class="text-primary-500">Reel</span>track
                 </a>
             </div>
@@ -17,7 +17,7 @@
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 transition-all group-hover:w-full"></span>
                 </a>
-                <a href="{{ route('home') }}" class="font-bold hover:text-primary-500 transition-colors relative
+                <a href="{{ url('/') }}" class="font-bold hover:text-primary-500 transition-colors relative
                 group">
                     TV
                     <span

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class Movie extends Model
@@ -42,6 +43,42 @@ class Movie extends Model
     // End Relationships
 
     // Scopes
+
+    public static function getGenreSpotlights(): Collection
+    {
+        $targetGenres = [
+            'Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Romance', 'Science Fiction', 'Thriller'
+        ];
+        $spotlights = new Collection();
+        $usedMovieIds = [];
+
+        foreach ($targetGenres as $genre) {
+            // Find the most popular movie for this genre that hasn't been used yet
+            $movie = self::whereHas('genres', function ($query) use ($genre) {
+                $query->where('name', $genre);
+            })
+                ->whereNotIn('id', $usedMovieIds)
+                ->where('poster_path', '!=', '')
+                ->withAvg('reelEntries as avg_rating', 'rating')
+                ->withCount('reelEntries as watch_count')
+                ->orderByRaw('avg_rating DESC NULLS LAST')
+                ->orderBy('watch_count', 'desc')
+                ->first();
+
+            if ($movie) {
+                $movie->genre = $genre;
+                $spotlights->push($movie);
+                $usedMovieIds[] = $movie->id;
+
+                // Only collect the first 2-4 genres that have movies
+                if ($spotlights->count() >= 4) {
+                    break;
+                }
+            }
+        }
+
+        return $spotlights;
+    }
 
     /**
      * Boot the model and register a saving event to set the slug attribute
@@ -91,14 +128,14 @@ class Movie extends Model
             ->orderByDesc('likes_count')
             ->orderByDesc('ratings_avg_rating');
     }
+    // End Scopes
+
+    // Helpers
 
     public function scopeNewest($query)
     {
         return $query->latest();
     }
-    // End Scopes
-
-    // Helpers
 
     public function scopeLatestReviews($query)
     {
@@ -187,6 +224,7 @@ class Movie extends Model
             ->where('user_id', $user->id)
             ->value('is_liked');
     }
+
     // End Helpers
 
     public function isWatched(?User $user = null): bool

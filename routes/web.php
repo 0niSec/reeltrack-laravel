@@ -86,7 +86,7 @@ Route::get('/tmdb/{type}/{id}', [TmdbController::class, 'findOrCreate'])
 
 // Movies
 Route::name('movies.')->group(function () {
-    Route::get('/', [MovieController::class, 'index'])->name('index');
+    Route::get('/movies', [MovieController::class, 'index'])->name('index');
     Route::get('/new', [MovieController::class, 'new'])->name('new');
     Route::get('/popular', [MovieController::class, 'popular'])->name('popular');
     Route::get('/{movie}', [MovieController::class, 'show'])->name('show');
